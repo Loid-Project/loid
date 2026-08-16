@@ -79,10 +79,6 @@ Use `rustfmt` as described to format your code to Loid's specification
 
 Follow Loid's style guide for writing new code
 
-
-
-
-
 ### Testing
 
 Changes should always include tests for new behavior
