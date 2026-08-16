@@ -1,0 +1,16 @@
+name: Blocker Check
+on:
+    pull_request:
+        types: [opened, synchronize, labeled, unlabeled, reopened]
+
+jobs:
+    check-blocked-status:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Check for Blocked Label
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const script = require('./.github/scripts/blocker-check.js');
+                      await script({ github, context, core });

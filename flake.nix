@@ -76,12 +76,14 @@
 
             # node
             nodejs_26
+            javascript-typescript-langserver
+            prettier
 
             # nix
             nixfmt
             nixd
 
-            # dev
+            # just
             just
             just-formatter
             just-lsp

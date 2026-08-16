@@ -1,0 +1,16 @@
+name: Issue Management
+on:
+    issues:
+        types: [opened, edited]
+jobs:
+    triage:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+        steps:
+            - name: Auto-Label and Assign
+              uses: actions/github-script@v6
+              with:
+                  script: |
+                      const script = require('./.github/scripts/issue-mgmt.js');
+                      await script({github, context, core});
