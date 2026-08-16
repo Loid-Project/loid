@@ -1,4 +1,4 @@
-#!/bin/bash env bash
+#!/bin/bash/env bash
 
 curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --daemon
 
