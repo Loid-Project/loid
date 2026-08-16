@@ -145,31 +145,10 @@ direnv allow
 
 This'll install all the dependencies and they'll only be accessible within this folder, not cluttering your actual computer.
 
-### On NixOS
+### On Non-NixOS Linux Distributions
 
-Get <a href="https://wiki.nixos.org/wiki/Direnv">direnv</a>.
-
-You can enable it with:
-```Nix
-{
-    programs.direnv.enable = true;
-}
-
-```
-
-Make sure nix flakes are enabled:
-```Nix
-{
-    nix.settings.experimental-features = [
-        "nix-command"
-        "flakes"
-    ];
-}
-```
-
-And rebuild with `$ nixos-rebuild switch --sudo`.
-
-### On other Linux Distributions
+##### IMPORTANT!!!!:
+Do the following in the root directory `~/`
 
 Every most distributions provide the `direnv` package, however, for `direnv` to work correctly with `nix flakes`, one must still enable `nix`.
 
@@ -184,6 +163,23 @@ For a simpler approach you can just run:
 curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --daemon
 ```
 
+After having installed nix you have to source your shell:
+
+##### BASH
+```
+source ~/.bashrc
+```
+
+##### zsh
+```
+source ~/.zshrc
+```
+
+##### Fish
+```
+source ~/.config/fish/config.fish
+```
+
 Then you can get flakes and commands enabled through:
 ```bash
 echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
@@ -192,6 +188,11 @@ echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.con
 And then:
 ```bash
 nix profile add nixpkgs#nix-direnv
+```
+
+Restart the Nix Daemon (for `systemd`):
+```bash
+sudo systemctl restart nix-daemon
 ```
 
 Then make a config file:
@@ -256,6 +257,30 @@ echo 'direnv hook fish | source' >> ~/.config/fish/config.fish
 source ~/.config/fish/config.fish
 ```
 
+### On NixOS
+
+Get <a href="https://wiki.nixos.org/wiki/Direnv">direnv</a>.
+
+You can enable it with:
+```Nix
+{
+    programs.direnv.enable = true;
+}
+
+```
+
+Make sure nix flakes are enabled:
+```Nix
+{
+    nix.settings.experimental-features = [
+        "nix-command"
+        "flakes"
+    ];
+}
+```
+
+And rebuild with `$ nixos-rebuild switch --sudo`.
+
 ### MacOS
 
 You must first install `nix` on MacOS:
@@ -299,6 +324,29 @@ Feel free to help bring Loid to BSD.
 
 We do not yet support Windows.
 Feel free to help bring Loid to Windows.
+
+## Editor Configuration:
+
+### VSCode
+
+#### Opening VSCode
+
+Due to the use of direnv, it is recommended to open VSCode through the terminal.
+Go to the project repository folder at the root of the repo.
+And then run:
+```
+code .
+```
+
+This way all of the requirements for VSCode (language servers, formatters, and so on) are available out of the box.
+
+#### Extensions
+
+For this project the following extensions are recommended:
+
+
+
+#### VSCode Settings
 
 ## Dev Documentation
 

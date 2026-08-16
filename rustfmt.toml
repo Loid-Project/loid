@@ -1,0 +1,94 @@
+unstable_features = true
+
+#
+
+# widths
+array_width = 50
+attr_fn_like_width = 50
+max_width = 100
+
+# layout
+binop_separator = "Front"
+fn_args_layout = "Tall"
+fn_call_width = 50
+fn_params_layout = "Tall"
+force_multiline_blocks = true
+imports_layout = "HorizontalVertical"
+match_arm_blocks = true
+match_arm_leading_pipes = "Always"
+match_block_trailing_comma = true
+imports_granularity = "Module"
+trailing_comma = "Always"
+trailing_semicolon = true
+
+# vertical alignment
+struct_field_align_threshold = 20
+enum_field_align_threshold = 20
+enum_discrim_align_threshold = 30
+
+# whitespace
+blank_lines_lower_bound = 0
+blank_lines_upper_bound = 2
+hard_tabs = false
+tab_spaces = 4
+imports_indent = "Block"
+indent_style = "Visual"
+match_arm_indent = true
+single_line_let_else_max_width = 30
+space_after_colon = false
+space_before_colon = false
+
+# new lines
+newline_style = "Unix"
+
+# braces
+brace_style = "SameLineWhere"
+combine_control_expr = false
+control_brace_style = "ClosingNextLine"
+
+# comments
+comment_width = 100
+wrap_comments = true
+format_code_in_doc_comments = true
+doc_comment_code_block_width = 100
+doc_comment_code_block_small_heuristics = "Default"
+normalize_comments = true
+normalize_doc_attributes = true
+
+# condense code
+condense_wildcard_suffixes = false
+empty_item_single_line = true
+fn_single_line = true
+merge_derives = true
+remove_nested_parens = true
+overflow_delimited_expr = true
+
+# correct code
+force_explicit_abi = true
+reorder_impl_items = true
+reorder_imports = true
+reorder_modules = true
+
+# generated files
+format_generated_files = true
+generated_marker_line_search_limit = 5
+
+# macros
+format_macro_matchers = true
+format_macro_bodies = true
+skip_macro_invocations = []
+
+# strings
+format_strings = true
+
+# hexadecimals
+hex_literal_case = "Upper"
+
+# floats
+float_literal_trailing_zero = "Always"
+
+# parser
+show_parse_errors = true
+
+# types
+type_punctuation_density = "Wide"

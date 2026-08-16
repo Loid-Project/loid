@@ -1,5 +1,11 @@
+# Cargo:
+target
+
+# direnv:
+.direnv
+
+# Editors:
 .vscode
 
-# Added by cargo
-
-/target
+# Operating System Specific Files:
+.DS_Store
