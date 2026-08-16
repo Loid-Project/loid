@@ -1,0 +1,37 @@
+# Loid Compiler/Transpiler Architecture
+
+This document describes the high-level architecture of the Loid transpiler (and soon the compiler) and its development infrastructure.
+This should serve as a guide for contributors and as a roadmap for future enhancements.
+
+## Table of Contents
+
+- [Overview](#overview)
+
+## Overview
+
+Loid is a statically-typed, multi-paradigm programming language.
+At this moment, Loid compiles to JavaScript.
+
+For the sake of organization it is important to highlight our architectural decisions:
+- **Modularity**: each part of the language can be developed and tested as independently as possible.
+- **Correctness**: the Rust code must be written in a clean manner, following the `rustfmt.toml` file with `rustfmt`, and organized and documented clearly.
+- **Extensibility**: new compilation targets must be capable of being added without being forced to re-write too much the core logic.
+
+## Compilation Pipeline
+
+The compiler processes source files through a very linear pipeline.
+
+```bash
+Source (.loid) -> Lexer -> Parser (CST) -> Parser (AST) -> Semantic Analysis And Type Checking -> -> AST Generator (JavaScript AST) -> JavaScript Generator (.js)
+```
+
+- **Lexer** - converts the source text into a token stream
+- **Parser (CST)** - builds a CST from the tokens
+- **Parser (AST)** - builds an AST from the CST (desugaring)
+- **Semantic Analysis and Type Checking** - resolves names and validates some language rules
+- **JavaScript AST Generator** - generates the JavaScript AST
+- **JavaScript Generator** - generates JavaScript from the AST
+
+## File Structure
+
+This workspace is to be divided into the following systems:
