@@ -31,6 +31,10 @@ pub enum Keyword {
     STATIC,
     PROT,
     OVERRIDE,
+    LAMBDA,
+    OVERWRITE,
+    PUB,
+    UNDERSCORE,
 }
 
 impl Keyword {
@@ -66,8 +70,12 @@ impl Keyword {
             | "inst" => Some(Keyword::INST),
             | "priv" => Some(Keyword::PRIV),
             | "static" => Some(Keyword::STATIC),
-            | "PROT" => Some(Keyword::PROT),
-            | "OVERRIDE" => Some(Keyword::OVERRIDE),
+            | "prot" => Some(Keyword::PROT),
+            | "override" => Some(Keyword::OVERRIDE),
+            | "overwrite" => Some(Keyword::OVERWRITE),
+            | "lambda" => Some(Keyword::LAMBDA),
+            | "pub" => Some(Keyword::PUB),
+            | "_" => Some(Keyword::UNDERSCORE),
             | _ => None,
         }
     }
@@ -106,6 +114,10 @@ impl Keyword {
             | Keyword::PRIV => "priv",
             | Keyword::PROT => "prot",
             | Keyword::STATIC => "static",
+            | Keyword::LAMBDA => "lambda",
+            | Keyword::OVERWRITE => "overwrite",
+            | Keyword::UNDERSCORE => "underscore",
+            | Keyword::PUB => "pub",
         }
     }
 }
