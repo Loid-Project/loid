@@ -26,6 +26,15 @@ pub enum Keyword {
     STUB,
     MOCK,
     FAILS,
+    INST,
+    PRIV,
+    STATIC,
+    PROT,
+    OVERRIDE,
+    LAMBDA,
+    OVERWRITE,
+    PUB,
+    UNDERSCORE,
 }
 
 impl Keyword {
@@ -58,6 +67,15 @@ impl Keyword {
             | "stub" => Some(Keyword::STUB),
             | "mock" => Some(Keyword::MOCK),
             | "fails" => Some(Keyword::FAILS),
+            | "inst" => Some(Keyword::INST),
+            | "priv" => Some(Keyword::PRIV),
+            | "static" => Some(Keyword::STATIC),
+            | "prot" => Some(Keyword::PROT),
+            | "override" => Some(Keyword::OVERRIDE),
+            | "overwrite" => Some(Keyword::OVERWRITE),
+            | "lambda" => Some(Keyword::LAMBDA),
+            | "pub" => Some(Keyword::PUB),
+            | "_" => Some(Keyword::UNDERSCORE),
             | _ => None,
         }
     }
@@ -91,6 +109,15 @@ impl Keyword {
             | Keyword::STUB => "stub",
             | Keyword::MOCK => "mock",
             | Keyword::FAILS => "fails",
+            | Keyword::INST => "inst",
+            | Keyword::OVERRIDE => "override",
+            | Keyword::PRIV => "priv",
+            | Keyword::PROT => "prot",
+            | Keyword::STATIC => "static",
+            | Keyword::LAMBDA => "lambda",
+            | Keyword::OVERWRITE => "overwrite",
+            | Keyword::UNDERSCORE => "underscore",
+            | Keyword::PUB => "pub",
         }
     }
 }
