@@ -6,7 +6,7 @@ use crate::define_parsable_enum;
 
 define_parsable_enum! {
     pub enum Keyword {
-
+        // declarations
         Let => "let",
         Var => "var",
         Const => "const",
@@ -37,13 +37,14 @@ define_parsable_enum! {
         Extends => "extends",
         Override => "override",
         Overwrite => "overwrite",
-        // modifiers
+
+        // class modifiers
         Pub => "pub",
         Priv => "priv",
         Prot => "prot",
         Static => "static",
 
-
+        // importing
         Import => "import",
         Use => "use",
 
@@ -57,9 +58,6 @@ define_parsable_enum! {
         // Other:
         Lambda => "lambda",
         Inst => "inst",
-        Overwrite => "overwrite",
-        Pub => "pub",
-        Until => "until",
         Global => "global",
         Overload => "overload",
         Default => "default",
