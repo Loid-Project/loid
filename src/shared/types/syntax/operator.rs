@@ -12,9 +12,7 @@ define_parsable_enum! {
         Percent => "%",
         Or => "||",
         And => "&&",
-        OrMath => "∨",
-        AndMath => "∧",
-        XorMath => "⊕",
+        Xor => "^",
         Assignment => "=",
         NotEquals => "!=",
         EqualEqual => "==",
@@ -35,5 +33,6 @@ define_parsable_enum! {
         EqualArrow => "=>",
         Hashtag => "#",
         AtSign => "@",
+        Bar => "|",
     }
 }

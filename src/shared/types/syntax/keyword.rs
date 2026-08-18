@@ -1,40 +1,62 @@
 use crate::define_parsable_enum;
 
+/*  * Style Guide:
+ * All enum values are CamelCase
+*/
+
 define_parsable_enum! {
     pub enum Keyword {
+
         Let => "let",
+        Var => "var",
+        Const => "const",
         Fn => "fn",
+        Type => "type",
+        Namespace => "namespace",
+
+        // control flow:
         If => "if",
         Else => "else",
         While => "while",
+        Until => "until",
+        Cond => "cond",
+        Match => "match",
+        Breakable => "breakable",
         Return => "return",
-        Const => "const",
-        Var => "var",
-        Type => "type",
-        Proxy => "proxy",
-        Interface => "interface",
+
+        // Classes & Interfaces & Things:
         Class => "class",
         Abstract => "abstract",
+        Interface => "interface",
+        Proxy => "proxy",
+        Typestated => "typestated",
+        Impl => "impl",
         Inherits => "inherits",
         Derives => "derives",
         Implements => "implements",
         Extends => "extends",
-        Match => "match",
-        Namespace => "namespace",
+        Override => "override",
+        Overwrite => "overwrite",
+        // modifiers
+        Pub => "pub",
+        Priv => "priv",
+        Prot => "prot",
+        Static => "static",
+
+
         Import => "import",
         Use => "use",
-        With => "with",
-        Not => "not",
+
+
+        // testing
         Test => "test",
         Stub => "stub",
         Mock => "mock",
         Fails => "fails",
-        Inst => "inst",
-        Priv => "priv",
-        Static => "static",
-        Prot => "prot",
-        Override => "override",
+
+        // Other:
         Lambda => "lambda",
+        Inst => "inst",
         Overwrite => "overwrite",
         Pub => "pub",
         Until => "until",
@@ -42,5 +64,6 @@ define_parsable_enum! {
         Overload => "overload",
         Default => "default",
         Underscore => "_",
+        With => "with",
     }
 }
