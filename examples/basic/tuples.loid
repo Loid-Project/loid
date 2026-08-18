@@ -1,0 +1,1 @@
+let 3tuple: tuple<int, int, string> = tuple(6, 7, "eight, nine");

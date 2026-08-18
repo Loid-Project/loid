@@ -1,0 +1,8 @@
+cond {
+    (7 + 10 == 5) {
+        io.print("so false");
+    }
+    (8 + 15 == 15 + 8) {
+        io.print("actually kind of worked out");
+    }
+}

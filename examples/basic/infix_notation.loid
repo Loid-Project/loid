@@ -1,0 +1,5 @@
+fn add(x: int, y: int) -> int {
+    return x + y;
+}
+
+let add_2_numbers: int = 2 `add` 10;

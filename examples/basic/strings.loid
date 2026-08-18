@@ -1,0 +1,12 @@
+let logan: string = "basic string";
+
+let logan2: string = f"basic fstring where 2 + 2 = \(2 + 3)";
+
+let logan3: string =
+    >Very cool multiline string
+    >And an f\("string")
+
+let logan4_stress_test: string =
+    >Cool multiline string
+    >   With a tab
+    >   And a painful fstring: \((lambda (x: int) -> int => x + 2)(2))

@@ -1,0 +1,9 @@
+class Person {
+    static pub species: string;
+
+    pub construct() -> this {
+        Person.species = "Human";
+
+        return this;
+    }
+}

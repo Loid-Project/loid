@@ -1,0 +1,11 @@
+fn larry() -> void {
+    n + n;
+}
+
+fn larry2(n: int) -> void {
+    n + n;
+}
+
+fn larry3(n: int) -> int {
+    return n + n;
+}

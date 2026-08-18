@@ -1,0 +1,16 @@
+let n: int = 10;
+let f: float = 10.0;
+let d: double = 10.0;
+
+let char_a: char = #\a;
+
+let u_block_origin: string = "UBlock Origin";
+
+let are_fat_cats_cute: bool = true;
+
+let dogs_are_better_than_cats: bool = false;
+
+var variable_variable: int = 10;
+variable_variable = 50;
+
+const eval_at_comp_time: string = "10000";

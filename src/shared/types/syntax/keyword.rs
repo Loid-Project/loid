@@ -57,6 +57,12 @@ define_parsable_enum! {
         // Other:
         Lambda => "lambda",
         Inst => "inst",
+        Overwrite => "overwrite",
+        Pub => "pub",
+        Until => "until",
+        Global => "global",
+        Overload => "overload",
+        Default => "default",
         Underscore => "_",
         With => "with",
     }

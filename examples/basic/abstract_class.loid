@@ -1,0 +1,23 @@
+abstract class Species {
+    inst pub name: string;
+
+    pub construct(name: string) -> this {
+        this.name = name;
+
+        return this;
+    }
+
+    abstract inst pub favorite_ice_cream_flavour() -> string;
+}
+
+class Dog extends Species {
+    pub constructor(name: string) -> this {
+        super(name);
+
+        return this;
+    }
+
+    override inst pub favorite_ice_cream_flavour() -> {
+        return "chocolate, even tho it'll kill me";
+    }
+}

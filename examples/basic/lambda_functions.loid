@@ -1,0 +1,14 @@
+let f: int -> int = lambda (x: int) -> int => x;
+
+let f2: int -> int = lambda (x: int) -> int => {
+    var let: int = 10;
+    return x + n;
+};
+
+let f3: (int, int) -> int = lambda (x: int, y: int) -> int => x + y;
+
+let f4: (int, (int -> int)) -> int = lambda (x: int, logan: int -> int) => int => logan(x);
+
+let iife_example: int = (lambda (x: int, y: int) -> int => x + y)(5, 6);
+
+let empty_inputs: () -> string = lambda () -> string => "EMPTY!";
