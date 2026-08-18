@@ -1,0 +1,7 @@
+type EvenInteger = int => lambda (x: int) -> bool => x % 2 == 0;
+
+// to deal with these the Result type is needed.
+// otherwise the compiler will be unhappy.
+// hopefully
+
+runtime_check(EvenInteger); // also checks at runtime if wanted.

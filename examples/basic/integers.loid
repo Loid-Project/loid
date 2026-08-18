@@ -1,0 +1,4 @@
+let n1: int = 15;
+let n2: int = 2b100011;
+let n3: int = 3b1021;
+let n4: int = n1 + n2;

@@ -38,6 +38,9 @@ define_parsable_enum! {
         Overwrite => "overwrite",
         Pub => "pub",
         Until => "until",
+        Global => "global",
+        Overload => "overload",
+        Default => "default",
         Underscore => "_",
     }
 }

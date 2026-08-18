@@ -1,0 +1,19 @@
+class Person {
+    inst pub name: string;
+    inst pub age: int;
+
+    inst pub construct(name: string, age: int) -> this {
+        this.name = name;
+        this.age = age;
+
+        return this;
+    }
+
+    inst get_age() -> int {
+        return this.age;
+    }
+
+    inst get_name() -> string {
+        return this.name;
+    }
+}

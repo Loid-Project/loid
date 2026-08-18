@@ -1,0 +1,11 @@
+struct Person {
+    name: string,
+    age: int,
+}
+
+default Person {
+    name: "Jane Doe",
+    age: 40,
+}
+
+let jane_doe: Person = Person.default;
