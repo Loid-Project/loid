@@ -52,7 +52,7 @@
           nativeBuildInputs = with pkgs; [ pkg-config ];
         };
 
-        gitboy = craneLib.buildPackage (
+        loid = craneLib.buildPackage (
           commonArgs
           // {
             cargoLock = ./Cargo.lock;
@@ -60,8 +60,8 @@
         );
       in
       {
-        packages.default = gitboy;
-        apps.default = flake-utils.lib.mkApp { drv = gitboy; };
+        packages.default = loid;
+        apps.default = flake-utils.lib.mkApp { drv = loid; };
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             # rust stuff
