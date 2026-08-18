@@ -1,0 +1,4 @@
+struct Result<T> {
+    Ok  : T,
+    Err : string,
+}

@@ -1,0 +1,17 @@
+interface IPerson {
+    pub name: string;
+    pub age: int;
+    priv home_address: string;
+
+    pub construct: (string, string, string) -> this;
+
+    pub get_name: () -> string;
+    pub get_age: () -> int;
+    pub get_home_address: () -> string;
+}
+
+interface IEmployedPerson inherits IPerson {
+    pub job: string;
+
+    override pub construct: (string, string, string, int) -> this;
+}

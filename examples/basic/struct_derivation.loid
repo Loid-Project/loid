@@ -1,0 +1,20 @@
+struct Animal {
+    pet: bool,
+    species: string;
+}
+
+impl Animal {
+    fn survival_if_you_pat_its_head() -> bool {
+        return this.pet;
+    }
+}
+
+struct AlienAnimal derives Animal {
+    planet_of_origin: string;
+}
+
+impl AlienAnimal {
+    fn is_he_dangerous() -> string {
+        return "no, he's just an alien puppy";
+    }
+}

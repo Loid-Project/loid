@@ -32,6 +32,9 @@ define_parsable_enum! {
         SConcreteClass => "concrete_class",
         SNamespace => "namespace",
 
+        // these will be in std.types
+        // but they will be automatically resolved into every file
+        // unless stated otherwise in the config
         // builtin:
         BResult => "result",
         BOption => "option",

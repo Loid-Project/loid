@@ -1,0 +1,3 @@
+let n1: int = 10;
+let n2: int = 15;
+let n3: int = n1 + n2;

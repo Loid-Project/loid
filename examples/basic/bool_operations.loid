@@ -1,0 +1,4 @@
+let b: bool = true;
+let b2: bool = false;
+let b3: bool = b3 || b2;
+let b4: bool = b3 && b2;

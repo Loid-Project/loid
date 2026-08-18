@@ -1,0 +1,6 @@
+fn add(x: int, y: int) -> int {
+    return x + y;
+}
+
+let add2: int -> int = add(_, 2);
+let different_add2: int -> int = add(2, _);

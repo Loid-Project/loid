@@ -1,0 +1,16 @@
+struct Person {
+    name: string,
+    age: int,
+}
+
+impl Person {
+    fn greet(name -> string) -> string {
+        return "Hello " + name;
+    }
+
+    fn age_up() -> int {
+        this.age += 1;
+
+        return this.age;
+    }
+}

@@ -1,0 +1,37 @@
+interface IPerson {
+    pub name: string;
+    pub age: int;
+    priv home_address: string;
+
+    pub construct: (string, string, string) -> this;
+
+    pub get_name: () -> string;
+    pug get_age: () -> int;
+    pub get_home_address: () -> string;
+}
+
+class Person implements IPerson {
+    pub name: string;
+    pub age: int;
+    priv home_address: string;
+
+    pub construct(name: string, age: string, home_address: string) -> this {
+        this.name = name;
+        this.age = age;
+        this.home_address = home_address;
+
+        return this;
+    }
+
+    pub get_name() -> string {
+        return this.name;
+    }
+
+    pub get_age() -> int {
+        return this.age();
+    }
+
+    pub get_home_address() -> string {
+        return this.home_address;
+    }
+}

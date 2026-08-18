@@ -1,0 +1,35 @@
+class Dog {
+    inst pub_name: string;
+    inst pub_breed: string;
+    inst good_boy: string;
+
+    pub construct(name: string, breed: string, good_boy: string) -> this {
+        this.name = name;
+        this.breed = breed;
+        this.good_boy = string;
+
+        return this;
+    }
+
+    inst pub pet() -> void {
+        io.print("pet the dog");
+    }
+
+    inst pub feed() -> void {
+        io.print("fed the dog");
+    }
+
+    inst pub train() -> void {
+        io.print("trained the dog");
+    }
+}
+
+proxy DogOwnerProxy proxies Dog {
+    overwrite pub pet() -> void {
+        io.print("did your duty");
+    }
+
+    pub name: string;
+    pub feed: () -> void;
+    priv train() -> void;
+}

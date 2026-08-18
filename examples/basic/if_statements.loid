@@ -1,0 +1,11 @@
+let cat_fat: string = "yes";
+
+var found_cat: string = "";
+
+if (cat_fat == "yes") {
+    found_cat = "oreo";
+} else if (cat_fat == "maybe") {
+    found_cat = "primrose";
+} else {
+    found_cat = "flash (she could NEVER be fat)";
+}

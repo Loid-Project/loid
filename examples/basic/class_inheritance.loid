@@ -1,0 +1,19 @@
+class Vehicle {
+    inst pub vehicle_type: string;
+
+    pub construct(vehicle_type: string) -> this {
+        this.vehicle_type = vehicle_type;
+
+        return this;
+    }
+}
+
+class Car extends Vehicle {
+    inst pub make: string;
+
+    pub construct(vehicle_type: string, make: string) -> this {
+        super(vehicle_type);
+
+        this.make = make;
+    }
+}

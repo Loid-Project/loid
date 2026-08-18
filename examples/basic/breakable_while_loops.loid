@@ -1,0 +1,14 @@
+var i: int = 0;
+var j: int = 0;
+
+breakable (#\A) while (i < 10) {
+    breakable (#\B) while (j < 10) {
+        if (j == 5) {
+            break #\A;
+        }
+        j++;
+    }
+    i++;
+}
+
+io.print(j);

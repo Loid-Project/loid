@@ -1,0 +1,17 @@
+enum Element {
+    Earth,
+    Air,
+    Water,
+    Fire,
+}
+
+let el: Element = Element.Earth;
+
+match el {
+    Earth => io.print("EARTH");
+    Air   => io.print("AIR");
+    WATER => io.print("WATER);
+    FIRE  => io.print("FIRE");
+}
+
+// long ago, the four nations lived in harmony

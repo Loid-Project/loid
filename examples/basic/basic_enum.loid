@@ -1,0 +1,6 @@
+enum Element {
+    Earth,
+    Water,
+    Air,
+    Fire,
+}
