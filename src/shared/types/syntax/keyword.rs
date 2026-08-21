@@ -7,22 +7,22 @@ use crate::define_parsable_enum;
 define_parsable_enum! {
     pub enum Keyword {
         // declarations
-        Let         => "let",
-        Var         => "var",
-        Const       => "const",
-        Fn          => "fn",
-        Type        => "type",
-        Namespace   => "namespace",
+        Let        => "let",
+        Var        => "var",
+        Const      => "const",
+        Fn         => "fn",
+        Type       => "type",
+        Namespace  => "namespace",
 
         // control flow:
-        If        => "if",
-        Else      => "else",
-        While     => "while",
-        Until     => "until",
-        Cond      => "cond",
-        Match     => "match",
-        Breakable => "breakable",
-        Return    => "return",
+        If         => "if",
+        Else       => "else",
+        While      => "while",
+        Until      => "until",
+        Cond       => "cond",
+        Match      => "match",
+        Breakable  => "breakable",
+        Return     => "return",
 
         // Classes & Interfaces & Things:
         Class       => "class",
@@ -50,10 +50,10 @@ define_parsable_enum! {
 
 
         // testing
-        Test  => "test",
-        Stub  => "stub",
-        Mock  => "mock",
-        Fails => "fails",
+        Test   => "test",
+        Stub   => "stub",
+        Mock   => "mock",
+        Fails  => "fails",
 
         // Other:
         Lambda      => "lambda",
