@@ -55,6 +55,12 @@ define_parsable_enum! {
         Mock   => "mock",
         Fails  => "fails",
 
+
+        // type declarations:
+        Typedef  => "typedef",
+        Struct   => "struct",
+        Enum     => "enum",
+
         // Other:
         Lambda      => "lambda",
         Inst        => "inst",
