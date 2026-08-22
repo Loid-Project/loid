@@ -16,7 +16,7 @@ pub fn is_white_space(c: char) -> bool {
 pub fn is_operator_start(c: char) -> bool {
     matches!(
         c,
-        '+' | '-' | '*' | '/' | '%' | '&' | '=' | '!' | '<' | '>' | '|' | '#' | '@'
+        '+' | '-' | '*' | '/' | '%' | '&' | '=' | '!' | '<' | '>' | '|' | '#' | '@' | '\'
     )
 }
 
