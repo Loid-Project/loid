@@ -1,5 +1,7 @@
-struct Token {
-    tokenType: TokenType,
+use crate::lexer::types::token_type::TokenType;
+
+pub struct Token {
+    token_type: TokenType,
     line: u8,
     file: String,
     id: u64,

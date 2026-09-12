@@ -1,2 +1,2 @@
 pub mod token;
-pub mod tokenType;
+pub mod token_type;

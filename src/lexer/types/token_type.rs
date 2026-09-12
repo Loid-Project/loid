@@ -17,7 +17,7 @@ Ident
 
 [delim]
 
-    delimeters like: LParen, RParen, LBrace, RBrace, Comma, Period, Semicolon, etc...
+    delimiters like: LParen, RParen, LBrace, RBrace, Comma, Period, Semicolon, etc...
 
 Op[operator name]
 

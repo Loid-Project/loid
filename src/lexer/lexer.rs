@@ -1,5 +1,5 @@
-use crate::Shared::Helpers::Lexer_Helpers;
-use crate::Token;
+use crate::lexer::types::token::Token;
+use crate::shared::helpers::lexer_helper::{is_digit, is_white_space};
 
 /*
 
@@ -21,14 +21,17 @@ use a state‑machine approach (or a series of switch/if statements) to:
 for each token, create a Token instance: assign the next ID, set the line, fill the type and literal, and set alias if applicable.
 */
 
-pub fn lex(s: &str) -> Vec<Token> {
-    let mut cur_pos = 0;
-    let mut cur_line = 0;
+pub fn _lex(_s: &str) -> Vec<Token> {
+    /*
+    let mut cur_pos: i32 = 0;
+    let mut cur_lin: i32 = 0;
+    */
 
-    let mut tokens: Vec<Token> = Vec::new();
+    let tokens: Vec<Token> = Vec::new();
 
-    while cur_pos < s.len() {
-        let cur_char = s[cur_pos];
+    /*
+    while cur_pos < s.len() as i32 {
+        let cur_char: Option<char> = s.chars().nth((cur_pos as i32).try_into().unwrap());
 
         if is_white_space(cur_char) {
             if cur_char == '\n' {
@@ -39,15 +42,19 @@ pub fn lex(s: &str) -> Vec<Token> {
             continue;
         }
 
-        if cur_char == "\\" && cur_pos + 1 < s.len() && s[cur_pos + 1] == "\\" {
+        if cur_char == "\\".chars().next().unwrap()
+            && cur_pos + 1 < s.len()
+            && s[cur_pos + 1] == "\\"
+        {
             while cur_pos < s.len() && s[cur_pos] != "\n" {
-                cursor += 1;
+                cur_pos += 1;
             }
             continue;
         }
 
         if is_digit(cur_char) {}
     }
+    */
 
-    return tokens;
+    tokens
 }

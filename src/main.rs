@@ -1,3 +1,4 @@
+mod lexer;
 mod shared;
 
 fn main() {
