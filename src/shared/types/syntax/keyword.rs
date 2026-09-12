@@ -29,7 +29,6 @@ define_parsable_enum! {
         Abstract    => "abstract",
         Interface   => "interface",
         Proxy       => "proxy",
-        Typestated  => "typestated",
         Impl        => "impl",
         Inherits    => "inherits",
         Derives     => "derives",
@@ -57,9 +56,11 @@ define_parsable_enum! {
 
 
         // type declarations:
-        Typedef  => "typedef",
-        Struct   => "struct",
-        Enum     => "enum",
+        Typedef     => "typedef",
+        Struct      => "struct",
+        Enum        => "enum",
+        Trait       => "trait",
+        Typestated  => "typestated",
 
         // Other:
         Lambda      => "lambda",

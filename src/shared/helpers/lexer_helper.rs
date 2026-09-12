@@ -1,3 +1,4 @@
+#![allow(unused)]
 use crate::shared::helpers::look_up_aliased_token::lookup_token_alias;
 use crate::shared::types::syntax::keyword::Keyword;
 
@@ -10,10 +11,10 @@ pub fn is_digit(c: char) -> bool {
 }
 
 pub fn is_white_space(c: char) -> bool {
-    matches!(c, ' ' | '\n' | '\t' | '\r')
+    matches!(c, ' ' | '\t' | '\r')
 }
 
-pub fn is_operator_start(c: char) -> bool {
+pub fn is_operator(c: char) -> bool {
     matches!(
         c,
         '+' | '-' | '*' | '/' | '%' | '&' | '=' | '!' | '<' | '>' | '|' | '#' | '@' | '\\'

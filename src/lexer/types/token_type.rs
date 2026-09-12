@@ -33,14 +33,20 @@ A lot of this is Macroable, especially if one makes lists of stuff in the consta
 
 pub enum TokenType {
     Keyword,
-    Ident,
+    Identifier,
+    Decorator,
+
     IntLiteral,
     FloatLiteral,
     StringLiteral,
     CharLiteral,
-    Delim,
+    BoolLiteral,
+
     Operator,
+    Delim,
+    Newline,
     Special,
+    Neg,
 }
 
 /*
