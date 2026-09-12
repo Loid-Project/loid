@@ -7,6 +7,7 @@ macro_rules! define_parsable_enum {
         }
     } => {
         $(#[$meta])*
+        #[derive(Debug, PartialEq, strum_macros::EnumIter)]
         $vis enum $name {
             $($variant,)*
         }
