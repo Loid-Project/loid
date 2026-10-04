@@ -1,5 +1,6 @@
 # loid
-A programming language . What is it named ? Loid !!
+
+Loid is an in-works programming language integrating Martin-Lof's Type Theory into an OOP approach.
 
 ## ...
 
