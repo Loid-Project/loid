@@ -3,6 +3,7 @@
 Loid has a dependent-type system.
 
 It relies on two foundational super-types: `atom` and `type`.
+They are both children of the `unknown` type by formality.
 
 Types in Loid are first-class.
 
@@ -444,8 +445,8 @@ You must use the `match` keyword to unwrap the payload.
 
 ```Rust
 enum NetworkResponse {
-    Success { data: string },
-    Error   { code: int, msg: string },
+    Success: { data: string },
+    Error  : { code: int, msg: string },
     Loading,
 }
 
@@ -473,7 +474,7 @@ impl NetworkResponse {
 enum Connection {
     Disconnected,
     Connecting,
-    Connected { ip: string },
+    Connected: { ip: string },
 }
 
 impl Connection {
@@ -903,37 +904,57 @@ let current_status: Status = "SUCCESS"; // Valid
 // let current_status: Status = "UNKNOWN"; // COMPILE ERROR
 ```
 
-### Conditional Types
-
-TO-DO
-
-### Union Types
-
-TO-DO
-
-### The `unknown` type
-
-TO-DO
-
 ### The `never` type
 
-TO-DO
+The `never` type is a bottom type.
+
+The `never` type can only be used as a return type for a function that terminates.
+
+```Rust
+fn panic(msg: string) -> never {
+    io.print("fatal: " + msg);
+    sys.exit(1);
+}
+```
 
 ## Built-in and Monadic Types
 
-TO-DO
+Loid omits the infamous programming concept of `null`.
+
+Instead of missing values with the `null` type, Loid relies on monadic types.
+
+These types enforce that the developer handles both the "success" and "failure" tracks explicitly.
 
 ### Option, Maybe, Either, Result
 
-TO-DO
-
 #### Option
 
-TO-DO
+The `Option<T>` type represents a value that might be present.
+
+It has two variants: `Some` and `None`.
+
+Consider:
+
+```Rust
+struct User {
+    username: string,
+    email   : Option<string>,
+}
+
+let u: User = User {
+    username: "LoidFan69",
+    email   : Option.Some("fan@proton.me"),
+}
+
+match u.email {
+    Some { e } => io.print("sending to: " + e);
+    None       => io.print("who is you");
+}
+```
 
 #### Maybe
 
-TO-DO
+`Maybe` is an alias of `Option`.
 
 #### Either
 
@@ -950,7 +971,7 @@ TO-DO
 ### Promises
 
 TO-DO
-`when`, `await` keywords
+`when`, `async`, `await` keywords too
 
 ## As Keyword
 
@@ -968,10 +989,36 @@ TO-DO
 
 TO-DO
 
+### Union Types
+
+TO-DO
+
 ## Dynamically Dependent Types
+
+TO-DO
+
+### Conditional Types
 
 TO-DO
 
 ## Runtime/Compile-time Testing
 
 TO-DO
+
+## The Unknown Type
+
+The `unknown` type is the top type.
+
+Everything in Loid technically descends from the `unknown` type.
+
+Anything can be assigned to a variable of `unknown` type.
+However, no operations can be done on an `unknown` variable.
+Nor can it be passed into a function, or done anything with.
+
+The `unknown` type can either be a return value for a function, or an instantiating type for a variable.
+
+The `unknown` variable can be cast or pattern matched to another type, and then used (in-line).
+
+This exists mostly for the reasons of formality and is generally advised against for usage unless you have a deep understanding of what you are doing.
+
+Any `unknown`s will get a compiler warning.
