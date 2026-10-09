@@ -890,7 +890,18 @@ Leveraging Martin-Löf Type Theory, Loid's type system can restrict values throu
 
 ### Literal Types
 
-A literal type restricts a variable to a predefined
+A literal type restricts a variable to a predefined set of vales.
+
+It's similar to a lightweight enum.
+
+Consider:
+```Rust
+type Status = typing.literal<"SUCCESS", "FAILURE", "PENDING">;
+type BinaryInt = typing.literal<0, 1>;
+
+let current_status: Status = "SUCCESS"; // Valid
+// let current_status: Status = "UNKNOWN"; // COMPILE ERROR
+```
 
 ### Conditional Types
 
