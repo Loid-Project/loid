@@ -4,6 +4,8 @@ Loid has a dependent-type system.
 
 It relies on two foundational super-types: `atom` and `type`.
 
+Types in Loid are first-class.
+
 ## Atoms and the `atom` Type
 
 Atoms are primitive values that carry no internal API.
@@ -211,7 +213,7 @@ The `block` type represents any un-evaluated chunk of code.
 
 Declaring `block`s:
 ```Rust
-def block cool_block {
+block cool_block {
     let n: int = 0;
     io.print(n + n + n);
 }
@@ -225,7 +227,7 @@ A `struct` is Loid is an algebraic data structure similar to JavaScript objects 
 
 Struct definitions:
 ```Rust
-def struct Person {
+struct Person {
     name: string,
     age : int,
 }
@@ -243,7 +245,7 @@ Implementations on structs allow you to attack an `impl` block onto a struct.
 This gives a struct methods it can use on the objects in it.
 
 ```Rust
-def struct Person {
+struct Person {
     name: string,
     age : int,
 }
@@ -272,12 +274,12 @@ io.print(person.age); // 21
 Structs can derive one another:
 
 ```Rust
-def struct Person {
+struct Person {
     name: string,
     age : int,
 }
 
-def struct Employee derives Person {
+struct Employee derives Person {
     job : string,
 }
 
@@ -285,7 +287,7 @@ def struct Employee derives Person {
 This is the same as:
 */
 
-def struct Employee derives Person {
+struct Employee derives Person {
     name: string,
     age : int,
     job : string,
@@ -295,17 +297,17 @@ def struct Employee derives Person {
 Structs can derive multiple structs as well:
 
 ```Rust
-def struct Employee {
+struct Employee {
     name: string,
     age : int,
     job : string,
 }
 
-def struct Boss {
+struct Boss {
     employee_count: int,
 }
 
-def struct EmployedBoss {
+struct EmployedBoss {
     good_boss: bool,
 }
 ```
@@ -313,7 +315,7 @@ def struct EmployedBoss {
 This is the same as:
 
 ```Rust
-def struct EmployedBoss {
+struct EmployedBoss {
     name          : string,
     age           : int,
     job           : string,
@@ -327,7 +329,7 @@ def struct EmployedBoss {
 Struct implementations can also be derived
 
 ```Rust
-def struct Person {
+struct Person {
     name: string,
     age : int,
 }
@@ -339,7 +341,7 @@ impl Person {
     }
 }
 
-def struct Employee derives Person {
+struct Employee derives Person {
     job: string,
 }
 ```
@@ -347,7 +349,7 @@ def struct Employee derives Person {
 One can also override implementations
 
 ```Rust
-def struct Person {
+struct Person {
     name: string,
     age : int,
 }
@@ -359,7 +361,7 @@ impl Person {
     }
 }
 
-def struct Employee derives Person {
+struct Employee derives Person {
     job: string,
 }
 
@@ -392,24 +394,129 @@ enum Result<T, E> {
 }
 ```
 
-Enums can also have Implementations on them.
-TO-DO.
-
 These can be used for state machines and error handling.
 
 Loid's `match` statement can be used to unwrap and handle enums easily.
 The `match` statement works on structs and strings as well.
 More on this later.
 
+
+#### Enum Implementations
+
+Enums can have implementations, just like structs.
+
+Consider:
+```Rust
+enum TrafficLight {
+    Red,
+    Yellow,
+    Green,
+}
+
+impl TrafficLight {
+    fn next_state() -> TrafficLight {
+        return match this {
+            Red    => TrafficLight.Green.
+            Yellow => TrafficLight.Red,
+            Green  => TrafficLight.Yellow,
+        };
+    }
+
+    fn can_drive() -> bool {
+        return match this {
+            Green => true,
+            _     => false, // the underscore is a commonly used keyword in Loid and is a catch-all.
+            // more on the underscore in a later chapter
+        };
+    }
+}
+
+let light: TrafficLight = TrafficLight.Red;
+
+io.print(light.can_drive().to_string()); // false
+```
+
+#### Payload Enum Implementations
+
+When variants carry data payloads, the `impl` block acts as the unified API for extracting and operating on that data safely.
+
+You must use the `match` keyword to unwrap the payload.
+
+```Rust
+enum NetworkResponse {
+    Success { data: string },
+    Error   { code: int, msg: string },
+    Loading,
+}
+
+impl NetworkResponse {
+    fn is_resolved() -> bool {
+        return match this {
+            Loading => false,
+            _       => true,
+        };
+    }
+
+    fn unwrap_or(fallback: string) -> string {
+        return match this {
+            Success { data } => data,
+            Error { msg }    => "Failed with: " + msg,
+            Loading          => fallback,
+        };
+    }
+}
+```
+
+#### Mutating Enum State with Implementations
+
+```Rust
+enum Connection {
+    Disconnected,
+    Connecting,
+    Connected { ip: string },
+}
+
+impl Connection {
+    fn connect(target_ip: string) -> void {
+        this = Connection.Connected { ip: target_ip };
+    }
+
+    fn disconnect() -> void {
+        this = Connection.Disconnected;
+    }
+}
+
+let conn: Connection = Connection.Disconnected;
+
+conn.connect("192.168.1.1");
+```
+
 ### Traits
 
 Traits in Loid work the same as in Rust.
 
 They are composable, reusable, implementation blocks, for all essential purposes.
-These can be bolted onto structs or enums.
+These can be bolted onto structs.
+
+Traits do NOT work with classes nor enums.
 
 ```Rust
+trait Loggable {
+    fn log_state() -> void {
+        io.print("state logged as: " + time.now().to_string());
+    }
+}
 
+struct Server {
+    ip  : string,
+    port: int,
+}
+
+impl Loggable for Server;
+
+let s: Server = Server { ip: "127.0.0.1", port: 8080 };
+
+s.log_state();
 ```
 
 ### Classes
@@ -473,24 +580,215 @@ class Car inherits Vehicle {
 }
 ```
 
+##### Overriding
+
+TO-DO
+
 #### Abstract Classes
 
-TO-DO `abstract`, `override`
+Abstract classes are blueprints for concrete classes.
+They cannot be directly instantiated and may contain `abstract` methods with signatures and no bodies.
+
+As such, they are simply blueprints.
+
+They work the same as in languages like TypeScript.
+
+Consider:
+```Rust
+abstract class Animal {
+    inst pub name: string;
+
+    pub construct(name: string) -> this {
+        this.name = name;
+
+        return this;
+    }
+
+    abstract inst pub speak() -> string;
+}
+```
+
+When a class inherits an abstract class, it must `override` the abstract methods to fulfill them.
+
+Consider:
+```Rust
+class Cat inherits Animal {
+    pub construct(name: string) -> this {
+        super(name);
+
+        return this;
+    }
+
+    override inst pub speak() -> string {
+        return "Meow";
+    }
+}
+```
 
 #### Proxy Classes
 
-TO-DO `proxy_class` type and `proxies` keyword
+Proxy classes are a common way to have security and encapsulation.
+They are a common way to structure OOP programs.
+
+In Loid, proxy classes have first-class support, as proxy classes are too vital to proper programmatic security.
+
+Proxy classes wrap existing concrete classes and strictly dictate which fields and methods are exposed to the class it proxies for.
+
+They also allow you to intercept, block, and rewrite method calls without altering the original object or having to implement complicated systems for catching cases.
+
+Proxies use the `proxy`, `proxies`, and `overwrite` keywords.
+
+Consider:
+
+```Rust
+class Database {
+    inst pub url: string;
+
+    pub construct(url: string) -> this {
+        this.url = url;
+
+        return this;
+    }
+
+    inst pub read() -> string {
+        return "some sensitive data";
+    }
+
+    inst pub drop_tables() -> void {
+        io.print("tables totally dropped");
+    }
+}
+
+proxy ReadOnlyDB proxies Database {
+    pub url: string; // exposes url as-is
+
+    pub read: () -> string; // exposes read as-is
+
+    overwrite pub drop_tables() -> void {
+        io.print("security issue: no drop permissions");
+    } // you can also just not have a drop_tables exposed if you want at all
+}
+
+let db: Database = Database.construct("localhost");
+
+let safe_db: ReadonlyDB = ReadonlyDB.construct(db);
+
+safe_db.drop_tables(); // prints the message instead of actually dropping tables
+```
 
 ### Interfaces
 
-TO-DO
-`implements keyword`, examples of interfaces.
+Interfaces in OOP enforce behavioral contracts on classes.
+
+It must implement every field that an interface defines.
+Private, Public, or Protected.
+
+Interfaces use the `implements` keyword.
+
+```Rust
+// by notation always capitalize and start with "I"
+interface IConnectTable {
+    pub connect: (string) -> bool;
+    pub disconnect: () -> void;
+}
+
+interface ILoggable {
+    pub log: () -> void;
+}
+
+class NetworkNode implements IConnectable, ILoggable {
+    inst pub is_active: bool;
+
+    pub construct() -> this {
+        this.is_active = false;
+
+        return this;
+    }
+
+    inst pub connect(ip: string) -> bool {
+        this.is_active = true;
+
+        return true;
+    }
+
+    inst pub disconnect() -> void {
+        this.is_active = false;
+    }
+
+    inst pub log() -> void {
+        io.print("node status: " + this.is_active.to_string());
+    }
+}
+```
+
+A class can implement multiple interfaces as long as they do not conflict.
+
+#### Interface Inheritance
 
 TO-DO
+The `inherits` keyword
 
 ### Typestated Classes and Interfaces
 
-TO-DO
+Typestate-Oriented Programming guarantees that methods are called in the right order and work in the right methodology.
+
+Typestating is defined at the `interface` level and implemented by a `typestated` class.
+
+Consider:
+```Rust
+typestated interface IFileOps {
+    pub file_name: string;
+    pub construct: (string) -> this;
+
+    pub open: () -> void;
+
+    depends (open) {
+        pub read_line: () -> string;
+        pub close: () -> string;
+    }
+    // these methods cannot be called until `open` is executed.
+    // an error here will be notified at comp-time and stopped
+    // if the compiler cannot detect the error then it will optionally break
+    // at runtime. This is behavior that must be specified by the programmer himself.
+    // As such, using typestated classes should be done carefully and cleanly.
+    // This is to allow the compiler to always find out how it'll execute.
+    // More on this later
+
+    // If there is a better way to deal with this behavior I'd appreciate help planning it
+}
+
+typestated class SafeFile implements IFileOps {
+    inst pub file_name: string;
+
+    pub construct(name: string) -> this {
+        this.file_name = name;
+
+        return this;
+    }
+
+    inst pub open() -> void {
+        io.print("opened");
+    }
+
+    inst pub read_line() -> string {
+        return "data";
+    }
+
+    inst pub close() -> void {
+        io.print("closed");
+    }
+}
+
+let file: SafeFile = SafeFile.construct("data.txt");
+// file.read_line() // FAILURE (compile error)
+file.open();
+file.read_line(); // SUCCESS
+```
+
+### Typestated Structs
+
+TO-DO (not depends based but rather a different struct per the exact chosen state)
+(basically a tagged union wrapper i guess)
 
 ### Integrating Classes into the Type System
 
@@ -498,44 +796,101 @@ TO-DO
 `abstract_class`, `proxy_class`, `concrete_class`, `child_class`
 `typestated<a>` modifier
 `children<a>`, `child_of<a>`, `interface<a>`, etc...
+`uniq_type<a>` type too.
 
 ### Namespaces
 
-TO-DO
+Namespaces act as isolated environments to prevent global scope pollution.
+Lots of words to say: a namespace like any other language.
+
+Consider:
+```TypeScript
+namespace Networking {
+    pub class Router { ... }
+    pub fn ping(ip: string) -> bool { ... }
+    priv const DEFAULT_PORT: int = 8080;
+}
+```
+
+You use namespaces with `import` and `use` keywords in other files.
+
+More on this at a later chapter.
 
 ## Functional Programming
 
-TO-DO
+Loid uses functional programming for many things.
+Functions are first-class (just like types in Loid, more on this later).
 
-### Functions
+Functions also support currying and partial application by default (more on this also later).
 
-TO-DO
+Function example:
+```Rust
+fn calculate_area(w: float, h: float) -> float {
+    return w * h;
+}
+```
+
+### Lambda functions
+
+Lambda functions are written with the `lambda` keyword.
+The `λ` symbol is an alias for the `lambda` keyword.
+
+Consider:
+```Rust
+let square: (int) -> int = λ (x: int) -> int => x * x;
+
+let complex_lambda: (int) -> int = λ (x: int) -> int {
+    let y: int = 10;
+
+    return x * y;
+};
+```
+
+Functions naturally supported partial application with the `_` keyword.
+And piping with the `|>` and `<|` operators.
 
 ### Function Types
 
-TO-DO
+When specifying a function as a type (for params or variables) Loid uses a familiar arrow notation.
+Or a more generic `function<>` type.
+
+Consider:
+```Rust
+fn process_number(n: int, formatter: (int) -> string) -> string {
+    return formatter(n);
+}
+```
+
+In Loid `(int, string) -> string` is the same as `function<[int, string], string>`
+And `(int) -> string` is the same as `function<[int], string>`.
 
 ## Meta Programming
 
-TO-DO
+Loid offers some metaprogramming capabilities.
+They are designed to be highly explicit and avoiding magic.
 
 ### Symbol Type
 
-TO-DO
+Symbols are unique identifiers and are optimized, immutable, and evaluated at compile time.
 
-### Operator Type
+They are declared with a `\` prefix:
 
-TO-DO
+```TypeScript
+symbol \mut;
+symbol \read_only;
+```
 
-### Blocks in More Depth
+They can simply serve as flags.
+
+A symbol called `\mut` is equivalent to any other symbol `\mut`.
 
 ## Advanced Types
 
-TO-DO
+Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through the type system itself.
 
 ### Literal Types
 
-TO-DO
+A literal type restricts a variable to a predefined
 
 ### Conditional Types
 
@@ -585,6 +940,18 @@ TO-DO
 
 TO-DO
 `when`, `await` keywords
+
+## As Keyword
+
+TO-DO
+
+## Satisfies Keyword
+
+TO-DO
+
+## First-Class Types
+
+TO-DO
 
 ## Immutably Dependent Types
 
