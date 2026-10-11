@@ -120,7 +120,34 @@ Atomic types `bit` and `trit` refer to:
 
 #### Qubits:
 
-TO-DO
+Loid targets JavaScript, as such, it isn't capable of doing quantum computation.
+However, a simulated (and one day real) quantum bit type is built into Loid.
+It is the `qbit` type.
+
+Qubits are declared with the `q` prefix:
+
+Consider:
+
+```Rust
+let q0: qbit = q|0>;
+let q1: qbit = q|1>;
+let qo: qbit = q|+>:
+let qm: qbit = q|->;
+```
+
+Qubits also have registers with the `qreg` constructor type:
+
+```Rust
+let rwg: qreg<3> = qreg(0, 0, 0);
+```
+
+Gates are ordinary functions in the standard library, most gates are supported and their APIs can be found at later chapters of this book.
+
+Measurements return classical bits and mutate the registers.
+
+```Rust
+let outcome: bit = q.measure(reg, 0);
+```
 
 ## Complex Types
 
@@ -583,7 +610,63 @@ class Car inherits Vehicle {
 
 ##### Overriding
 
-TO-DO
+When a concrete class inherits another concrete class, its methods may override the parent's.
+
+Loid requires explicit override on any method that shadows an inherited signature.
+
+Consider:
+
+```Rust
+class Vehicle {
+    inst pub fn describe() -> string {
+        return "a vehicle";
+    }
+}
+
+class Car inherits Vehicle {
+    override inst pub fn describe() -> string {
+        return "a car";
+    }
+}
+```
+
+Overridden methods must always be marked by the `override` keyword.
+
+A subclass may return a subtype of parent's return type as covariance.
+So: `Vehicle.describe -> Vehicle` can become `Car.describe -> Car`.
+This is sound, as `Car` is a `Vehicle`.
+
+Visibility may only widen, but cannot be narrowed:
+So: `priv -> prot -> pub` is fine, but `pub -> prot -> priv` is not.
+
+`abstract` methods (explained next) must be overridden.
+
+As Loid compiles to JavaScript, static methods can be overridden if you so desire.
+
+##### Final Methods
+
+Methods can be marked by final on concrete classes.
+This means that they cannot be overridden in their children.
+Consider:
+
+```Rust
+class Vehicle {
+    final inst pub fn describe() -> string {
+        return "a vehicle";
+    }
+}
+
+class Car inherits Vehicle {
+    // this fails to compile
+    override inst pub fn describe() -> string {
+        return "a car";
+    }
+}
+```
+
+##### Class Derivations and Mixins
+
+TO-DO, use `mixes` keyword, and maybe `derives` keyword.
 
 #### Abstract Classes
 
@@ -726,8 +809,54 @@ A class can implement multiple interfaces as long as they do not conflict.
 
 #### Interface Inheritance
 
-TO-DO
-The `inherits` keyword
+An interface may inherit from one or more interfaces.
+Absorbing their methods and contracts (as long as there are no conflicts).
+Conflicts in visibility, types, and so on will cause compilation errors.
+
+Consider:
+
+```Rust
+interface IReader {
+    pub read: () -> string;
+}
+
+interface IWriter {
+    pub write: (string) -> void;
+}
+
+interface IReadWriter inherits IReader, IWriter {
+    pub flush: () -> void;
+}
+```
+
+So, `IReadWriter` also enforced `read` and `write` alongside `flush`.
+
+
+#### Default Interface Methods
+
+Interfaces can have default methods.
+These default methods can access any fields that are enforced by the interface.
+
+Consider:
+```Rust
+interface ILoggable {
+    default pub log: () -> void = λ => io.print("logging");
+}
+
+interface IMetric {
+    pub record: (float -> void);
+}
+
+class Sensor implements ILoggable, IMetric {
+    inst pub fn record(v: float) -> void {
+        io.print(v);
+    }
+}
+
+let s: Sensor = Sensor.construct();
+
+s.log() // "logging"
+```
 
 ### Typestated Classes and Interfaces
 
@@ -788,16 +917,63 @@ file.read_line(); // SUCCESS
 
 ### Typestated Structs
 
-TO-DO (not depends based but rather a different struct per the exact chosen state)
-(basically a tagged union wrapper i guess)
+Typestate on structs works via type parameters rather than depends blocks.
+A struct carries its state as a type argument, and `impl` blocks are specialized per state.
+
+Consider:
+
+```Rust
+struct File<S> {
+    pub path: string,
+}
+
+impl File<Closed> {
+    pub fn open(path: string) -> File<Open> {
+        return File<Open> { path: path };
+    }
+}
+
+impl File<Open> {
+    pub fn read_line() -> string {
+        return "data";
+    }
+
+    pub fn close() -> File<Closed> {
+        return File<Closed> { path: this.path };
+    }
+}
+```
+
+Calling methods on a wrong state will result in a compile error.
+
+An useful type function built into Loid is `Typestated<A, S>`:
+`Typestated<A, S>` - the typestated struct `A` in state `S`.
+Say: `Typestated<File, Open>`.
+
 
 ### Integrating Classes into the Type System
 
-TO-DO
-`abstract_class`, `proxy_class`, `concrete_class`, `child_class`
-`typestated<a>` modifier
-`children<a>`, `child_of<a>`, `interface<a>`, etc...
-`uniq_type<a>` type too.
+Because Loid's types are first-class and classes lower to JS classes with attached `__typerep` data, the type system exposes reflection over classes through a set of useful utility types and comptime type functions.
+
+#### Reflection Types
+
+`AbstractClass<A>` - the type of an abstract class named `A`. Values of this type may be subclassed but not instantiated.
+Say in `AbstractClass<Animal>` the `Animal` is an abstract class.
+
+`ConcreteClass<A>` - the type of a concrete class `A`.
+
+`ProxyClassOf<A>` - the type of a proxy class wrapping `A`.
+
+`ChildClass<A>` - the type of a class that inherits from `A`.
+
+#### Type-Level Utility Functions
+
+These are not apart of the base language, but rather exist in the standard library's `typing` module.
+Many of these however, are hardcoded into the language rather than constructed from Loid's type system.
+
+`Children<A>` - compile-time list of all classes that inherit from the class `A`.
+`ChildOf<A, B>` - boolean function that returns true if `A` is a child of `B`.
+`Interface<A>` - the interface portion of `A`. The `Interface<A>` is a struct of the union of all interfaces that the class inherits.
 
 ### Namespaces
 
@@ -870,6 +1046,9 @@ And `(int) -> string` is the same as `function<[int], string>`.
 Loid offers some metaprogramming capabilities.
 They are designed to be highly explicit and avoiding magic.
 
+This section from the type system will only go into types that are useful for metaprogramming.
+However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
+
 ### Symbol Type
 
 Symbols are unique identifiers and are optimized, immutable, and evaluated at compile time.
@@ -907,6 +1086,11 @@ let current_status: Status = "SUCCESS"; // Valid
 ### The `never` type
 
 The `never` type is a bottom type.
+
+I.E.:
+```
+never <: T  <: unknown
+```
 
 The `never` type can only be used as a return type for a function that terminates.
 
@@ -958,22 +1142,208 @@ match u.email {
 
 #### Either
 
-TO-DO
+The `Either<L, R>` monad is a two-variant sum enum type used for when a type is either one thing or another.
+
+Consider:
+```Rust
+enum Either<L, R> {
+    Left: L,
+    Right: R,
+}
+```
+
+Constructors:
+```Rust
+let l: Either<int, string> = Either.Left(42);
+let r: Either<int, string> = Either.Right("hi");
+```
+
+Combinators:
+```Rust
+impl Either<L, R> {
+    pub fn is_left() -> bool;
+    pub fn is_right() -> bool;
+
+    pub fn left() -> Option<L>;
+    pub fn right() -> Option<R>;
+
+    pub fn unwrap_left() -> L;
+    pub fn unwrap_right() -> R;
+
+    pub fn map<R2, F: (R) -> R2>(f: F) -> Either<L, R2>;
+    pub fn map_left<L2, F: (L) -> L2>(f: F) -> Either<L2, R>;
+
+    pub fn swap() -> Either<R, L>;
+
+    pub fn fold<T, FL: (L) -> T, FR: (R) -> T>(fl: FL, fr: FR) -> T;
+}
+```
 
 #### Result
 
-TO-DO
+`Result` is a wrapper around `Either`.
+
+More on the `?` operator, `Result` type (and the general monadic error handling system) in the Error Handling chapter.
 
 ### Sets
 
-TO-DO
+Loid has both a runtime collection type for sets and a type-level set representation.
+
+#### Runtime Sets
+
+These are instances of the `Set` class, which stores an unique list of elements:
+
+This is the Set API:
+
+```Rust
+class Set<T> {
+    pub fn new() -> Set<T>;
+    pub fn of(items: list<T>) -> Set<T>;
+
+    pub fn add(item: T) -> bool;        // true if newly inserted
+    pub fn remove(item: T) -> bool;
+    pub fn has(item: T) -> bool;
+
+    pub fn union(other: Set<T>) -> Set<T>;
+    pub fn intersect(other: Set<T>) -> Set<T>;
+    pub fn difference(other: Set<T>) -> Set<T>;
+    pub fn symmetric_difference(other: Set<T>) -> Set<T>;
+
+    pub fn is_subset(other: Set<T>) -> bool;
+    pub fn is_superset(other: Set<T>) -> bool;
+
+    pub fn size() -> int;
+    pub fn to_list() -> list<T>;
+
+    pub fn for_each<F: (T) -> void>(f: F) -> void;
+}
+```
+
+These sets are unordered, deduplicated, and support O(1) membership.
+
+#### Type-Level Sets
+
+This is a type-level set used for keys and unions of literals.
+
+Consider:
+```TypeScript
+type K = set<"a" | "b" | "c">;
+
+// You can add elements to this type set:
+// and do various other operations
+
+type L = K.add<"d">;          // { "a", "b", "c", "d" }
+type M = K.remove<"a">;       // { "b", "c" }
+type N = K.union<set<"d">>;    // { "a", "b", "c", "d" }
+type O = K.intersect<set<"b" | "x">>; // { "b" }
+```
+
+Type-level sets such as this must be finite.
+The use cases for these will be explained later on.
+
+This is also a good time to mention that in Loid, the type system itself is purely functional.
+The type system does not allow for side effects, despite it serving as a almost a full programming language of its own, in some regards.
+This is to allow for stronger and safer types.
 
 ### Promises
 
+Loid's asynchronous model is Promise-based, mirroring JavaScript but with full type level tracking.
+
+#### Async Functions
+
+Consider:
+```Rust
+async fn fetch_user(id: int) -> Promise<User> {
+    let res = await http.get("/users/" + (int.to_string <| id>));
+    return User.from_json(res.body);
+}
+```
+
+These work the same way as in TypeScript.
+
+#### Await
+
+The `await` keyword works the same as in JavaScript.
+
+It waits until an asynchronous function is done doing its calculations.
+
+Consider:
+```TypeScript
+await fetch_user(1);
+```
+
+The code will simply wait here until the user is fetched.
+The `await` keyword only works in asynchronous functions or blocks of code.
+
+#### Async Blocks
+
+For the purposes of metaprogramming, one can define an `async` type block.
+
+```Rust
+let some_block: AsyncBlock = async {
+    ...
+}
+```
+
+These can be worked with and ran same as other blocks, but these will simply be asynchronous.
+
+#### After Keyword
+
 TO-DO
-`when`, `async`, `await` keywords too
+Waits for multiple jobs and then runs that block of code
+```Rust
+async { ... } after async { ... }
+```
+
+#### When Keyword
+
+TO-DO
+Runs a background task (daemon) in the program.
+
+#### Assign After Keyword
+
+TO-DO
+```Rust
+let [a, b, c] = assign after [
+    fetch_user(1),
+    fetch_user(2),
+    fetch_user(3),
+];
+```
+
+#### Promise<T> Combinators and API
+
+TO-DO
+
+#### Deferred Lazy Execution in Async Blocks via Future<T>
+
+TO-DO
+
+#### Promise Cancellation
+
+TO-DO
 
 ## As Keyword
+
+TO-DO
+
+### Checked `as` Conversion
+
+TO-DO
+
+### Unchecked `as!` Conversion
+
+TO-DO
+
+### Pattern Matching as Narrowing
+
+TO-DO
+
+### Numeric Conversions
+
+TO-DO
+
+### String Conversions
 
 TO-DO
 
@@ -981,7 +1351,48 @@ TO-DO
 
 TO-DO
 
+### Exhaustiveness
+
+TO-DO
+
+### Runtime Behavior
+
+TO-DO, shouldn't be any, but just in case there might be any.
+
 ## First-Class Types
+
+TO-DO
+
+### The `Type<T>` Wrapper
+
+TO-DO
+
+### Reflections
+
+TO-DO
+`TypeRep`.
+
+### `Type.of`
+
+TO-DO
+
+### Passing Types to Functions
+
+TO-DO
+
+### Returning Types from Functions
+
+TO-DO
+
+### Comptime Types vs Runtime Types
+
+TO-DO
+
+#### Type Identity
+
+TO-DO
+
+#### Type Limitations
 
 TO-DO
 
@@ -989,7 +1400,56 @@ TO-DO
 
 TO-DO
 
-### Union Types
+### Arrays
+
+TO-DO
+
+### Dependent Operations
+
+TO-DO
+```TypeScript
+fn head<T, N: int>(xs: array<T, N+1>) -> T {
+    return xs[0];
+}
+```
+
+### Matrices
+
+TO-Do
+
+### Compile-Time Arithmetic
+
+TO-DO
+
+### Limits
+
+TO-DO
+
+## Union Types
+
+TO-DO
+
+### Basic Unions
+
+TO-DO
+
+### Discriminated Unions
+
+TO-DO
+
+### Non-Discriminated Unions
+
+TO-DO
+
+### `keyof` and `valueof`
+
+TO-DO
+
+### Union Algebra
+
+TO-DO
+
+### Narrowing Rules
 
 TO-DO
 
@@ -997,11 +1457,93 @@ TO-DO
 
 TO-DO
 
-### Conditional Types
+### Refined Runtime Values
+
+TO-DO
+
+### Smart Constructors
+
+TO-DO
+
+### Flow Narrowing
+
+TO-DO
+
+### Limits
+
+TO-DO
+
+### Dynamic Dependency Use Cases
+
+TO-DO
+
+## Conditional Types
+
+TO-DO
+
+### Distribution Over Unions
+
+TO-DO
+
+### Non-Distributive Conditionals
+
+TO-DO
+
+### `infer`
+
+To-DO
+
+## Logical Types
+
+### Boolean Logic on Types
+
+TO-DO
+
+### Loopy and Recursive Types
+
+TO-DO
+
+### Where to Use These
 
 TO-DO
 
 ## Runtime/Compile-time Testing
+
+TO-DO
+
+### Runtime Assertions Through `assert`
+
+TO-DO
+
+### `comptime assert`
+
+TO-DO
+
+### `test` blocks
+
+TO-DO
+
+### `comptime test` blocks
+
+TO-DO
+
+### Type-Level Tests
+
+TO-DO
+
+### Property-Based Testing
+
+TO-DO
+
+### Fuzzing
+
+TO-DO
+
+### Test Attributes
+
+TO-DO
+
+### Coverage
 
 TO-DO
 
@@ -1022,3 +1564,27 @@ The `unknown` variable can be cast or pattern matched to another type, and then 
 This exists mostly for the reasons of formality and is generally advised against for usage unless you have a deep understanding of what you are doing.
 
 Any `unknown`s will get a compiler warning.
+
+## Foreign Types
+
+TO-DO
+
+### The `foreign` Keyword
+
+TO-DO
+
+### Foreign Functions
+
+TO-DO
+
+### Foreign Modules
+
+TO-DO
+
+### Safety
+
+TO-DO
+
+### Notes
+
+TO-DO
