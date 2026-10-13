@@ -43,7 +43,37 @@ You can see the progress in the <a href="docs/">docs</a> folder.
 
 ## Contributing
 
-Read <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>
+Any contributions are welcome, whether they be for documentation, ideas, any bug-fixes, issues found, new features, or anything else.
+Your ideas are always appreciated.
+
+Feel free to open any issues asking any questions or suggesting ideas.
+
+Please read <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> before beginning to work on the codebase and/or making a pull request.
+
+## Team
+
+The Loid core team is currently made up of:
+<a href="https://github.com/KrakenTheJaken">logan</a>, <a href="https://github.com/dagworth">larry</a>, and <a href="https://github.com/givikuna">givi</a>
+
+## Sponsors
+
+Loid is currently sponsored and maintained, in-part by the <a href="http://amphiseum.dev/">Amphiseum</a> corporation.
+For any legal issues, contact the Amphiseum team, per their website.
+
+If any organization, team, or company wants to contribute, sponsor, or help in any form maintain, please contact <a href="https://github.com/givikuna">Givi Tsvariani</a>.
+
+## AI Policy
+
+Loid does allow for AI-assisted code, but any issue, pull request, or code published or pushed to this codebase must be verified by a human and sent by a human.
+
+AI-assisted code will still be expected to hold up to our standards, be well written, and tested.
+We ask that you cite your AI sources when used and how it was used.
+
+Code that is clearly fully AI generated, or written and then pushed to the codebase by an autonomous AI agent will not be accepted.
+
+## Issues
+
+...
 
 ## Security
 
