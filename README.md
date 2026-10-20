@@ -29,7 +29,7 @@ You can see the progress in the <a href="docs/">docs</a> folder.
 -   <a href="docs/book/C13-Packages.md">Chapter 13 - Packages</a>: Explains the Loid package manager, how to create Loid packages, change package repositories, add package repositories, and so on.
 -   <a href="docs/book/C14-Comptime.md">Chapter 14 - Comptime</a>: This chapter talks about the compile-time computations that happen in Loid. This will be elaborated upon greatly in every following chapter.
 -   <a href="docs/book/C15-TypeRepAndKernel.md">Chapter 15 - `TypeRep` and the Kernel</a>: Explains the Loid type kernel and the `TypeRep` type.
--   <a href="docs/book/C16-UtilityTypes.md">Chapter 16 - Utility Types</a>: Explains the standard library utility types in Loid in detail (with examples), and explains how to write them.
+-   <a href="docs/book/C16-TypeOperations.md">Chapter 16 - Type Operations</a>: Explains type operations, how to construct advanced types and how to use them for creating types.
 -   <a href="docs/book/C17-VarianceAnnotations.md">Chapter 17 - Variance Annotations</a>: Explains in detail Loid's type variance system "for dummies" (simply, not assuming prerequisites).
 -   <a href="docs/book/C18-Typestating.md">Chapter 18 - Typestating</a>: Elaborates on how typestating can work in Loid, for OOP, structs, and tagged union types.
 -   <a href="docs/book/C19-Concurrency.md">Chapter 19 - Concurrency</a>: Goes into depth about concurrent programming in Loid beyond just `async` and `await`.
@@ -38,10 +38,11 @@ You can see the progress in the <a href="docs/">docs</a> folder.
 -   <a href="docs/book/C22-CompilationModel.md">Chapter 22 - Compilation Model</a>: Discusses Loid's compilation model (advanced, not meant for people just looking to use Loid for simply development).
 -   <a href="docs/book/C23-Metaprogramming.md">Chapter 23 - Metaprogramming</a>: Explains metaprogramming in Loid, the `block` type, macros, comptime computations and interpreter injections.
 -   <a href="docs/book/C24-Hashtag.md">Chapter 24 - Hashtag</a>: Explains the hashtag `#` symbol Loid.
--   <a href="docs/book/C25-WebDev.md">Chapter 25 - Web Development</a>: Explains how web development is done in Loid.
--   <a href="docs/book/C26-QuantumComputing.md">Chapter 26 - Quantum Computing</a>: Loid supports emulating a quantum computer with its standard library `q` module and the `qbit` type. This chapter explains in depth how that works.
--   <a href="docs/book/C27-Migration.md">Chapter 27 - Migration</a>: Explains how to migrate a JavaScript codebase to Loid.
--   <a href="docs/book/C28-StyleGuide.md">Chapter 28 - Style Guide</a>: How the language should generally be styled, organized, and written. Guidelines, rather than rules.
+-   <a href="docs/book/C25-LoidDerivations.md">Chapter 25 - Loid Derivations</a>: Explains Loid derivative and subset languages.
+-   <a href="docs/book/C26-WebDev.md">Chapter 26 - Web Development</a>: Explains how web development is done in Loid.
+-   <a href="docs/book/C27-QuantumComputing.md">Chapter 27 - Quantum Computing</a>: Loid supports emulating a quantum computer with its standard library `q` module and the `qbit` type. This chapter explains in depth how that works.
+-   <a href="docs/book/C28-Migration.md">Chapter 28 - Migration</a>: Explains how to migrate a JavaScript codebase to Loid.
+-   <a href="docs/book/C29-StyleGuide.md">Chapter 29 - Style Guide</a>: How the language should generally be styled, organized, and written. Guidelines, rather than rules.
 
 ## Contributing
 
@@ -62,7 +63,7 @@ The Loid core team is currently made up of:
 Loid is currently sponsored and maintained, in-part by the <a href="http://amphiseum.dev/">Amphiseum</a> corporation.
 For any legal issues, contact the Amphiseum team, per their website.
 
-If any organization, team, or company wants to contribute, sponsor, or help in any form maintain, please contact <a href="https://github.com/givikuna">Givi Tsvariani</a>.
+If any organization, team, or company wants to contribute, sponsor, or help in any form maintain, please contact <a href="https://github.com/givikuna">givi</a>.
 
 ## AI Policy
 

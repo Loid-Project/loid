@@ -9,3 +9,7 @@
 ## Interfacing with Rust
 
 ## Interfacing with Scala
+
+## Name Conflicts with Foreign Imports
+
+## Keyword Conflicts with Foreign Imports

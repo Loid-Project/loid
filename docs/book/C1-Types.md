@@ -1430,6 +1430,10 @@ TO-DO
 
 TO-DO
 
+### The `Ref` and `Snap` types
+
+TO-DO
+
 ### Arrays
 
 TO-DO
@@ -1437,12 +1441,6 @@ TO-DO
 ### Dependent Operations
 
 TO-DO
-
-```TypeScript
-fn head<T, N: int>(xs: array<T, N+1>) -> T {
-    return xs[0];
-}
-```
 
 ### Matrices
 
@@ -1483,6 +1481,12 @@ TO-DO
 ### Narrowing Rules
 
 TO-DO
+
+## Type Inference
+
+### Declaration Inference
+
+### `?` Inference
 
 ## Dynamically Dependent Types
 
