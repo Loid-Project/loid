@@ -21,12 +21,14 @@ Integers are a base-10 signed 64-bit integer.
 It operates in a strict range of $(-2^{53}+1,2^{53}-1)$.
 
 To declare an integer one does:
+
 ```Rust
 let n: int = 15;
 let m: int = -100;
 ```
 
 Underscores can be used for readability:
+
 ```Rust
 let o: int = 1_000_000;
 ```
@@ -85,6 +87,7 @@ Represents a single UTF-8 unicode character.
 Uses a Racket-style prefix of `#\`.
 
 For example:
+
 ```Rust
 let a: char = #\A;
 ```
@@ -95,6 +98,7 @@ Represents nothing.
 Used the same as other `void` types.
 
 For example in functions:
+
 ```Rust
 fn print_thing() -> void { ... }
 ```
@@ -104,6 +108,7 @@ fn print_thing() -> void { ... }
 The `imag` type represents imaginary numbers, floats, and integers, `complex` represents complex numbers of floats and imaginary numbers.
 
 Consider:
+
 ```Rust
 let n: imag = 15i;
 let m: imag = 10.54;
@@ -115,8 +120,9 @@ let c: complex = 12 + 15i;
 #### Bits and Trits
 
 Atomic types `bit` and `trit` refer to:
-- `bit`: 1 or 0
-- `trit`: 0, 1, or 2
+
+-   `bit`: 1 or 0
+-   `trit`: 0, 1, or 2
 
 #### Qubits:
 
@@ -158,6 +164,7 @@ Unlike atoms, these can have complex structures and often have built-in methods 
 ### Strings (`string`)
 
 One defines strings as follows:
+
 ```Rust
 let s: string = "Hello";
 let f: string = f"2 + 2 = \(2 + 2)"; // f-strings
@@ -181,6 +188,7 @@ There are many shorthands for manipulating strings in Loid.
 Loid supports regex expressions the same as JavaScript.
 
 It has a builtin `regex` type:
+
 ```Rust
 let pattern: regex = /[^0-9]/;
 ```
@@ -189,11 +197,14 @@ let pattern: regex = /[^0-9]/;
 
 Loid differentiates between dynamically sized lists and statically sized, dependently-typed arrays.
 
+Explained right down below:
+
 ### Lists (`list<T>`)
 
 Loid lists are dynamic, homogenous collections of items.
 
 Consider:
+
 ```Rust
 let xs: list<int> = [1, 2, 3, 4, 5];
 let ys: int[] = [1, 2, 3]; // shorthand
@@ -212,7 +223,7 @@ xs.push(6);
 ### Arrays
 
 Loid arrays are fixed-size collections where the length `N` is a part of the type signature itself.
-In Loid, this is called an *Immutably Dependent Type* (explained at the end of this chapter).
+In Loid, this is called an _Immutably Dependent Type_ (explained at the end of this chapter).
 
 Passing an array of size 4 to a function expecting an array of size 3 will result in a compile-time error.
 
@@ -230,6 +241,7 @@ Tuples in Loid are fixed-size heterogenous collections of values.
 They are strictly immutable.
 
 Consider:
+
 ```Rust
 let t : tuple<int, string> = tuple(1, "one");
 let t2: [string, int]      = ["age", 25]; // shorthand for tuples
@@ -240,6 +252,7 @@ let t2: [string, int]      = ["age", 25]; // shorthand for tuples
 The `block` type represents any un-evaluated chunk of code.
 
 Declaring `block`s:
+
 ```Rust
 block cool_block {
     let n: int = 0;
@@ -254,6 +267,7 @@ block cool_block {
 A `struct` is Loid is an algebraic data structure similar to JavaScript objects and Rust structs.
 
 Struct definitions:
+
 ```Rust
 struct Person {
     name: string,
@@ -428,12 +442,12 @@ Loid's `match` statement can be used to unwrap and handle enums easily.
 The `match` statement works on structs and strings as well.
 More on this later.
 
-
 #### Enum Implementations
 
 Enums can have implementations, just like structs.
 
 Consider:
+
 ```Rust
 enum TrafficLight {
     Red,
@@ -678,6 +692,7 @@ As such, they are simply blueprints.
 They work the same as in languages like TypeScript.
 
 Consider:
+
 ```Rust
 abstract class Animal {
     inst pub name: string;
@@ -695,6 +710,7 @@ abstract class Animal {
 When a class inherits an abstract class, it must `override` the abstract methods to fulfill them.
 
 Consider:
+
 ```Rust
 class Cat inherits Animal {
     pub construct(name: string) -> this {
@@ -831,13 +847,13 @@ interface IReadWriter inherits IReader, IWriter {
 
 So, `IReadWriter` also enforced `read` and `write` alongside `flush`.
 
-
 #### Default Interface Methods
 
 Interfaces can have default methods.
 These default methods can access any fields that are enforced by the interface.
 
 Consider:
+
 ```Rust
 interface ILoggable {
     default pub log: () -> void = λ => io.print("logging");
@@ -865,6 +881,7 @@ Typestate-Oriented Programming guarantees that methods are called in the right o
 Typestating is defined at the `interface` level and implemented by a `typestated` class.
 
 Consider:
+
 ```Rust
 typestated interface IFileOps {
     pub file_name: string;
@@ -950,7 +967,6 @@ An useful type function built into Loid is `Typestated<A, S>`:
 `Typestated<A, S>` - the typestated struct `A` in state `S`.
 Say: `Typestated<File, Open>`.
 
-
 ### Integrating Classes into the Type System
 
 Because Loid's types are first-class and classes lower to JS classes with attached `__typerep` data, the type system exposes reflection over classes through a set of useful utility types and comptime type functions.
@@ -981,6 +997,7 @@ Namespaces act as isolated environments to prevent global scope pollution.
 Lots of words to say: a namespace like any other language.
 
 Consider:
+
 ```TypeScript
 namespace Networking {
     pub class Router { ... }
@@ -1001,6 +1018,7 @@ Functions are first-class (just like types in Loid, more on this later).
 Functions also support currying and partial application by default (more on this also later).
 
 Function example:
+
 ```Rust
 fn calculate_area(w: float, h: float) -> float {
     return w * h;
@@ -1013,6 +1031,7 @@ Lambda functions are written with the `lambda` keyword.
 The `λ` symbol is an alias for the `lambda` keyword.
 
 Consider:
+
 ```Rust
 let square: (int) -> int = λ (x: int) -> int => x * x;
 
@@ -1032,6 +1051,7 @@ When specifying a function as a type (for params or variables) Loid uses a famil
 Or a more generic `function<>` type.
 
 Consider:
+
 ```Rust
 fn process_number(n: int, formatter: (int) -> string) -> string {
     return formatter(n);
@@ -1075,6 +1095,7 @@ A literal type restricts a variable to a predefined set of vales.
 It's similar to a lightweight enum.
 
 Consider:
+
 ```Rust
 type Status = typing.literal<"SUCCESS", "FAILURE", "PENDING">;
 type BinaryInt = typing.literal<0, 1>;
@@ -1088,6 +1109,7 @@ let current_status: Status = "SUCCESS"; // Valid
 The `never` type is a bottom type.
 
 I.E.:
+
 ```
 never <: T  <: unknown
 ```
@@ -1145,6 +1167,7 @@ match u.email {
 The `Either<L, R>` monad is a two-variant sum enum type used for when a type is either one thing or another.
 
 Consider:
+
 ```Rust
 enum Either<L, R> {
     Left: L,
@@ -1153,12 +1176,14 @@ enum Either<L, R> {
 ```
 
 Constructors:
+
 ```Rust
 let l: Either<int, string> = Either.Left(42);
 let r: Either<int, string> = Either.Right("hi");
 ```
 
 Combinators:
+
 ```Rust
 impl Either<L, R> {
     pub fn is_left() -> bool;
@@ -1226,6 +1251,7 @@ These sets are unordered, deduplicated, and support O(1) membership.
 This is a type-level set used for keys and unions of literals.
 
 Consider:
+
 ```TypeScript
 type K = set<"a" | "b" | "c">;
 
@@ -1252,6 +1278,7 @@ Loid's asynchronous model is Promise-based, mirroring JavaScript but with full t
 #### Async Functions
 
 Consider:
+
 ```Rust
 async fn fetch_user(id: int) -> Promise<User> {
     let res = await http.get("/users/" + (int.to_string <| id>));
@@ -1268,6 +1295,7 @@ The `await` keyword works the same as in JavaScript.
 It waits until an asynchronous function is done doing its calculations.
 
 Consider:
+
 ```TypeScript
 await fetch_user(1);
 ```
@@ -1291,6 +1319,7 @@ These can be worked with and ran same as other blocks, but these will simply be 
 
 TO-DO
 Waits for multiple jobs and then runs that block of code
+
 ```Rust
 async { ... } after async { ... }
 ```
@@ -1303,6 +1332,7 @@ Runs a background task (daemon) in the program.
 #### Assign After Keyword
 
 TO-DO
+
 ```Rust
 let [a, b, c] = assign after [
     fetch_user(1),
@@ -1407,6 +1437,7 @@ TO-DO
 ### Dependent Operations
 
 TO-DO
+
 ```TypeScript
 fn head<T, N: int>(xs: array<T, N+1>) -> T {
     return xs[0];
