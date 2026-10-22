@@ -131,7 +131,7 @@ For loops in Loid are essentially always for-each loops.
 Consider:
 
 ```Rust
-for (let i : int; i ### [1, 2, 3, 4, 5]) {
+for (let i: int; i ### [1, 2, 3, 4, 5]) {
     io.print(i);
 }
 ```
@@ -204,9 +204,25 @@ TO-DO
 
 ### The `repeat` keyword
 
-TO-DO (used for repeating a certain block of code a certain integer (literal) number of times)
+The `repeat` keyword repeats a block of code a fixed number of times given by an integer literal (or by a value determined at compile time):
+
+```Rust
+repeat 3 {
+    io.print("hello");
+}
+```
 
 ### The `#repeat` keyword
+
+The `#repeat` is a directive form and allows for an expression to determine the count itself:
+
+It'll try to determine at comptime, but if it doesn't, it just does so at runtime.
+
+```Rust
+#repeat n {
+    io.print("hello");
+}
+```
 
 ### Deferring and the `defer` Keyword
 
@@ -245,24 +261,62 @@ fn some_bad_function(db: Database) -> void {
 
 #### Defer Identities
 
-TO-DO (you can define which defer-layer happens first by giving it an integer value with the `#defer` keyword. Larger values go first).
+You can assign priority to deferred blocks with the `#defer` directive.
+
+The standard `defer` always has the lowest priority.
+
+Consider:
+
+```Odin
+fn (example) -> void {
+    #defer 10 {
+        io.print("first");
+    }
+    #defer 9 {
+        io.print("second");
+    }
+}
+```
 
 ## Shorthands
 
 ### The `with` keyword
 
-TO-DO (same as in Nix, it resolves a namespace)
-(it can also implicitly turn a struct object into a namespace of its keys and values, but does not work for implementations upon said struct)
+The `with` keyword brings contents of a namespace or a struct (that is implicitly to be transformed into a namespace) into the current scope.
 
-```Typescript
+Essentially resolving it, similar to Nix.
+
+Consider:
+
+```TypeScript
 with some_namespace {
-    // block of code doing stuff
-};
+    do_something(); // say do_something was apart of some_namespace
+}
+some_namespace.do_something();
+
+let p: Person = Person { name: "Alice", age: 30 };
+with p {
+    io.print(name); // prints "Alice"
+}
 ```
 
 ### The `#let` `in` syntax
 
-TO-DO (standard `let` `in` syntax in Nix, but uses a `directive` instead)
+The `#let`...`in` expression binds names locally and evaluates a body.
+
+Consider:
+
+```Odin
+result = #let { let x: int = 10;
+                let y: int = 15; }
+                in x + y; // this is 25.
+```
+
+The block defined will simply create a namespace.
+
+There is a shorthand as well:
+
+TO-DO (decide on shorthand notation)
 
 ## The `directive` `#` syntax
 
@@ -283,3 +337,12 @@ TO-DO (memoizes functions, only able to be used on function blocks not on any bl
 ### More
 
 TO-DO
+
+## The Semicolon
+
+The semicolon in Loid isn't required.
+However, highly encouraged as it makes it clearer where things start and end.
+
+If the language does not find a semicolon, it'll know to go to the next line.
+
+Revolutionary, I know.
