@@ -114,11 +114,99 @@ if (true) {
 
 ### While Loops
 
+While loops in Loid work like any other language.
+
+Consider:
+
+```Rust
+while (true) {
+    // do something
+}
+```
+
 ### For Loops
+
+For loops in Loid are essentially always for-each loops.
+
+Consider:
+
+```Rust
+for (let i : int; i ### [1, 2, 3, 4, 5]) {
+    io.print(i);
+}
+```
+
+(the `###` is a placeholder until a good syntax to replace it is decided upon)
+(it is yet to be decided to allow for standard for loops where you declare an iterator variable)
 
 ### Premature Breaking/Continuing and Labelling
 
+#### While Loops
+
+In Loid, you can break out or continue a while loop with `break` and `continue` keywords.
+
+However, Loid understands scoping.
+
+You can tag while loops with strings. This is used to give them an ID.
+
+Consider:
+
+```Odin
+#while "outer" (true) {
+    #while "inner" (true) {
+        break "outer";
+    }
+}
+```
+
+Note: to use this feature, you need to use the `#while` keyword instead.
+
+This means that the outer while loop'll break.
+
+If there is no string given, it'll simply break out of the last loop you're in.
+
+Consider:
+
+```Odin
+#while "outer" (true) {
+    #while "inner" (true) {
+        break;
+        // same as typing: break "inner";
+    }
+}
+```
+
+This'll only break out of the inner loop.
+
+Or for standard while loops:
+
+```Rust
+while (true) {
+    while (true) {
+        break;
+    }
+}
+```
+
+Just breaks out of the inner loop again.
+
+#### For Loops
+
+TO-DO
+
+#### Hybrids
+
+TO-DO
+
 ### Switch Statements
+
+TO-DO
+
+### The `repeat` keyword
+
+TO-DO (used for repeating a certain block of code a certain integer (literal) number of times)
+
+### The `#repeat` keyword
 
 ### Deferring and the `defer` Keyword
 
@@ -155,8 +243,43 @@ fn some_bad_function(db: Database) -> void {
 }
 ```
 
+#### Defer Identities
+
+TO-DO (you can define which defer-layer happens first by giving it an integer value with the `#defer` keyword. Larger values go first).
+
 ## Shorthands
 
 ### The `with` keyword
 
+TO-DO (same as in Nix, it resolves a namespace)
+(it can also implicitly turn a struct object into a namespace of its keys and values, but does not work for implementations upon said struct)
+
+```Typescript
+with some_namespace {
+    // block of code doing stuff
+};
+```
+
 ### The `#let` `in` syntax
+
+TO-DO (standard `let` `in` syntax in Nix, but uses a `directive` instead)
+
+## The `directive` `#` syntax
+
+TO-DO (basically as in Odin)
+
+## Decorators
+
+TO-DO
+
+### @pure
+
+TO-DO (enforces functional purity onto a block, this example will only cover how to use this on functions)
+
+### @cached
+
+TO-DO (memoizes functions, only able to be used on function blocks not on any block)
+
+### More
+
+TO-DO

@@ -84,12 +84,12 @@ let is_dead  : bool   = false;
 ### Character (`char`)
 
 Represents a single UTF-8 unicode character.
-Uses a Racket-style prefix of `#\`.
+To create a character, you place it in `''`.
 
 For example:
 
 ```Rust
-let a: char = #\A;
+let a: char = 'A';
 ```
 
 ### Void (`void`)
@@ -115,6 +115,12 @@ let m: imag = 10.54;
 let c: complex = 12 + 15i;
 ```
 
+Essentially:
+Any `imag` is also `complex`
+Any `int` is also `imag`
+
+But not vice-versa
+
 ### Bits, Trits, and Qubits (`bit`, `trit`, `qbit`)
 
 #### Bits and Trits
@@ -123,6 +129,8 @@ Atomic types `bit` and `trit` refer to:
 
 -   `bit`: 1 or 0
 -   `trit`: 0, 1, or 2
+
+TO-DO (needs more information)
 
 #### Qubits:
 
@@ -134,7 +142,7 @@ Qubits are declared with the `q` prefix:
 
 Consider:
 
-```Rust
+```TypeScript
 let q0: qbit = q|0>;
 let q1: qbit = q|1>;
 let qo: qbit = q|+>:
@@ -179,8 +187,8 @@ There are many shorthands for manipulating strings in Loid.
 
 ```Rust
 "hello" + " world"; // "hello world"
-"hello" * 2; // "hellohello"
-"hello" - "l"; // "heo"
+"hello" * 2;        // "hellohello"
+"hello" - "l";      // "heo"
 ```
 
 ### Regex
@@ -244,7 +252,6 @@ Consider:
 
 ```Rust
 let t : tuple<int, string> = tuple(1, "one");
-let t2: [string, int]      = ["age", 25]; // shorthand for tuples
 ```
 
 ### Block
@@ -468,7 +475,7 @@ impl TrafficLight {
         return match this {
             Green => true,
             _     => false, // the underscore is a commonly used keyword in Loid and is a catch-all.
-            // more on the underscore in a later chapter
+            // more on the underscore as a catch-all in a later chapter
         };
     }
 }
@@ -532,6 +539,10 @@ let conn: Connection = Connection.Disconnected;
 
 conn.connect("192.168.1.1");
 ```
+
+#### Getting Enum Payloads
+
+TO-DO (syntax for getting payloads out of enums is yet to be defined)
 
 ### Traits
 
@@ -776,6 +787,18 @@ let safe_db: ReadonlyDB = ReadonlyDB.construct(db);
 safe_db.drop_tables(); // prints the message instead of actually dropping tables
 ```
 
+#### Children of Proxy Classes
+
+TO-DO (proxy classes can have children that are also proxy classes)
+(their children must always be a proxy class)
+
+#### Singleton Classes
+
+TO-DO (need to decide whether to include or not)
+(these could just be a standard class that starts with a `@singleton` decorator)
+
+####
+
 ### Interfaces
 
 Interfaces in OOP enforce behavioral contracts on classes.
@@ -854,7 +877,7 @@ These default methods can access any fields that are enforced by the interface.
 
 Consider:
 
-```Rust
+```TypeScript
 interface ILoggable {
     default pub log: () -> void = λ => io.print("logging");
 }
@@ -873,6 +896,15 @@ let s: Sensor = Sensor.construct();
 
 s.log() // "logging"
 ```
+
+#### Inheritance of Interfaces with Default Methods
+
+Inheritance them works the same as for other types of interfaces.
+However, the default methods can be overriden by the `override` keyword.
+
+Also, non-default methods can be made default methods the same way.
+
+TO-DO (examples of how these'd work)
 
 ### Typestated Classes and Interfaces
 
@@ -932,6 +964,15 @@ file.open();
 file.read_line(); // SUCCESS
 ```
 
+#### Typestated Object Inheritance
+
+TO-DO (how inheritance works on typestated classes and interfaces, also for interfaces with default values)
+
+#### Typestated Abstract Classes
+
+TO-DO (decide whether to allow typestating in abstract classes)
+(decide on how to allow that in a clean manner)
+
 ### Typestated Structs
 
 Typestate on structs works via type parameters rather than depends blocks.
@@ -973,23 +1014,39 @@ Because Loid's types are first-class and classes lower to JS classes with attach
 
 #### Reflection Types
 
-`AbstractClass<A>` - the type of an abstract class named `A`. Values of this type may be subclassed but not instantiated.
+`AbstractClass<A>` - the type of an abstract class named `A`. Values of this type may be subclasses of `A` but not instantiated.
 Say in `AbstractClass<Animal>` the `Animal` is an abstract class.
+If a type of a variable is `AbstractClass<A>` it can be assigned a value of `A` (which is the abstract class itself), or value of `B` if `B` is a child of the abstract class.
+
+If a type of a variable is `A` and `A` is an abstract class, it can be assigned any child of said abstract class.
 
 `ConcreteClass<A>` - the type of a concrete class `A`.
+If a type of a variable is `ConcreteClass<A>` it can be assigned a value of `A` (which is the concrete class itself), or a value of `B` if `B` is a child of the abstract class.
 
-`ProxyClassOf<A>` - the type of a proxy class wrapping `A`.
+To clarify, since Loid is a language with first-class types, the value of the said variable (or parameter, or constant, or whatever), is actually just the type itself.
+
+`ProxyClassOf<A>` - the type of a proxy class wrapping `A`. But not a type that takes in a type.
+To be clearer:
+
+-   A variable of type `ProxyClassOf<A>` can hold a value of an instance of a proxy class of `A`
+-   A variable of type `ProxyClass<A>` can hold a value of any proxy class of `A`, the class itself, not an instantiated object of it.
+
+Recall that proxy classes are technically concrete classes, as such, any proxy class can also be treated as a concrete class.
+
+TO-DO (explain how types'll work with proxy class children)
 
 `ChildClass<A>` - the type of a class that inherits from `A`.
+This is to say:
+
+-   A variable of type `ChildClass<A>` can hold a value of a child class of `A`, the class itself, not an instantiated object of it.
+
+TO-DO (parent classes for the type system)
+
+TO-DO (how interfaces, singletons, and typestated classes, and typestated interfaces, including their inheritance fits into this)
 
 #### Type-Level Utility Functions
 
-These are not apart of the base language, but rather exist in the standard library's `typing` module.
-Many of these however, are hardcoded into the language rather than constructed from Loid's type system.
-
-`Children<A>` - compile-time list of all classes that inherit from the class `A`.
-`ChildOf<A, B>` - boolean function that returns true if `A` is a child of `B`.
-`Interface<A>` - the interface portion of `A`. The `Interface<A>` is a struct of the union of all interfaces that the class inherits.
+TO-DO
 
 ### Namespaces
 
@@ -1009,6 +1066,10 @@ namespace Networking {
 You use namespaces with `import` and `use` keywords in other files.
 
 More on this at a later chapter.
+
+#### Namespace Transformations
+
+TO-DO (how to make things like structs and similar objects, into namespaces (especially important for resolutions with the `with` keyword))
 
 ## Functional Programming
 
@@ -1069,6 +1130,8 @@ They are designed to be highly explicit and avoiding magic.
 This section from the type system will only go into types that are useful for metaprogramming.
 However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
 
+This is regarding the `block` type, macros, and so on.
+
 ### Symbol Type
 
 Symbols are unique identifiers and are optimized, immutable, and evaluated at compile time.
@@ -1111,7 +1174,7 @@ The `never` type is a bottom type.
 I.E.:
 
 ```
-never <: T  <: unknown
+never <: T <: unknown
 ```
 
 The `never` type can only be used as a return type for a function that terminates.
@@ -1181,6 +1244,8 @@ Constructors:
 let l: Either<int, string> = Either.Left(42);
 let r: Either<int, string> = Either.Right("hi");
 ```
+
+TO-DO (still need to properly decide on syntax for payload initializing and access)
 
 Combinators:
 
@@ -1432,7 +1497,7 @@ TO-DO
 
 ### The `Ref` and `Snap` types
 
-TO-DO
+TO-DO (maybe something to do with the Call-By-Push-Value Paradigm?)
 
 ### Arrays
 
