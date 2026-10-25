@@ -900,7 +900,7 @@ s.log() // "logging"
 #### Inheritance of Interfaces with Default Methods
 
 Inheritance them works the same as for other types of interfaces.
-However, the default methods can be overriden by the `override` keyword.
+However, the default methods can be overridden by the `override` keyword.
 
 Also, non-default methods can be made default methods the same way.
 
