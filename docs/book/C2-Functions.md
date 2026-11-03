@@ -23,6 +23,8 @@ let func_cooler : (int, int) -> int = λ (x: int, y: int) -> int => x + y;
 
 ### Variadic Function Parameters
 
+TO-DO (disallowed, but will allow for a type-system thing to define something similar)
+
 ## Function Types
 
 ## Function Signatures

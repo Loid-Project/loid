@@ -126,7 +126,11 @@ while (true) {
 
 ### For Loops
 
-For loops in Loid are essentially always for-each loops.
+TO-DO
+
+### For Each Loops
+
+For loops can be for-each loops.
 
 Consider:
 
@@ -137,9 +141,10 @@ for (let i: int; i ### [1, 2, 3, 4, 5]) {
 ```
 
 (the `###` is a placeholder until a good syntax to replace it is decided upon)
-(it is yet to be decided to allow for standard for loops where you declare an iterator variable)
 
 ### Premature Breaking/Continuing and Labelling
+
+TO-DO
 
 #### While Loops
 
@@ -200,7 +205,11 @@ TO-DO
 
 ### Switch Statements
 
-TO-DO
+There are no `switch` statements in standard Loid.
+All of the said functionality is built into the pattern matching system with the `match` keyword.
+More on that in the chapter on pattern matching.
+
+However, they do exist in `JavaScript` and in `JLoid`, as such, in `Loid` identifiers cannot be named `switch`.
 
 ### The `repeat` keyword
 

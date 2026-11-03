@@ -4,6 +4,10 @@ Loid is an in-works programming language integrating Martin-Lof's Type Theory in
 
 Loid compiles to JavaScript.
 
+## Inspiration
+
+Loid is heavily inspired by <a href="https://rust-lang.org/">Rust</a>, <a href="https://odin-lang.org/">Odin</a>, <a href="https://www.typescriptlang.org/">TypeScript</a>, and <a href="https://idris-lang.org/">Idris2</a>
+
 ## Book
 
 Loid is currently writing a full documentation to describe every aspect of the language before proper development is begun.
@@ -29,7 +33,7 @@ You can see the progress in the <a href="docs/">docs</a> folder.
 -   <a href="docs/book/C13-Packages.md">Chapter 13 - Packages</a>: Explains the Loid package manager, how to create Loid packages, change package repositories, add package repositories, and so on.
 -   <a href="docs/book/C14-Comptime.md">Chapter 14 - Comptime</a>: This chapter talks about the compile-time computations that happen in Loid. This will be elaborated upon greatly in every following chapter.
 -   <a href="docs/book/C15-TypeRepAndKernel.md">Chapter 15 - `TypeRep` and the Kernel</a>: Explains the Loid type kernel and the `TypeRep` type.
--   <a href="docs/book/C16-TypeOperations.md">Chapter 16 - Type Operations</a>: Explains type operations, how to construct advanced types and how to use them for creating types.
+-   <a href="docs/book/C16-TypeOperationsAndLanguage.md">Chapter 16 - Type Operations and Language</a>: Explains type operations, how to construct advanced types and how to use them for creating types.
 -   <a href="docs/book/C17-VarianceAnnotations.md">Chapter 17 - Variance Annotations</a>: Explains in detail Loid's type variance system "for dummies" (simply, not assuming prerequisites).
 -   <a href="docs/book/C18-Typestating.md">Chapter 18 - Typestating</a>: Elaborates on how typestating can work in Loid, for OOP, structs, and tagged union types.
 -   <a href="docs/book/C19-Concurrency.md">Chapter 19 - Concurrency</a>: Goes into depth about concurrent programming in Loid beyond just `async` and `await`.

@@ -267,6 +267,8 @@ block cool_block {
 }
 ```
 
+More on blocks will be explained in the metaprogramming section.
+
 ## Structural & Object-Oriented Types
 
 ### Structs (`struct`)
@@ -365,11 +367,11 @@ This is the same as:
 
 ```Rust
 struct EmployedBoss {
-    name          : string,
-    age           : int,
-    job           : string,
-    employee_count: int,
-    good_boss     : bool,
+    name           : string,
+    age            : int,
+    job            : string,
+    employee_count : int,
+    good_boss      : bool,
 }
 ```
 
@@ -379,8 +381,8 @@ Struct implementations can also be derived
 
 ```Rust
 struct Person {
-    name: string,
-    age : int,
+    name : string,
+    age  : int,
 }
 
 impl Person {
@@ -399,8 +401,8 @@ One can also override implementations
 
 ```Rust
 struct Person {
-    name: string,
-    age : int,
+    name : string,
+    age  : int,
 }
 
 impl Person {
@@ -438,8 +440,8 @@ enum Element {
 
 // with payload:
 enum Result<T, E> {
-    Ok : T,
-    Err: E,
+    Ok  : T,
+    Err : E,
 }
 ```
 
@@ -509,7 +511,7 @@ impl NetworkResponse {
     fn unwrap_or(fallback: string) -> string {
         return match this {
             Success { data } => data,
-            Error { msg }    => "Failed with: " + msg,
+            Error   { msg }  => "Failed with: " + msg,
             Loading          => fallback,
         };
     }
@@ -542,7 +544,7 @@ conn.connect("192.168.1.1");
 
 #### Getting Enum Payloads
 
-TO-DO (syntax for getting payloads out of enums is yet to be defined)
+TO-DO (syntax for getting payloads out of enums is yet to be defined, outside of match statements (and also debate on whether to even allow for these))
 
 ### Traits
 
@@ -571,6 +573,28 @@ let s: Server = Server { ip: "127.0.0.1", port: 8080 };
 
 s.log_state();
 ```
+
+#### Implementing Multiple Traits
+
+You can implement multiple traits onto a struct.
+
+Consider a struct called `Cat` and traits `Walk`, `Play`, `Sleep`.
+
+Then:
+
+```Rust
+impl Walk, Play, Sleep for Cat;
+```
+
+This'll implement these traits.
+
+#### Trait Inheritance
+
+TO-DO
+
+#### Overriding Traits
+
+TO-DO
 
 ### Classes
 
@@ -691,7 +715,7 @@ class Car inherits Vehicle {
 
 ##### Class Derivations and Mixins
 
-TO-DO, use `mixes` keyword, and maybe `derives` keyword.
+TO-DO (use `mixes` keyword, and maybe `derives` keyword).
 
 #### Abstract Classes
 
@@ -797,7 +821,7 @@ TO-DO (proxy classes can have children that are also proxy classes)
 TO-DO (need to decide whether to include or not)
 (these could just be a standard class that starts with a `@singleton` decorator)
 
-####
+#### Singleton Class Inheritance
 
 ### Interfaces
 
@@ -906,6 +930,14 @@ Also, non-default methods can be made default methods the same way.
 
 TO-DO (examples of how these'd work)
 
+#### Interfaces with Proxy Classes
+
+TO-DO
+
+#### Interfaces with Singleton Classes
+
+TO-DO
+
 ### Typestated Classes and Interfaces
 
 Typestate-Oriented Programming guarantees that methods are called in the right order and work in the right methodology.
@@ -972,6 +1004,14 @@ TO-DO (how inheritance works on typestated classes and interfaces, also for inte
 
 TO-DO (decide whether to allow typestating in abstract classes)
 (decide on how to allow that in a clean manner)
+
+#### Typestated Proxies
+
+TO-DO
+
+#### Typestated Singletons
+
+TO-DO
 
 ### Typestated Structs
 
@@ -1147,6 +1187,8 @@ They can simply serve as flags.
 
 A symbol called `\mut` is equivalent to any other symbol `\mut`.
 
+This is just a more efficient `string` for flagging.
+
 ## Advanced Types
 
 Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through the type system itself.
@@ -1167,13 +1209,17 @@ let current_status: Status = "SUCCESS"; // Valid
 // let current_status: Status = "UNKNOWN"; // COMPILE ERROR
 ```
 
+#### Runtime Literal Types
+
+TO-DO
+
 ### The `never` type
 
 The `never` type is a bottom type.
 
 I.E.:
 
-```
+```Rust
 never <: T <: unknown
 ```
 
@@ -1186,9 +1232,13 @@ fn panic(msg: string) -> never {
 }
 ```
 
+#### Never Behaviour Quirks
+
+TO-DO
+
 ## Built-in and Monadic Types
 
-Loid omits the infamous programming concept of `null`.
+Loid omits the infamous programming concept of `null`. For obvious reasons.
 
 Instead of missing values with the `null` type, Loid relies on monadic types.
 
@@ -1271,8 +1321,9 @@ impl Either<L, R> {
 
 #### Result
 
+TO-DO (write a basic explanation)
+Ideas:
 `Result` is a wrapper around `Either`.
-
 More on the `?` operator, `Result` type (and the general monadic error handling system) in the Error Handling chapter.
 
 ### Sets
@@ -1280,6 +1331,8 @@ More on the `?` operator, `Result` type (and the general monadic error handling 
 Loid has both a runtime collection type for sets and a type-level set representation.
 
 #### Runtime Sets
+
+TO-DO (add more useful functions to the API)
 
 These are instances of the `Set` class, which stores an unique list of elements:
 
@@ -1310,6 +1363,8 @@ class Set<T> {
 ```
 
 These sets are unordered, deduplicated, and support O(1) membership.
+
+TO-DO (examples)
 
 #### Type-Level Sets
 
@@ -1464,12 +1519,11 @@ TO-DO
 
 ### Reflections
 
-TO-DO
-`TypeRep`.
+TO-DO (`TypeRep`?)
 
 ### `Type.of`
 
-TO-DO
+TO-DO (?)
 
 ### Passing Types to Functions
 
@@ -1549,9 +1603,15 @@ TO-DO
 
 ## Type Inference
 
+TO-DO (small explanation, will be explained more in a later chapter)
+
 ### Declaration Inference
 
+TO-DO
+
 ### `?` Inference
+
+TO-DO (very small explanation, elaborated upon in another chapter)
 
 ## Dynamically Dependent Types
 
@@ -1577,6 +1637,8 @@ TO-DO
 
 TO-DO
 
+### Runtime Behaviour
+
 ## Conditional Types
 
 TO-DO
@@ -1589,7 +1651,7 @@ TO-DO
 
 TO-DO
 
-### `infer`
+### The `infer` Keyword
 
 To-DO
 
@@ -1665,9 +1727,13 @@ This exists mostly for the reasons of formality and is generally advised against
 
 Any `unknown`s will get a compiler warning.
 
+## Type Language
+
+TO-DO (basic rundown, finish in another chapter)
+
 ## Foreign Types
 
-TO-DO
+TO-DO (basic rundown/intro, finish in another chapter)
 
 ### The `foreign` Keyword
 
