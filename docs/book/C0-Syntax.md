@@ -141,7 +141,7 @@ For loops can be for-each loops.
 Consider:
 
 ```Odin
-#for (let i in [1, 2, 3, 4, 5]) {
+#for (let i; [1, 2, 3, 4, 5]) {
     io.print(i);
 }
 ```
@@ -231,11 +231,13 @@ The `#repeat` is a directive form and allows for an expression to determine the 
 
 It'll try to determine at comptime, but if it doesn't, it just does so at runtime.
 
-```Rust
+```Odin
 #repeat n {
     io.print("hello");
 }
 ```
+
+This is less safe, and generally not recommended for production.
 
 ### Deferring and the `defer` Keyword
 
@@ -282,14 +284,16 @@ Consider:
 
 ```Odin
 fn (example) -> void {
-    #defer 10 {
+    #defer 2 {
         io.print("first");
     }
-    #defer 9 {
+    #defer 1 { // runs before the defer above it
         io.print("second");
     }
 }
 ```
+
+These defer keyword are harder to predict, and as such generally not recommended for production.
 
 ## Shorthands
 
@@ -320,9 +324,9 @@ The `#let`...`in` expression binds names locally and evaluates a body.
 Consider:
 
 ```Odin
-result = #let { let x: int = 10;
-                let y: int = 15; }
-                in x + y; // this is 25.
+let result: int = #let { let x: int = 10;
+                         let y: int = 15; }
+                         in x + y; // this is 25.
 ```
 
 The block defined will simply create a namespace.
@@ -331,31 +335,32 @@ There is a shorthand as well:
 
 TO-DO (decide on shorthand notation)
 
+## The `where` Keyword.
+
+The `where` keyword is a syntactic sugar over the `let` and `in` syntax.
+
+Consider:
+
+```Rust
+let n: int = x + y where { let x: int = 10; let y: int = 11; };
+```
+
+## The `when` Keyword.
+
+The `when` keyword is the way ternary-like operators are to be used in Loid.
+
+## The `do` Keyword
+
+TO-DO
+
 ## The `directive` `#` syntax
 
 TO-DO (basically as in Odin)
 
 ## Decorators
 
-TO-DO
-
-### @pure
-
-TO-DO (enforces functional purity onto a block, this example will only cover how to use this on functions)
-
-### @cached
-
-TO-DO (memoizes functions, only able to be used on function blocks not on any block)
-
-### More
-
-TO-DO
+These are explored in more depth in <a href="./C2-Functions.md">Chapter 2</a>.
 
 ## The Semicolon
 
-The semicolon in Loid isn't required.
-However, highly encouraged as it makes it clearer where things start and end.
-
-If the language does not find a semicolon, it'll know to go to the next line.
-
-Revolutionary, I know.
+The semicolon in Loid is required at the end of almost everything outside of the end of code blocks (`{ ... }`).

@@ -27,7 +27,11 @@ TO-DO (disallowed, but will allow for a type-system thing to define something si
 
 ## Function Types
 
+TO-DO
+
 ## Function Signatures
+
+TO-DO
 
 ## Decorators
 
@@ -162,4 +166,8 @@ fn fib(n: int) -> int { ... }
 
 ## Pure Functions
 
+TO-DO
+
 ## Functional Programming
+
+TO-DO
