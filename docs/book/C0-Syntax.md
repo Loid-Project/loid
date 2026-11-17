@@ -311,6 +311,8 @@ These defer keyword are harder to predict, and as such generally not recommended
 
 ## Shorthands
 
+TO-DO (shorthands isn't a good name, give it a better name)
+
 ### The `with` keyword
 
 The `with` keyword brings contents of a namespace or a struct (that is implicitly to be transformed into a namespace) into the current scope.
