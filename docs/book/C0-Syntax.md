@@ -375,6 +375,36 @@ The `do` keyword in Loid has two main uses.
 Allowing for one-liners.
 And running code blocks.
 
+### One-liner Statements
+
+Consider:
+
+```Rust
+while (true) do io.print("sleepy");
+
+if (true) do io.print("hungry");
+else if (true) do io.print("hungry more");
+else do io.print("not hungry");
+```
+
+### Running Code Blocks
+
+Consider:
+
+```Rust
+let b: block = {
+    io.print("play!");
+};
+
+do b; // prints "play!"
+
+// or:
+
+do {
+    io.print("stop playing!");
+} // prints "stop playing!"
+```
+
 ## The `directive` `#` syntax
 
 TO-DO (basically as in Odin)
