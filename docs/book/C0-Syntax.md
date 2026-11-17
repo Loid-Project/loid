@@ -66,6 +66,20 @@ let f1: (int, int) -> int = f(1, 2, _, _); // now it takes in the l and g parame
 let f2: (int, int) -> int = f(1, _, _, 2); // now it takes in the m and l parameters.
 ```
 
+### Lambda Functions
+
+Lambda functions in Loid work as follows:
+
+```Odin
+let f: (int, int) -> int = lambda (x: int, y: int) -> int { return x + y; };
+```
+
+Or:
+
+```Odin
+let f: (int, int) -> int = lambda (x: int, y: int) -> int => x + y;
+```
+
 ## Control Flow
 
 ### If Statements
@@ -349,9 +363,17 @@ let n: int = x + y where { let x: int = 10; let y: int = 11; };
 
 The `when` keyword is the way ternary-like operators are to be used in Loid.
 
+Consider:
+
+```Odin
+let n: int = when true (lambda () -> int => 10) else (lambda (x) -> int => 5);
+```
+
 ## The `do` Keyword
 
-TO-DO
+The `do` keyword in Loid has two main uses.
+Allowing for one-liners.
+And running code blocks.
 
 ## The `directive` `#` syntax
 
