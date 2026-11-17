@@ -126,7 +126,13 @@ while (true) {
 
 ### For Loops
 
-TO-DO
+Standard for loops work in Loid as in most other languages.
+
+```Rust
+for (let i: int = 0; i < 5; i++) {
+    io.print(i);
+}
+```
 
 ### For Each Loops
 
@@ -134,13 +140,11 @@ For loops can be for-each loops.
 
 Consider:
 
-```Rust
-for (let i: int; i ### [1, 2, 3, 4, 5]) {
+```Odin
+#for (let i in [1, 2, 3, 4, 5]) {
     io.print(i);
 }
 ```
-
-(the `###` is a placeholder until a good syntax to replace it is decided upon)
 
 ### Premature Breaking/Continuing and Labelling
 
