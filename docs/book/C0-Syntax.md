@@ -361,14 +361,18 @@ Consider:
 let n: int = x + y where { let x: int = 10; let y: int = 11; };
 ```
 
-## The `when` Keyword.
-
-The `when` keyword is the way ternary-like operators are to be used in Loid.
+## The Ternary Operator.
 
 Consider:
 
 ```Odin
-let n: int = when true (lambda () -> int => 10) else (lambda (x) -> int => 5);
+let n: int = if (true) do 10 // doesn't require the ";" if using do and expecting an else or else if.
+             else do 15;
+let m: int = if (true) {
+                10;
+             } else {
+                10;
+             }
 ```
 
 ## The `do` Keyword

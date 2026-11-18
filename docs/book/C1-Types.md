@@ -529,7 +529,7 @@ enum Connection {
 
 impl Connection {
     fn connect(target_ip: string) -> void {
-        this = Connection.Connected { ip: target_ip };
+        this = Connection.Connected({ ip: target_ip });
     }
 
     fn disconnect() -> void {
@@ -542,9 +542,38 @@ let conn: Connection = Connection.Disconnected;
 conn.connect("192.168.1.1");
 ```
 
+#### Setting Enum Payloads
+
+When creating an instance of an enum with a payload one can follow this kind of syntax:
+
+```Rust
+enum Connection {
+    Disconnected,
+    Connecting,
+    Connected: string,
+}
+
+let conn: Connection = Connection.Connected("192.168.1.1");
+```
+
 #### Getting Enum Payloads
 
-TO-DO (syntax for getting payloads out of enums is yet to be defined, outside of match statements (and also debate on whether to even allow for these))
+To get the payload from an Enum, you can simply access the value without calling it with `()`.
+Keep in mind, enum types with payloads behave as if they were typestated, as such, it is important to either clarify to the compiler that it is at the right typestating point, or keep code pure to allow the compiler to catch this for itself.
+
+Consider:
+
+```Rust
+enum Connection {
+    Disconnected,
+    Connecting,
+    Connected: string,
+}
+
+let conn: Connection = Connection.Connected("192.168.1.1");
+
+io.print(conn.Connected);
+```
 
 ### Traits
 
@@ -823,6 +852,8 @@ TO-DO (need to decide whether to include or not)
 
 #### Singleton Class Inheritance
 
+TO-DO
+
 ### Interfaces
 
 Interfaces in OOP enforce behavioral contracts on classes.
@@ -1011,7 +1042,7 @@ TO-DO
 
 #### Typestated Singletons
 
-TO-DO
+TO-DO (does this even make sense?)
 
 ### Typestated Structs
 
@@ -1211,7 +1242,7 @@ let current_status: Status = "SUCCESS"; // Valid
 
 #### Runtime Literal Types
 
-TO-DO
+TO-DO (has to allow due to the nature of side-effects being unabstracted to their fullest)
 
 ### The `never` type
 
@@ -1340,6 +1371,8 @@ This is the Set API:
 
 ```Rust
 class Set<T> {
+    priv fn construct() -> Set<T>;
+
     pub fn new() -> Set<T>;
     pub fn of(items: list<T>) -> Set<T>;
 
@@ -1391,6 +1424,10 @@ This is also a good time to mention that in Loid, the type system itself is pure
 The type system does not allow for side effects, despite it serving as a almost a full programming language of its own, in some regards.
 This is to allow for stronger and safer types.
 
+#### Infinite Type-Level Sets
+
+TO-DO
+
 ### Promises
 
 Loid's asynchronous model is Promise-based, mirroring JavaScript but with full type level tracking.
@@ -1440,7 +1477,7 @@ These can be worked with and ran same as other blocks, but these will simply be 
 TO-DO
 Waits for multiple jobs and then runs that block of code
 
-```Rust
+```Odin
 async { ... } after async { ... }
 ```
 
