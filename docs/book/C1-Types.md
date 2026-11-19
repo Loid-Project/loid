@@ -1488,7 +1488,7 @@ Runs a background task (daemon) in the program.
 
 #### Assign After Keyword
 
-TO-DO
+TO-DO (requires being in an async block)
 
 ```Rust
 let [a, b, c] = assign after [
@@ -1497,6 +1497,10 @@ let [a, b, c] = assign after [
     fetch_user(3),
 ];
 ```
+
+#### Assign Before Keyword
+
+TO-Do (requires being in an async block)
 
 #### Promise<T> Combinators and API
 
@@ -1582,6 +1586,10 @@ TO-DO
 
 TO-DO
 
+### Type Functions
+
+TO-DO
+
 ## Immutably Dependent Types
 
 TO-DO
@@ -1600,7 +1608,7 @@ TO-DO
 
 ### Matrices
 
-TO-Do
+TO-DO
 
 ### Compile-Time Arithmetic
 
@@ -1676,6 +1684,8 @@ TO-DO
 
 ### Runtime Behaviour
 
+TO-DO
+
 ## Conditional Types
 
 TO-DO
@@ -1694,6 +1704,8 @@ To-DO
 
 ## Logical Types
 
+TO-DO
+
 ### Boolean Logic on Types
 
 TO-DO
@@ -1703,6 +1715,30 @@ TO-DO
 TO-DO
 
 ### Where to Use These
+
+TO-DO
+
+## Theorem Proving
+
+TO-DO
+
+### Natural Numbers
+
+TO-DO
+
+### Irrational Number Type
+
+TO-DO
+
+#### Example: Proving Irrationality to the Compiler
+
+TO-DO
+
+### Types as Statements
+
+TO-DO
+
+### Induction
 
 TO-DO
 
@@ -1719,6 +1755,14 @@ TO-DO
 TO-DO
 
 ### `test` blocks
+
+TO-DO
+
+### Stubbing
+
+TO-DO
+
+### Mocking
 
 TO-DO
 
@@ -1767,6 +1811,14 @@ Any `unknown`s will get a compiler warning.
 ## Type Language
 
 TO-DO (basic rundown, finish in another chapter)
+
+### TLoid
+
+TO-DO
+
+### Loid Derivatives
+
+TO-DO
 
 ## Foreign Types
 
