@@ -1265,7 +1265,7 @@ These default methods can access any fields that are enforced by the interface.
 
 Consider:
 
-```Java
+```Coffee
 interface ILoggable {
     default pub log: () -> void = λ => io.print("logging");
 }
@@ -1282,7 +1282,7 @@ class Sensor implements ILoggable, IMetric {
 
 let s: Sensor = Sensor.construct();
 
-s.log() // "logging"
+s.log()
 ```
 
 #### Inheritance of Interfaces with Default Methods
@@ -1402,7 +1402,11 @@ interface IDerived inherits IBase {
 
 #### Interfaces with Proxy Classes
 
-TO-DO
+In Loid, interfaces cannot be made over proxy classes, and proxy classes cannot implement interfaces.
+
+This is done for the sake of simplicity.
+As you can CLEARLY tell, Loid is a very simple language with not many keywords.
+(This is sarcasm, Loid is actually a very large language)
 
 ### Typestated Classes and Interfaces
 
