@@ -770,13 +770,160 @@ However, it is important to note that:
 Reimplementing an inherited trait (say `impl Loggable for Employee`) after derivation is always a compile error.
 If Employee derives from two parents that both implement `Loggable`, the rule applies: the compiler requires an explicit override, unless they both implement Loggable in the same exact way.
 
+#### Abstract Traits
+
+Abstract traits are traits that don't have the full implementation.
+As in:
+
+```Rust
+trait AnimalLike {
+    abstract fn make_sound() -> void;
+    abstract fn get_named(s: string) -> bool;
+}
+```
+
+When implementing these, they have to be overriden:
+
+```Rust
+struct Cat {
+    name: string,
+}
+
+impl AnimalLike for Cat {
+    override fn make_sound() -> void {
+        io.print("meow");
+    }
+
+    override fn get_named(s: string) -> bool {
+        this.name = s;
+        return true;
+    }
+}
+```
+
+Code failing to do this fails to compile.
+
 #### Generics in Traits
 
-TO-DO
+Traits may be parameterized over types,just like structs and enums.
+
+Consider:
+
+```Rust
+trait Container<T> {
+    fn get(index: int) -> T { ... };
+    fn set(index: int, value: T) -> void { ... };
+    fn len() -> int { ... };
+}
+```
+
+A generic trait is implemented on a generic struct by carrying the type parameter through the `impl` block.
+
+```Rust
+struct Stack<T> {
+    items: list<T>,
+}
+
+impl<T> Container<T> for Stack<T>;
+```
+
+A trait may also introduce a type parameter that is not present on the struct, for example, to describe a conversion.
+
+These are however less common and it is preferred to define the generic on the method itself rather than the trait.
+
+As follows:
+
+```Rust
+trait ConvertsToInteger {
+    abstract fn convert<T>(t: T) -> int;
+}
+```
 
 #### Interactions of Generics in Trait Inheritance
 
-TO-DO
+A generic trait can inherit from one or more generic traits.
+Type parameters flow through the inheritance chain, and the child may fix, reorder, or extend the parent's parameters.
+
+Consider passing parameters through unchanged:
+
+```Rust
+trait Iterable<T> {
+    abstract fn next() -> T;
+}
+
+trait Collection<T> inherits Iterable<T> {
+    abstract fn size() -> int;
+}
+```
+
+Parameters must be passed down.
+
+##### Fixing Parameters
+
+A child may bind a parent's parameter to a concrete type or to one of its own parameters:
+
+```Rust
+trait Readable<T> {
+    fn read() -> T;
+}
+
+trait Writeable<T> {
+    fn write(value: T) -> void;
+}
+
+trait ReadWriteable<T> inherits Readable<T>, Writeable<T> {
+    fn flush() -> void;
+}
+
+// Here K and V are the child's parameters,
+// and the parents are instantiated with those same parameters
+trait KeyValue<K, B> inherits Readable<Option<V>>, Writeable<tuple<K, V>> {
+    fn contains_key(key: K) -> bool;
+}
+
+// a trait that is specifically string-keyed
+trait StringKeyword inherits KeyValue<string, V> {
+    // StringKeyed<V> is a KeyValue<string, V>;
+    // K is pinned to a string
+}
+```
+
+##### Adding Parameters
+
+A child may add new parameters that the parent never saw, provided that they are independent of the parent's:
+
+Consider:
+
+```Rust
+trait Encoder<T> {
+    fn encode(value: T) -> string;
+}
+
+trait CompressingEncoder<T, C> inherits Encoder<T> {
+    fn compression_level() -> C;
+}
+```
+
+##### Overriding Generic Methods
+
+A child trait may override an inherited method, but the override must be signature-compatible module the trait's parameters.
+Covariant return types are permitted, but the same `override` rules apply as for non-generic traits.
+
+Consider:
+
+```Rust
+trait Stringify<T> {
+    fn stringify(value: T) -> string {
+        return value.to_string();
+    }
+}
+
+trait PrettyStringify<T> inherits Stringify<T> {
+    override fn stringify(value: T) -> string {
+        return "<" + value.to_string() + ">";
+    }
+}
+```
 
 ### Classes
 
@@ -995,17 +1142,49 @@ safe_db.drop_tables(); // prints the message instead of actually dropping tables
 
 #### Children of Proxy Classes
 
-TO-DO (proxy classes can have children that are also proxy classes)
-(their children must always be a proxy class)
+Proxy classes can themselves be inherited, but every descendant of a proxy class must also be a proxy class.
+The compiler enforces this.
 
-#### Singleton Classes
+Consider:
 
-TO-DO (need to decide whether to include or not)
-(these could just be a standard class that starts with a `@singleton` decorator)
+```Rust
+proxy ReadOnlyDB proxies Database {
+    pub url: string;
+    pub read: () -> string;
 
-#### Singleton Class Inheritance
+    overwrite pub drop_tables() -> void {
+        io.print("security issue: no drop perms");
+    }
+}
 
-TO-DO
+proxy AuditedDB proxies Database inherits ReadOnlyDB {
+    pub url: string;
+    pub read: () -> string;
+
+    overwrite pub drop_tables() -> void {
+        io.print("audio log: drop_tables was blocked");
+    }
+}
+```
+
+If a child declares `proxies <T>` explicitly, the type must match the proxied target (`Database` in this example above).
+Otherwise the compiler will report a mismatch.
+The `proxies` clause may be omitted on the child, in which case the target is inherited from the parent chain:
+
+```Rust
+proxy AuditDB inherits ReadOnlyDB { ... }
+```
+
+The exposure rules are cumulative down the chain.
+A child exposes at least what its parent exposes, and may add further members of the wrapped class.
+It may also `overwrite` any inherited members, which replaces that member's behaviour from the child (and its own descendants).
+
+#### Interactions of Proxy Classes with `ConcreteClass<A>` / `ProxyClassOf<A>`
+
+Because a proxy is technically a concrete class, any proxy may be passed where a `ConcreteClass<Database>` is expected.
+`ProxyClassOf<A>` accepts any instance of any proxy chain targeting `A`.
+`ProxyClass<A>` accepts the class itself (see the reflection types part of this chapter).
+The compiler computes this set of admissible proxies from the inheritance chain of the proxy classes.
 
 ### Interfaces
 
