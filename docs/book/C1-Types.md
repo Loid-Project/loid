@@ -2,12 +2,12 @@
 
 Loid has a dependent-type system.
 
-It relies on two foundational super-types: `atom` and `type`.
-They are both children of the `unknown` type by formality.
+It relies on two foundational super-types: `Atom` and `Type`.
+They are both children of the `Unknown` type by formality.
 
 Types in Loid are first-class.
 
-## Atoms and the `atom` Type
+## Atoms and the `Atom` Type
 
 Atoms are primitive values that carry no internal API.
 Similar to primitives in other programming languages.
@@ -15,7 +15,7 @@ Similar to primitives in other programming languages.
 Atoms are the lowest-level memory structures in Loid.
 They do not have methods or properties attached to them; all interactions occur through built-in standard library functions.
 
-### Integers (`int`)
+### Integers (`Int`)
 
 Integers are a base-10 signed 64-bit integer.
 It operates in a strict range of $(-2^{53}+1,2^{53}-1)$.
@@ -23,21 +23,21 @@ It operates in a strict range of $(-2^{53}+1,2^{53}-1)$.
 To declare an integer one does:
 
 ```Rust
-let n: int = 15;
-let m: int = -100;
+let n: Int = 15;
+let m: Int = -100;
 ```
 
 Underscores can be used for readability:
 
 ```Rust
-let o: int = 1_000_000;
+let o: Int = 1_000_000;
 ```
 
 Integer operations always yield an integer.
-Integer and `float` operations always yield a `float`.
+Integer and `Float` operations always yield a `Float`.
 
 Key functions for integers:
-`add(x: int, y: int)`, `div(x: int, y: int)`, `mod(x: int, y: int)`, ...
+`add(x: Int, y: Int)`, `div(x: Int, y: Int)`, `mod(x: Int, y: Int)`, ...
 
 #### Integer Bases
 
@@ -46,42 +46,42 @@ In Loid, one can define integers to be of any base, but they will be treated as 
 Consider:
 
 ```Rust
-let n: int = 2b1001001101;
+let n: Int = 2b1001001101;
 ```
 
 This is an integer but it is in binary (base-2).
 
-#### Big integers (`bigint`)
+#### Big integers (`BigInt`)
 
-The `bigint` type refers to a 128-bit integer over a 64-bit integer.
+The `BigInt` type refers to a 128-bit integer over a 64-bit integer.
 
 ```Rust
-let b: bigint = 99999999999999999999999;
+let b: BigInt = 99999999999999999999999;
 ```
 
-### Float & Double (`float` & `double`)
+### Float & Double (`Float` & `Double`)
 
-`float` and `double` represent all floating-point numbers.
-They also include special literal states like `nan`, `infinity`, `neg_infinity`.
+`Float` and `Double` represent all floating-point numbers.
+They also include special literal states like `NaN`, `Infty`, `NegInfty`.
 
 One can declare a float simply:
 
 ```Rust
-let pi: float = 3.14159;
+let pi: Float = 3.14159;
 ```
 
 `nan` in Loid is unordered (not equal to itself) and represents the non-existence of a number.
 
-### Bool (`bool`)
+### Bool (`Bool`)
 
 Represent boolean logic states of `true` and `false`.
 
 ```Rust
-let is_active: bool = true;
-let is_dead  : bool   = false;
+let is_active: Bool = true;
+let is_dead  : Bool   = false;
 ```
 
-### Character (`char`)
+### Character (`Char`)
 
 Represents a single UTF-8 unicode character.
 To create a character, you place it in `''`.
@@ -89,70 +89,73 @@ To create a character, you place it in `''`.
 For example:
 
 ```Rust
-let a: char = 'A';
+let a: Char = 'A';
 ```
 
-### Void (`void`)
+### Void (`Void`)
 
 Represents nothing.
-Used the same as other `void` types.
+Used the same as other `Void` types.
 
 For example in functions:
 
 ```Rust
-fn print_thing() -> void { ... }
+fn print_thing() -> Void { ... }
 ```
 
-### Imaginary and Complex Numbers (`imag` & `complex`)
+### Imaginary and Complex Numbers (`Imag` & `Complex`)
 
-The `imag` type represents imaginary numbers, floats, and integers, `complex` represents complex numbers of floats and imaginary numbers.
+The `imag` type represents imaginary numbers, floats, and integers, `Complex` represents complex numbers of floats and imaginary numbers.
 
 Consider:
 
 ```Rust
-let n: imag = 15i;
-let m: imag = 10.54;
-let c: complex = 12 + 15i;
+let n: Imag = 15i;
+let m: Imag = 10.54;
+let c: Complex = 12 + 15i;
 ```
 
 Essentially:
-Any `imag` is also `complex`
-Any `int` is also `imag`
+Any `Imag` is also `Complex`
+Any `Int` is also `Imag`
 
 But not vice-versa
 
-### Bits, Trits, and Qubits (`bit`, `trit`, `qbit`)
+### Bits, Trits, and Qubits (`Bit`, `tTit`, `QBit`)
 
 #### Bits and Trits
 
-Atomic types `bit` and `trit` refer to:
+Atomic types `Bit` and `Trit` refer to:
 
--   `bit`: 1 or 0
--   `trit`: 0, 1, or 2
+-   `Bit`: 1 or 0
+-   `Trit`: 0, 1, or 2
 
 TO-DO (needs more information)
 
 #### Qubits:
 
+Note, to write quantum code, you must use the `QLoid` derivative.
+To understand what that means refer to the Loid Derivatives chapter.
+
 Loid targets JavaScript, as such, it isn't capable of doing quantum computation.
 However, a simulated (and one day real) quantum bit type is built into Loid.
-It is the `qbit` type.
+It is the `QBit` type.
 
-Qubits are declared with the `q` prefix:
+Qubits are declared with the `Q` prefix:
 
 Consider:
 
 ```TypeScript
-let q0: qbit = q|0>;
-let q1: qbit = q|1>;
-let qo: qbit = q|+>:
-let qm: qbit = q|->;
+let q0: QBit = Q|0>;
+let q1: QBit = Q|1>;
+let qo: QBit = Q|+>:
+let qm: QBit = Q|->;
 ```
 
-Qubits also have registers with the `qreg` constructor type:
+Qubits also have registers with the `QReg` constructor type:
 
 ```Rust
-let rwg: qreg<3> = qreg(0, 0, 0);
+let rwg: QReg<3> = QReg(0, 0, 0);
 ```
 
 Gates are ordinary functions in the standard library, most gates are supported and their APIs can be found at later chapters of this book.
@@ -160,7 +163,7 @@ Gates are ordinary functions in the standard library, most gates are supported a
 Measurements return classical bits and mutate the registers.
 
 ```Rust
-let outcome: bit = q.measure(reg, 0);
+let outcome: Bit = Q.measure(reg, 0);
 ```
 
 ## Complex Types
@@ -169,14 +172,14 @@ Complex types in Loid are types that descend from the `type` type.
 
 Unlike atoms, these can have complex structures and often have built-in methods rather than relying on the standard library.
 
-### Strings (`string`)
+### Strings (`String`)
 
 One defines strings as follows:
 
 ```Rust
-let s: string = "Hello";
-let f: string = f"2 + 2 = \(2 + 2)"; // f-strings
-let m: string = // multiline strings, by default are f-strings
+let s: String = "Hello";
+let f: String = f"2 + 2 = \(2 + 2)"; // f-strings
+let m: String = // multiline strings, by default are f-strings
     >Line one
     >Line two \(f)
 ```
@@ -193,36 +196,33 @@ There are many shorthands for manipulating strings in Loid.
 
 ### Regex
 
-Loid supports regex expressions the same as JavaScript.
+Loid supports regex expressions from its standard library.
+Which includes the `Regex` type.
 
-It has a builtin `regex` type:
+More on this in the standard library chapter.
 
-```Rust
-let pattern: regex = /[^0-9]/;
-```
-
-### Lists and Arrays (`list` and `array`)
+### Lists and Arrays (`List` and `Array`)
 
 Loid differentiates between dynamically sized lists and statically sized, dependently-typed arrays.
 
 Explained right down below:
 
-### Lists (`list<T>`)
+### Lists (`List<T>`)
 
 Loid lists are dynamic, homogenous collections of items.
 
 Consider:
 
 ```Rust
-let xs: list<int> = [1, 2, 3, 4, 5];
-let ys: int[] = [1, 2, 3]; // shorthand
+let xs: List<Int> = [1, 2, 3, 4, 5];
+let ys: Int[] = [1, 2, 3]; // shorthand
 
-let one_to_ten: int[]  = list.to(1, 10);
-let one_til_ten: int[] = list.til(1, 10);
+let one_to_ten: Int[]  = List.to(1, 10);
+let one_til_ten: Int[] = List.til(1, 10);
 
 io.print(xs.at(0).to_string());
 
-xs.for_each(λ (x: int, i: int) -> void => io.print(x.to_string()));
+xs.for_each(λ (x: Int, i: Int) -> void => io.print(x.to_string()));
 
 xs.set(0, 99);
 xs.push(6);
@@ -236,10 +236,10 @@ In Loid, this is called an _Immutably Dependent Type_ (explained at the end of t
 Passing an array of size 4 to a function expecting an array of size 3 will result in a compile-time error.
 
 ```Rust
-let arr1: array<int, 3> = [1, 2, 3];
-let arr2: int[3] = [1, 2, 3]; // shorthand
+let arr1: Array<Int, 3> = [1, 2, 3];
+let arr2: Int[3] = [1, 2, 3]; // shorthand
 
-let bad_arr: int[2] = [1, 2, 3]; // this fails, as this is an array of length 3 expecting length 2
+let bad_arr: Int[2] = [1, 2, 3]; // this fails, as this is an array of length 3 expecting length 2
 ```
 
 ### Tuple
@@ -251,17 +251,17 @@ They are strictly immutable.
 Consider:
 
 ```Rust
-let t : tuple<int, string> = tuple(1, "one");
+let t : Tuple<Int, String> = tuple(1, "one");
 ```
 
 ### Block
 
-The `block` type represents any un-evaluated chunk of code.
+The `Block` type represents any un-evaluated chunk of code.
 
-Declaring `block`s:
+Declaring `Block`s:
 
 ```Rust
-block cool_block {
+let cool_block: Block = {
     let n: int = 0;
 
     io.print(n + n + n);
@@ -269,22 +269,6 @@ block cool_block {
 ```
 
 More on blocks will be explained in the metaprogramming section.
-
-## Function Types
-
-TO-DO
-
-### Basic Function Syntax
-
-TO-DO
-
-### Function Signatures
-
-TO-DO
-
-### Generics in Functions
-
-TO-DO
 
 ## Structural & Object-Oriented Types
 
@@ -296,8 +280,8 @@ Struct definitions:
 
 ```Rust
 struct Person {
-    name: string,
-    age : int,
+    name: String,
+    age : Int,
 }
 
 let person: Person = Person {
@@ -314,12 +298,12 @@ This gives a struct methods it can use on the objects in it.
 
 ```Rust
 struct Person {
-    name: string,
-    age : int,
+    name: String,
+    age : Int,
 }
 
 impl Person {
-    fn age_up() -> int {
+    fn age_up() -> Int {
         this.age = this.age + 1;
         return this.age;
     }
@@ -343,12 +327,12 @@ Structs can derive one another:
 
 ```Rust
 struct Person {
-    name: string,
-    age : int,
+    name: String,
+    age : Int,
 }
 
 struct Employee derives Person {
-    job : string,
+    job : String,
 }
 
 /*
@@ -356,9 +340,9 @@ This is the same as:
 */
 
 struct Employee derives Person {
-    name: string,
-    age : int,
-    job : string,
+    name: String,
+    age : Int,
+    job : String,
 }
 ```
 
@@ -366,17 +350,17 @@ Structs can derive multiple structs as well:
 
 ```Rust
 struct Employee {
-    name: string,
-    age : int,
-    job : string,
+    name: String,
+    age : Int,
+    job : String,
 }
 
 struct Boss {
-    employee_count: int,
+    employee_count: Int,
 }
 
 struct EmployedBoss {
-    good_boss: bool,
+    good_boss: Bool,
 }
 ```
 
@@ -384,11 +368,11 @@ This is the same as:
 
 ```Rust
 struct EmployedBoss {
-    name           : string,
-    age            : int,
-    job            : string,
-    employee_count : int,
-    good_boss      : bool,
+    name           : String,
+    age            : Int,
+    job            : String,
+    employee_count : Int,
+    good_boss      : Bool,
 }
 ```
 
@@ -398,19 +382,19 @@ Struct implementations can also be derived
 
 ```Rust
 struct Person {
-    name : string,
-    age  : int,
+    name : String,
+    age  : Int,
 }
 
 impl Person {
-    fn age_up() -> int {
+    fn age_up() -> Int {
         this.age = this.age + 1;
         return this.age;
     }
 }
 
 struct Employee derives Person {
-    job: string,
+    job: String,
 }
 ```
 
@@ -418,19 +402,19 @@ One can also override implementations
 
 ```Rust
 struct Person {
-    name : string,
-    age  : int,
+    name : String,
+    age  : Int,
 }
 
 impl Person {
-    fn age_up() -> int {
+    fn age_up() -> Int {
         this.age = this.age + 1;
         return this.age;
     }
 }
 
 struct Employee derives Person {
-    job: string,
+    job: String,
 }
 
 impl Employee {
@@ -498,7 +482,7 @@ impl TrafficLight {
         };
     }
 
-    fn can_drive() -> bool {
+    fn can_drive() -> Bool {
         return match this {
             TrafficLight.Green => true,
             _                  => false, // the underscore is a commonly used keyword in Loid and is a catch-all.
@@ -526,14 +510,14 @@ enum NetworkResponse {
 }
 
 impl NetworkResponse {
-    fn is_resolved() -> bool {
+    fn is_resolved() -> Bool {
         return match this {
             NetworkResponse.Loading => false,
             _                       => true,
         };
     }
 
-    fn unwrap_or(fallback: string) -> string {
+    fn unwrap_or(fallback: String) -> String {
         return match this {
             NetworkResponse.Success { data } => data,
             NetworkResponse.Error   { msg }  => "Failed with: " + msg,
@@ -549,15 +533,15 @@ impl NetworkResponse {
 enum Connection {
     Disconnected,
     Connecting,
-    Connected: { ip: string },
+    Connected: { ip: String },
 }
 
 impl Connection {
-    fn connect(target_ip: string) -> void {
+    fn connect(target_ip: String) -> Void {
         this = Connection.Connected({ ip: target_ip });
     }
 
-    fn disconnect() -> void {
+    fn disconnect() -> Void {
         this = Connection.Disconnected;
     }
 }
@@ -575,7 +559,7 @@ When creating an instance of an enum with a payload one can follow this kind of 
 enum Connection {
     Disconnected,
     Connecting,
-    Connected: string,
+    Connected: String,
 }
 
 let conn: Connection = Connection.Connected("192.168.1.1");
@@ -611,14 +595,14 @@ Traits do NOT work with classes nor enums.
 
 ```Rust
 trait Loggable {
-    fn log_state() -> void {
+    fn log_state() -> Void {
         io.print("state logged as: " + time.now().to_string());
     }
 }
 
 struct Server {
-    ip  : string,
-    port: int,
+    ip  : String,
+    port: Int,
 }
 
 impl Loggable for Server;
@@ -648,22 +632,22 @@ Consider the following:
 
 ```Rust
 trait Drawable {
-    fn draw() -> void { ... };
+    fn draw() -> Void { ... };
 }
 
 trait Resizable {
-    fn resize(w: int, h: int) -> void { ... };
+    fn resize(w: Int, h: Int) -> Void { ... };
 }
 
 trait UIElement inherits Drawable, Resizable {
-    fn focus() -> void { ... };
-    fn blur()  -> void { ... };
+    fn focus() -> Void { ... };
+    fn blur()  -> Void { ... };
 }
 
 // these methods can also call their super methods
 
 trait Animated inherits Drawable {
-    fn redraw() -> void {
+    fn redraw() -> Void {
         this.draw();
     }
 }
@@ -679,11 +663,11 @@ Consider:
 
 ```Rust
 trait Drawable {
-    fn draw() -> void { ... };
+    fn draw() -> Void { ... };
 }
 
 trait Animated inherits Drawable {
-    override fn draw() {
+    override fn draw() -> Void {
         // something else
     }
 }
@@ -705,7 +689,7 @@ We can override these by writing this instead:
 
 ```Rust
 impl UIElement for Button {
-    override fn draw() -> void {
+    override fn draw() -> Void {
         io.print("drawing");
     }
 };
@@ -721,7 +705,7 @@ However, this can be handled as follows:
 
 ```Rust
 impl Walk, Play, Sleep for Cat {
-    override fn meow {
+    override fn meow() -> Void {
         Walk.meow(); // if you want to use the Walk version
         Play.meow(); // for the Play version
         // or write something of your own
@@ -735,7 +719,7 @@ When overriden Traits (or traits in general) interact with derived structs, this
 
 ```Rust
 trait Loggable {
-    fn log_state() -> void {
+    fn log_state() -> Void {
         io.print("log");
     }
 }
@@ -747,7 +731,7 @@ struct Person {
 impl Loggable for Person;
 
 struct Employee derives Person {
-    job: string.
+    job: String.
 }
 
 let e: Employee = Employee { name: "Ada", job: "Computer Scientist" };
@@ -777,8 +761,8 @@ As in:
 
 ```Rust
 trait AnimalLike {
-    abstract fn make_sound() -> void;
-    abstract fn get_named(s: string) -> bool;
+    abstract fn make_sound() -> Void;
+    abstract fn get_named(s: String) -> Bool;
 }
 ```
 
@@ -790,11 +774,11 @@ struct Cat {
 }
 
 impl AnimalLike for Cat {
-    override fn make_sound() -> void {
+    override fn make_sound() -> Void {
         io.print("meow");
     }
 
-    override fn get_named(s: string) -> bool {
+    override fn get_named(s: String) -> Bool {
         this.name = s;
         return true;
     }
@@ -811,9 +795,9 @@ Consider:
 
 ```Rust
 trait Container<T> {
-    fn get(index: int) -> T { ... };
-    fn set(index: int, value: T) -> void { ... };
-    fn len() -> int { ... };
+    fn get(index: Int) -> T { ... };
+    fn set(index: Int, value: T) -> Void { ... };
+    fn len() -> Int { ... };
 }
 ```
 
@@ -821,7 +805,7 @@ A generic trait is implemented on a generic struct by carrying the type paramete
 
 ```Rust
 struct Stack<T> {
-    items: list<T>,
+    items: List<T>,
 }
 
 impl<T> Container<T> for Stack<T>;
@@ -835,7 +819,7 @@ As follows:
 
 ```Rust
 trait ConvertsToInteger {
-    abstract fn convert<T>(t: T) -> int;
+    abstract fn convert<T>(t: T) -> Int;
 }
 ```
 
@@ -852,7 +836,7 @@ trait Iterable<T> {
 }
 
 trait Collection<T> inherits Iterable<T> {
-    abstract fn size() -> int;
+    abstract fn size() -> Int;
 }
 ```
 
@@ -868,21 +852,21 @@ trait Readable<T> {
 }
 
 trait Writeable<T> {
-    fn write(value: T) -> void;
+    fn write(value: T) -> Void;
 }
 
 trait ReadWriteable<T> inherits Readable<T>, Writeable<T> {
-    fn flush() -> void;
+    fn flush() ->Void;
 }
 
 // Here K and V are the child's parameters,
 // and the parents are instantiated with those same parameters
-trait KeyValue<K, B> inherits Readable<Option<V>>, Writeable<tuple<K, V>> {
-    fn contains_key(key: K) -> bool;
+trait KeyValue<K, B> inherits Readable<Option<V>>, Writeable<Tuple<K, V>> {
+    fn contains_key(key: K) -> Bool;
 }
 
 // a trait that is specifically string-keyed
-trait StringKeyword inherits KeyValue<string, V> {
+trait StringKeyword inherits KeyValue<String, V> {
     // StringKeyed<V> is a KeyValue<string, V>;
     // K is pinned to a string
 }
@@ -896,7 +880,7 @@ Consider:
 
 ```Rust
 trait Encoder<T> {
-    fn encode(value: T) -> string;
+    fn encode(value: T) -> String;
 }
 
 trait CompressingEncoder<T, C> inherits Encoder<T> {
@@ -913,13 +897,13 @@ Consider:
 
 ```Rust
 trait Stringify<T> {
-    fn stringify(value: T) -> string {
+    fn stringify(value: T) -> String {
         return value.to_string();
     }
 }
 
 trait PrettyStringify<T> inherits Stringify<T> {
-    override fn stringify(value: T) -> string {
+    override fn stringify(value: T) -> String {
         return "<" + value.to_string() + ">";
     }
 }
@@ -938,9 +922,9 @@ Consider:
 
 ```Coffee
 class Vehicle {
-    inst pub vehicle_type: string;
+    inst pub vehicle_type: String;
 
-    pub construct(vehicle_type: string) -> this {
+    pub construct(vehicle_type: String) -> TypeOf<this> {
         this.vehicle_type = vehicle_type;
 
         return this;
@@ -964,9 +948,9 @@ Consider:
 
 ```Coffee
 class Vehicle {
-    inst pub vehicle_type: string;
+    inst pub vehicle_type: String;
 
-    pub construct(vehicle_type: string) -> this {
+    pub construct(vehicle_type: String) -> TypeOf<this> {
         this.vehicle_type = vehicle_type;
 
         return this;
@@ -974,9 +958,9 @@ class Vehicle {
 }
 
 class Car inherits Vehicle {
-    inst pub company: string;
+    inst pub company: String;
 
-    pub construct(vehicle_type: string, company: string) -> this {
+    pub construct(vehicle_type: String, company: String) -> TypeOf<this> {
         super(vehicle_type);
 
         this.company = company;
@@ -996,13 +980,13 @@ Consider:
 
 ```Rust
 class Vehicle {
-    inst pub fn describe() -> string {
+    inst pub fn describe() -> String {
         return "a vehicle";
     }
 }
 
 class Car inherits Vehicle {
-    override inst pub fn describe() -> string {
+    override inst pub fn describe() -> String {
         return "a car";
     }
 }
@@ -1027,16 +1011,16 @@ Methods can be marked by final on concrete classes.
 This means that they cannot be overridden in their children.
 Consider:
 
-```Coffee
+```Java
 class Vehicle {
-    final inst pub fn describe() -> string {
+    final inst pub fn describe() -> String {
         return "a vehicle";
     }
 }
 
 class Car inherits Vehicle {
     // this fails to compile
-    override inst pub fn describe() -> string {
+    override inst pub fn describe() -> String {
         return "a car";
     }
 }
@@ -1059,15 +1043,15 @@ Consider:
 
 ```Coffee
 abstract class Animal {
-    inst pub name: string;
+    inst pub name: String;
 
-    pub construct(name: string) -> this {
+    pub construct(name: String) -> TypeOf<t>his {
         this.name = name;
 
         return this;
     }
 
-    abstract inst pub speak() -> string;
+    abstract inst pub speak() -> String;
 }
 ```
 
@@ -1077,13 +1061,13 @@ Consider:
 
 ```Coffee
 class Cat inherits Animal {
-    pub construct(name: string) -> this {
+    pub construct(name: String) -> TypeOf<this> {
         super(name);
 
         return this;
     }
 
-    override inst pub speak() -> string {
+    override inst pub speak() -> String {
         return "Meow";
     }
 }
@@ -1104,31 +1088,31 @@ Proxies use the `proxy`, `proxies`, and `overwrite` keywords.
 
 Consider:
 
-```Coffee
+```Java
 class Database {
-    inst pub url: string;
+    inst pub url: String;
 
-    pub construct(url: string) -> this {
+    pub construct(url: String) -> TypeOf<this> {
         this.url = url;
 
         return this;
     }
 
-    inst pub read() -> string {
+    inst pub read() -> String {
         return "some sensitive data";
     }
 
-    inst pub drop_tables() -> void {
+    inst pub drop_tables() -> Void {
         io.print("tables totally dropped");
     }
 }
 
 proxy ReadOnlyDB proxies Database {
-    pub url: string; // exposes url as-is
+    pub url: String; // exposes url as-is
 
-    pub read: () -> string; // exposes read as-is
+    pub read: () -> String; // exposes read as-is
 
-    overwrite pub drop_tables() -> void {
+    overwrite pub drop_tables() -> Void {
         io.print("security issue: no drop permissions");
     } // you can also just not have a drop_tables exposed if you want at all
 }
@@ -1149,19 +1133,19 @@ Consider:
 
 ```Rust
 proxy ReadOnlyDB proxies Database {
-    pub url: string;
-    pub read: () -> string;
+    pub url: String;
+    pub read: () -> String;
 
-    overwrite pub drop_tables() -> void {
+    overwrite pub drop_tables() -> Void {
         io.print("security issue: no drop perms");
     }
 }
 
 proxy AuditedDB proxies Database inherits ReadOnlyDB {
-    pub url: string;
-    pub read: () -> string;
+    pub url: String;
+    pub read: () -> String;
 
-    overwrite pub drop_tables() -> void {
+    overwrite pub drop_tables() -> Void {
         io.print("audio log: drop_tables was blocked");
     }
 }
@@ -1199,34 +1183,34 @@ By notation always capitalize and start with "I"
 
 ```Coffee
 interface IConnectTable {
-    pub connect: (string) -> bool;
-    pub disconnect: () -> void;
+    pub connect: (string) -> Bool;
+    pub disconnect: () -> Void;
 }
 
 interface ILoggable {
-    pub log: () -> void;
+    pub log: () -> Void;
 }
 
 class NetworkNode implements IConnectable, ILoggable {
-    inst pub is_active: bool;
+    inst pub is_active: Bool;
 
-    pub construct() -> this {
+    pub construct() -> TypeOf<this> {
         this.is_active = false;
 
         return this;
     }
 
-    inst pub connect(ip: string) -> bool {
+    inst pub connect(ip: String) -> Bool {
         this.is_active = true;
 
         return true;
     }
 
-    inst pub disconnect() -> void {
+    inst pub disconnect() -> Void {
         this.is_active = false;
     }
 
-    inst pub log() -> void {
+    inst pub log() -> Void {
         io.print("node status: " + this.is_active.to_string());
     }
 }
@@ -1244,15 +1228,15 @@ Consider:
 
 ```Coffee
 interface IReader {
-    pub read: () -> string;
+    pub read: () -> String;
 }
 
 interface IWriter {
-    pub write: (string) -> void;
+    pub write: (String) -> Void;
 }
 
 interface IReadWriter inherits IReader, IWriter {
-    pub flush: () -> void;
+    pub flush: () -> Void;
 }
 ```
 
@@ -1267,15 +1251,15 @@ Consider:
 
 ```Coffee
 interface ILoggable {
-    default pub log: () -> void = λ => io.print("logging");
+    default pub log: () -> Void = λ => io.print("logging");
 }
 
 interface IMetric {
-    pub record: (float -> void);
+    pub record: ((Float) -> Void);
 }
 
 class Sensor implements ILoggable, IMetric {
-    inst pub fn record(v: float) -> void {
+    inst pub fn record(v: Float) -> Void {
         io.print(v);
     }
 }
@@ -1301,15 +1285,15 @@ Consider the following code:
 
 ```Coffee
 interface ILoggable {
-    default pub log: () -> void = λ () => io.print("logging");
+    default pub log: () -> Void = λ () => io.print("logging");
 }
 
 interface IIdentifiable inherits ILoggable {
-    pub id: () -> string;
+    pub id: () -> String;
 }
 
 class User implements Identifiable {
-    inst pub id() -> string {
+    inst pub id() -> String {
         return "user-42";
     }
 }
@@ -1324,11 +1308,11 @@ You can also override default methods like this:
 
 ```Coffee
 interface ILoggable {
-    default pub log: () -> void = λ () => io.print("log");
+    default pub log: () -> Void = λ () => io.print("log");
 }
 
 interface IVerboseLoggable inherits ILoggable {
-    override default pub log: () -> void = λ () => io.print("VERBOSE: log");
+    override default pub log: () -> Void = λ () => io.print("VERBOSE: log");
 }
 
 class Service implements IVerboseLoggable { ... }
@@ -1345,13 +1329,13 @@ Consider:
 
 ```Coffee
 interface IReader {
-    pub read: () -> string;
+    pub read: () -> String;
 }
 
 interface IFileReader inherits IReader {
-    pub open: (path: string) -> void;
+    pub open: (path: String) -> Void;
 
-    default pub read: () -> string = λ () => "default content";
+    default pub read: () -> String = λ () => "default content";
 }
 ```
 
@@ -1363,15 +1347,15 @@ Consider:
 
 ```Coffee
 interface ILoggable {
-    default pub log: () -> void = λ () => io.print("loggable");
+    default pub log: () -> Void = λ () => io.print("loggable");
 }
 
 interface IDebuggable {
-    default pub log: () -. void = λ () => io.print("debuggable");
+    default pub log: () -> Void = λ () => io.print("debuggable");
 }
 
 interface ICombined inherits ILoggable, IDebuggable {
-    override default pub log: () -> void = λ () => {
+    override default pub log: () -> Void = λ () => {
         ILoggable.log();
         IDebuggable.log();
     }
@@ -1392,11 +1376,11 @@ Consider:
 
 ```Coffee
 interface IBase {
-    default prot log: () -> void = λ () => io.print("base");
+    default prot log: () -> Void = λ () => io.print("base");
 }
 
 interface IDerived inherits IBase {
-    override default pub log: () -> void = λ () => io.print("derived");
+    override default pub log: () -> Void = λ () => io.print("derived");
 }
 ```
 
@@ -1418,14 +1402,14 @@ Consider:
 
 ```Rust
 typestated interface IFileOps {
-    pub file_name: string;
-    pub construct: (string) -> this;
+    pub file_name: String;
+    pub construct: (String) -> TypeOf<this>;
 
-    pub open: () -> void;
+    pub open: () -> Void;
 
     depends (open) {
-        pub read_line: () -> string;
-        pub close: () -> string;
+        pub read_line: () -> String;
+        pub close: () -> String;
     }
     // these methods cannot be called until `open` is executed.
     // an error here will be notified at comp-time and stopped
@@ -1439,23 +1423,23 @@ typestated interface IFileOps {
 }
 
 typestated class SafeFile implements IFileOps {
-    inst pub file_name: string;
+    inst pub file_name: String;
 
-    pub construct(name: string) -> this {
+    pub construct(name: String) -> TypeOf<this> {
         this.file_name = name;
 
         return this;
     }
 
-    inst pub open() -> void {
+    inst pub open() -> Void {
         io.print("opened");
     }
 
-    inst pub read_line() -> string {
+    inst pub read_line() -> String {
         return "data";
     }
 
-    inst pub close() -> void {
+    inst pub close() -> Void {
         io.print("closed");
     }
 }
@@ -1484,21 +1468,23 @@ TO-DO
 Typestate on structs works via type parameters rather than depends blocks.
 A struct carries its state as a type argument, and `impl` blocks are specialized per state.
 
+It relies on generics.
+
 Consider:
 
 ```Rust
 struct File<S> {
-    pub path: string,
+    pub path: String,
 }
 
 impl File<Closed> {
-    pub fn open(path: string) -> File<Open> {
+    pub fn open(path: String) -> File<Open> {
         return File<Open> { path: path };
     }
 }
 
 impl File<Open> {
-    pub fn read_line() -> string {
+    pub fn read_line() -> String {
         return "data";
     }
 
@@ -1550,7 +1536,7 @@ TO-DO (parent classes for the type system)
 
 TO-DO (how interfaces, singletons, and typestated classes, and typestated interfaces, including their inheritance fits into this)
 
-#### Type-Level Utility Functions
+#### Type-Level Utility Functions for Reflection Types upon Classes
 
 TO-DO
 
@@ -1561,11 +1547,11 @@ Lots of words to say: a namespace like any other language.
 
 Consider:
 
-```TypeScript
+```Rust
 namespace Networking {
     pub class Router { ... }
-    pub fn ping(ip: string) -> bool { ... }
-    priv const DEFAULT_PORT: int = 8080;
+    pub fn ping(ip: String) -> Bool { ... }
+    priv const DEFAULT_PORT: Int = 8080;
 }
 ```
 
@@ -1587,7 +1573,7 @@ Functions also support currying and partial application by default (more on this
 Function example:
 
 ```Rust
-fn calculate_area(w: float, h: float) -> float {
+fn calculate_area(w: Float, h: Float) -> Float {
     return w * h;
 }
 ```
@@ -1600,10 +1586,10 @@ The `λ` symbol is an alias for the `lambda` keyword.
 Consider:
 
 ```Rust
-let square: (int) -> int = λ (x: int) -> int => x * x;
+let square: (Int) -> Int = λ (x: Int) -> Int => x * x;
 
-let complex_lambda: (int) -> int = λ (x: int) -> int {
-    let y: int = 10;
+let complex_lambda: (Int) -> Int = λ (x: Int) -> Int {
+    let y: Int = 10;
 
     return x * y;
 };
@@ -1615,18 +1601,35 @@ And piping with the `|>` and `<|` operators.
 ### Function Types
 
 When specifying a function as a type (for params or variables) Loid uses a familiar arrow notation.
-Or a more generic `function<>` type.
+
+Or a more generic `Function<T[], U>` type.
 
 Consider:
 
 ```Rust
-fn process_number(n: int, formatter: (int) -> string) -> string {
+fn process_number(n: Int, formatter: (Int) -> String) -> String {
     return formatter(n);
 }
 ```
 
-In Loid `(int, string) -> string` is the same as `function<[int, string], string>`
-And `(int) -> string` is the same as `function<[int], string>`.
+In Loid `(Int, String) -> String` is the same as `Function<[Int, String], String>`
+And `(Int) -> String` is the same as `Function<[Int], String>`.
+
+### Defining the Function Type in Loid Type Language
+
+TO-DO
+
+### Partial Application of Functions
+
+TO-Do
+
+### Function Piping
+
+To-DO
+
+## The `TypeOf` Keyword
+
+TO-DO
 
 ## Meta Programming
 
@@ -1636,7 +1639,7 @@ They are designed to be highly explicit and avoiding magic.
 This section from the type system will only go into types that are useful for metaprogramming.
 However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
 
-This is regarding the `block` type, macros, and so on.
+This is regarding the `Block` type, macros, and so on.
 
 ## Advanced Types
 
@@ -1662,20 +1665,20 @@ let current_status: Status = "SUCCESS"; // Valid
 
 TO-DO (has to allow due to the nature of side-effects being unabstracted to their fullest)
 
-### The `never` type
+### The `Never` type
 
-The `never` type is a bottom type.
+The `Never` type is a bottom type.
 
 I.E.:
 
 ```Rust
-never <: T <: unknown
+Never <: T <: Unknown
 ```
 
 The `never` type can only be used as a return type for a function that terminates.
 
 ```Rust
-fn panic(msg: string) -> never {
+fn panic(msg: String) -> Never {
     io.print("fatal: " + msg);
     sys.exit(1);
 }
@@ -1705,8 +1708,8 @@ Consider:
 
 ```Rust
 struct User {
-    username: string,
-    email   : Option<string>,
+    username: String,
+    email   : Option<String>,
 }
 
 let u: User = User {
@@ -1740,8 +1743,8 @@ enum Either<L, R> {
 Constructors:
 
 ```Rust
-let l: Either<int, string> = Either.Left(42);
-let r: Either<int, string> = Either.Right("hi");
+let l: Either<Int, String> = Either.Left(42);
+let r: Either<Int, String> = Either.Right("hi");
 ```
 
 TO-DO (still need to properly decide on syntax for payload initializing and access)
@@ -1750,8 +1753,8 @@ Combinators:
 
 ```Rust
 impl Either<L, R> {
-    pub fn is_left() -> bool;
-    pub fn is_right() -> bool;
+    pub fn is_left() ->  Bool;
+    pub fn is_right() -> Bool;
 
     pub fn left() -> Option<L>;
     pub fn right() -> Option<R>;
@@ -1792,24 +1795,24 @@ class Set<T> {
     priv fn construct() -> Set<T>;
 
     pub fn new() -> Set<T>;
-    pub fn of(items: list<T>) -> Set<T>;
+    pub fn of(items: List<T>) -> Set<T>;
 
-    pub fn add(item: T) -> bool;        // true if newly inserted
-    pub fn remove(item: T) -> bool;
-    pub fn has(item: T) -> bool;
+    pub fn add(item: T)    ->    Bool;        // true if newly inserted
+    pub fn remove(item: T) -> Bool;
+    pub fn has(item: T)    -> Bool;
 
     pub fn union(other: Set<T>) -> Set<T>;
     pub fn intersect(other: Set<T>) -> Set<T>;
     pub fn difference(other: Set<T>) -> Set<T>;
     pub fn symmetric_difference(other: Set<T>) -> Set<T>;
 
-    pub fn is_subset(other: Set<T>) -> bool;
-    pub fn is_superset(other: Set<T>) -> bool;
+    pub fn is_subset(other: Set<T>)   -> Bool;
+    pub fn is_superset(other: Set<T>) -> Bool;
 
-    pub fn size() -> int;
-    pub fn to_list() -> list<T>;
+    pub fn size() -> Int;
+    pub fn to_list() -> List<T>;
 
-    pub fn for_each<F: (T) -> void>(f: F) -> void;
+    pub fn for_each<F: (T) -> Void>(f: F) -> Void;
 }
 ```
 
@@ -1854,9 +1857,9 @@ Loid's asynchronous model is Promise-based, mirroring JavaScript but with full t
 
 Consider:
 
-```Rust
-async fn fetch_user(id: int) -> Promise<User> {
-    let res = await http.get("/users/" + (int.to_string <| id>));
+```Coffee
+async fn fetch_user(id: Int) -> Promise<User> {
+    let res = await http.get("/users/" + (Int.to_string <| id>));
     return User.from_json(res.body);
 }
 ```
@@ -1880,7 +1883,10 @@ The `await` keyword only works in asynchronous functions or blocks of code.
 
 #### Async Blocks
 
-For the purposes of metaprogramming, one can define an `async` type block.
+For the purposes of metaprogramming, one can define an `AsyncBlock` type block.
+
+These blocks are a built-in type that extend the `Block` type.
+These can work in metaprogramming terms as well.
 
 ```Rust
 let some_block: AsyncBlock = async {
@@ -2246,21 +2252,21 @@ TO-DO
 
 ## The Unknown Type
 
-The `unknown` type is the top type.
+The `Unknown` type is the top type.
 
-Everything in Loid technically descends from the `unknown` type.
+Everything in Loid technically descends from the `Unknown` type.
 
-Anything can be assigned to a variable of `unknown` type.
-However, no operations can be done on an `unknown` variable.
+Anything can be assigned to a variable of `Unknown` type.
+However, no operations can be done on an `Unknown` variable.
 Nor can it be passed into a function, or done anything with.
 
-The `unknown` type can either be a return value for a function, or an instantiating type for a variable.
+The `Unknown` type can either be a return value for a function, or an instantiating type for a variable.
 
-The `unknown` variable can be cast or pattern matched to another type, and then used (in-line).
+The `Unknown` variable can be cast or pattern matched to another type, and then used (in-line).
 
 This exists mostly for the reasons of formality and is generally advised against for usage unless you have a deep understanding of what you are doing.
 
-Any `unknown`s will get a compiler warning.
+Any `Unknown`s will get a compiler warning.
 
 ## Type Language
 

@@ -10,7 +10,7 @@ Variables declared with `var` are variables and can be changed.
 Consider:
 
 ```TypeScript
-var n: int = 1;
+var n: Int = 1;
 n = n + 1;
 ```
 
@@ -20,7 +20,7 @@ Variables declared with `let` are constants and cannot have their value be chang
 However, they can hold references to mutable values.
 
 ```Rust
-let n: int = 1;
+let n: Int = 1;
 n = n + 1; // compiler error
 ```
 
@@ -42,7 +42,7 @@ More on these later.
 In Loid to declare functions one generally follows this example:
 
 ```Rust
-fn f(n: int, m: int) -> int {
+fn f(n: Int, m: Int) -> Int {
     return n + m;
 }
 ```
@@ -54,7 +54,7 @@ All functions in loid are partially applied.
 Consider the function `f`:
 
 ```Rust
-fn f(n: int, m: int, l: int, g: int) -> int {
+fn f(n: Int, m: Int, l: Int, g: Int) -> Int {
     return n + m + l + g;
 }
 ```
@@ -62,8 +62,8 @@ fn f(n: int, m: int, l: int, g: int) -> int {
 This function can be applied in various ways:
 
 ```Rust
-let f1: (int, int) -> int = f(1, 2, _, _); // now it takes in the l and g parameters.
-let f2: (int, int) -> int = f(1, _, _, 2); // now it takes in the m and l parameters.
+let f1: (Int, Int) -> Int = f(1, 2, _, _); // now it takes in the l and g parameters.
+let f2: (Int, Int) -> Int = f(1, _, _, 2); // now it takes in the m and l parameters.
 ```
 
 ### Lambda Functions
@@ -71,13 +71,13 @@ let f2: (int, int) -> int = f(1, _, _, 2); // now it takes in the m and l parame
 Lambda functions in Loid work as follows:
 
 ```Odin
-let f: (int, int) -> int = lambda (x: int, y: int) -> int { return x + y; };
+let f: (Int, Int) -> Int = lambda (x: Int, y: Int) -> Int { return x + y; };
 ```
 
 Or:
 
 ```Odin
-let f: (int, int) -> int = lambda (x: int, y: int) -> int => x + y;
+let f: (Int, Int) -> Int = lambda (x: Int, y: Int) -> Int => x + y;
 ```
 
 ## Control Flow
@@ -143,7 +143,7 @@ while (true) {
 Standard for loops work in Loid as in most other languages.
 
 ```Rust
-for (let i: int = 0; i < 5; i++) {
+for (let i: Int = 0; i < 5; i++) {
     io.print(i);
 }
 ```
@@ -260,7 +260,7 @@ In Loid, one can defer a line or block of code to run at the end of the current 
 Consider:
 
 ```Odin
-fn some_bad_function(db: Database) -> void {
+fn some_bad_function(db: Database) -> Void {
     db.open();
     defer db.close();
 
@@ -275,7 +275,7 @@ This can be done to blocks of code as well.
 Consider:
 
 ```Odin
-fn some_bad_function(db: Database) -> void {
+fn some_bad_function(db: Database) -> Void {
     db.open();
     defer {
         db.close();
@@ -297,7 +297,7 @@ The standard `defer` always has the lowest priority.
 Consider:
 
 ```Odin
-fn (example) -> void {
+fn (example) -> Void {
     #defer 2 {
         io.print("first");
     }
@@ -340,8 +340,8 @@ The `#let`...`in` expression binds names locally and evaluates a body.
 Consider:
 
 ```Odin
-let result: int = #let { let x: int = 10;
-                         let y: int = 15; }
+let result: Int = #let { let x: Int = 10;
+                         let y: Int = 15; }
                          in x + y; // this is 25.
 ```
 
@@ -358,7 +358,7 @@ The `where` keyword is a syntactic sugar over the `let` and `in` syntax.
 Consider:
 
 ```Rust
-let n: int = x + y where { let x: int = 10; let y: int = 11; };
+let n: Int = x + y where { let x: Int = 10; let y: Int = 11; };
 ```
 
 ## The Ternary Operator.
@@ -366,9 +366,9 @@ let n: int = x + y where { let x: int = 10; let y: int = 11; };
 Consider:
 
 ```Odin
-let n: int = if (true) do 10 // doesn't require the ";" if using do and expecting an else or else if.
+let n: Int = if (true) do 10 // doesn't require the ";" if using do and expecting an else or else if.
              else do 15;
-let m: int = if (true) {
+let m: Int = if (true) {
                 10;
              } else {
                 10;
@@ -398,7 +398,7 @@ else do io.print("not hungry");
 Consider:
 
 ```Rust
-let b: block = {
+let b: Block = {
     io.print("play!");
 };
 

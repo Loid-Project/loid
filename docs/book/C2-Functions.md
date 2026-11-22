@@ -9,7 +9,7 @@ Functions in Loid are first-class and work like functions in JavaScript.
 Generally functions in Loid are declared as follows:
 
 ```Rust
-fn magical(x: int, y: int) -> int {
+fn magical(x: Int, y: Int) -> Int {
     return x + y;
 }
 ```
@@ -17,8 +17,8 @@ fn magical(x: int, y: int) -> int {
 While lambdas are declared as follows:
 
 ```Rust
-let func        : (int, int) -> int = lambda (x: int, y: int) -> int => x + y;
-let func_cooler : (int, int) -> int = λ (x: int, y: int) -> int => x + y;
+let func        : (Int, Int) -> Int = lambda (x: Int, y: Int) -> Int => x + y;
+let func_cooler : (Int, Int) -> Int = λ (x: Int, y: Int) -> Int => x + y;
 ```
 
 ### Variadic Function Parameters
@@ -42,7 +42,7 @@ Loid provides decorators for functions to allow for more complex kinds of comput
 Consider the function `fib` that computes the `Fibonacci` sequence.
 
 ```Rust
-fn fib(n: int) -> int {
+fn fib(n: Int) -> Int {
     return match n {
         0 | 1 => n,
         _     => fib(n - 1) + fib(n - 2),
@@ -54,7 +54,7 @@ Given:
 
 ```Rust
 @cached
-fn fib(n: int) -> int { ... }
+fn fib(n: Int) -> Int { ... }
 ```
 
 Every input output will be cached, regardless of the function's purity.
@@ -62,7 +62,7 @@ This stores the output information in a hash table, for efficient lookup and fas
 
 ```Rust
 @memoized
-fn fib(n: int) -> int { ... }
+fn fib(n: Int) -> Int { ... }
 ```
 
 `@memoized` is the same thing as `@cached`, just an alias.
@@ -75,13 +75,13 @@ Consider:
 
 ```Rust
 @lazy
-fn fib(n: int) -> int { ... }
+fn fib(n: Int) -> Int { ... }
 ```
 
 Now, when doing this:
 
 ```Rust
-let fib3: int = fib(3);
+let fib3: Int = fib(3);
 ```
 
 This will not be evaluated until the variable `fib3` itself is used somewhere.
@@ -94,7 +94,7 @@ Consider a more complex function that is lazy:
 
 ```Rust
 @lazy
-fn mystery(n: int, c: SomeClass) -> int { ... }
+fn mystery(n: Int, c: SomeClass) -> Int { ... }
 ```
 
 Let's say that created an instance of `SomeClass` is expensive.
@@ -104,7 +104,7 @@ When it comes to the standard Lazy decorator, this will still be evaluated befor
 Consider:
 
 ```Rust
-let mysterious: int = mystery(5, SomeClass.construct());
+let mysterious: Int = mystery(5, SomeClass.construct());
 ```
 
 This will still create the `SomeClass` instance before `mysterious` is every used.
@@ -115,7 +115,7 @@ This behaviour however, can be avoided by making something `@totally_lazy`.
 
 ```Rust
 @totally_lazy
-fn mystery(n: int, c: SomeClass) -> int { ... }
+fn mystery(n: Int, c: SomeClass) -> Int { ... }
 ```
 
 You can also do this in-line instead.
@@ -124,22 +124,26 @@ Say, for every call to `mystery`, only in one do you want `SomeClass` itself to 
 
 ```Rust
 @lazy
-fn mystery(n: int, c: SomeClass) -> int { ... }
-let mysterious: int = mystery(5, SomeClass.construct@(@lazy)());
+fn mystery(n: Int, c: SomeClass) -> Int { ... }
+let mysterious: Int = mystery(5, SomeClass.construct@(@lazy)());
 ```
 
 This makes the actual construct method itself lazy.
 You can use multiple decorators there as well:
 
 ```Rust
-let mysterious: int = mystery(5, SomeClass.construct@(@lazy, @other_decorator)());
+let mysterious: Int = mystery(5, SomeClass.construct@(@lazy, @other_decorator)());
 ```
 
 You can also make mystery itself `@totally_lazy` even if it is just `@lazy`:
 
 ```Rust
-let mysterious: int = mystery@(@totally_lazy)(5, SomeClass.construct(@lazy)());
+let mysterious: Int = mystery@(@totally_lazy)(5, SomeClass.construct(@lazy)());
 ```
+
+### Aliasing as Lazy for Clarity's Sake
+
+TO-Do
 
 ### Functional Purity
 
@@ -148,7 +152,7 @@ This also applies to code blocks of any kind.
 
 ```Rust
 @pure
-fn fib(n: int) -> int { ... }
+fn fib(n: Int) -> Int { ... }
 ```
 
 If the Loid compiler sees impurities in this code, it will not allow for compilation.
@@ -161,7 +165,7 @@ Consider:
 
 ```Rust
 @pure, @memoized
-fn fib(n: int) -> int { ... }
+fn fib(n: Int) -> Int { ... }
 ```
 
 ## Pure Functions
