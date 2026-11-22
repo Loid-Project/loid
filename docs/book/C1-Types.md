@@ -1294,11 +1294,113 @@ Also, non-default methods can be made default methods the same way.
 
 TO-DO (examples of how these'd work)
 
+An interface inheritance carries default methods down to child interfaces exactly as it carries abstract signatures.
+A child interface inherits every default method from its parents, and those defaults are available to any class that implements the child interface.
+
+Consider the following code:
+
+```Coffee
+interface ILoggable {
+    default pub log: () -> void = λ () => io.print("logging");
+}
+
+interface IIdentifiable inherits ILoggable {
+    pub id: () -> string;
+}
+
+class User implements Identifiable {
+    inst pub id() -> string {
+        return "user-42";
+    }
+}
+
+let u: User = User.construct();
+
+u.log();
+u.id();
+```
+
+You can also override default methods like this:
+
+```Coffee
+interface ILoggable {
+    default pub log: () -> void = λ () => io.print("log");
+}
+
+interface IVerboseLoggable inherits ILoggable {
+    override default pub log: () -> void = λ () => io.print("VERBOSE: log");
+}
+
+class Service implements IVerboseLoggable { ... }
+
+let s: Service = Service.construct();
+s.log();
+```
+
+##### Promoting Abstract Methods to Default Methods
+
+A child interface m ay supply a default body for a signature that a parent left abstract.
+
+Consider:
+
+```Coffee
+interface IReader {
+    pub read: () -> string;
+}
+
+interface IFileReader inherits IReader {
+    pub open: (path: string) -> void;
+
+    default pub read: () -> string = λ () => "default content";
+}
+```
+
+##### Handling Conflicts
+
+When two parents both contribute a default method with the same name,t he child must resolve the conflict or get a compile error.
+
+Consider:
+
+```Coffee
+interface ILoggable {
+    default pub log: () -> void = λ () => io.print("loggable");
+}
+
+interface IDebuggable {
+    default pub log: () -. void = λ () => io.print("debuggable");
+}
+
+interface ICombined inherits ILoggable, IDebuggable {
+    override default pub log: () -> void = λ () => {
+        ILoggable.log();
+        IDebuggable.log();
+    }
+}
+```
+
+#### Visibility Rules for Default Interface Methods when Parenting Interfaces
+
+Visibility on an inherited default may only widen, never narrow:
+
+`priv` -> `prot` -> `pub` is allowed.
+Anything else is a compile error.
+Of course this allows for `priv` -> `pub` too.
+
+This must be done with the override keyword.
+
+Consider:
+
+```Coffee
+interface IBase {
+    default prot log: () -> void = λ () => io.print("base");
+}
+
+interface IDerived inherits IBase {
+    override default pub log: () -> void = λ () => io.print("derived");
+}
+```
+
 #### Interfaces with Proxy Classes
-
-TO-DO
-
-#### Interfaces with Singleton Classes
 
 TO-DO
 
@@ -1372,10 +1474,6 @@ TO-DO (decide whether to allow typestating in abstract classes)
 #### Typestated Proxies
 
 TO-DO
-
-#### Typestated Singletons
-
-TO-DO (does this even make sense?)
 
 ### Typestated Structs
 
