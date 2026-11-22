@@ -217,7 +217,7 @@ Consider:
 let xs: list<int> = [1, 2, 3, 4, 5];
 let ys: int[] = [1, 2, 3]; // shorthand
 
-let one_to_ten: int[] = list.to(1, 10);
+let one_to_ten: int[]  = list.to(1, 10);
 let one_til_ten: int[] = list.til(1, 10);
 
 io.print(xs.at(0).to_string());
@@ -263,6 +263,7 @@ Declaring `block`s:
 ```Rust
 block cool_block {
     let n: int = 0;
+
     io.print(n + n + n);
 }
 ```
@@ -467,16 +468,16 @@ enum TrafficLight {
 impl TrafficLight {
     fn next_state() -> TrafficLight {
         return match this {
-            Red    => TrafficLight.Green.
-            Yellow => TrafficLight.Red,
-            Green  => TrafficLight.Yellow,
+            TrafficLight.Red    => TrafficLight.Green.
+            TrafficLight.Yellow => TrafficLight.Red,
+            TrafficLight.Green  => TrafficLight.Yellow,
         };
     }
 
     fn can_drive() -> bool {
         return match this {
-            Green => true,
-            _     => false, // the underscore is a commonly used keyword in Loid and is a catch-all.
+            TrafficLight.Green => true,
+            _                  => false, // the underscore is a commonly used keyword in Loid and is a catch-all.
             // more on the underscore as a catch-all in a later chapter
         };
     }
@@ -503,16 +504,16 @@ enum NetworkResponse {
 impl NetworkResponse {
     fn is_resolved() -> bool {
         return match this {
-            Loading => false,
-            _       => true,
+            NetworkResponse.Loading => false,
+            _                       => true,
         };
     }
 
     fn unwrap_or(fallback: string) -> string {
         return match this {
-            Success { data } => data,
-            Error   { msg }  => "Failed with: " + msg,
-            Loading          => fallback,
+            NetworkResponse.Success { data } => data,
+            NetworkResponse.Error   { msg }  => "Failed with: " + msg,
+            NetworkResponse.Loading          => fallback,
         };
     }
 }
@@ -619,11 +620,131 @@ This'll implement these traits.
 
 #### Trait Inheritance
 
-TO-DO
+Consider the following:
+
+```Rust
+trait Drawable {
+    fn draw() -> void { ... };
+}
+
+trait Resizable {
+    fn resize(w: int, h: int) -> void { ... };
+}
+
+trait UIElement inherits Drawable, Resizable {
+    fn focus() -> void { ... };
+    fn blur()  -> void { ... };
+}
+
+// these methods can also call their super methods
+
+trait Animated inherits Drawable {
+    fn redraw() -> void {
+        this.draw();
+    }
+}
+```
+
+Now the trait `UIElement` has the methods from `Drawable` and `Resizable`.
+
+#### Overriding Trait Methods
+
+When inheriting a method, you can override it.
+
+Consider:
+
+```Rust
+trait Drawable {
+    fn draw() -> void { ... };
+}
+
+trait Animated inherits Drawable {
+    override fn draw() {
+        // something else
+    }
+}
+```
+
+Without the `override` keyword, the compilation will fail.
 
 #### Overriding Traits
 
-TO-DO
+Consider a struct called `Button` and consider:
+
+```Rust
+impl UIElement for Button;
+```
+
+This gives us whatever the trait functions already had.
+
+We can override these by writing this instead:
+
+```Rust
+impl UIElement for Button {
+    override fn draw() -> void {
+        io.print("drawing");
+    }
+};
+```
+
+#### Handling Conflicts
+
+Consider a struct `Cat` that implements `Walk, Play, Sleep`, and say both `Play` and `Walk` have functions named `meow`.
+
+If two traits have a conflict in their namespace and are being both implemented into a struct, the compiler will fail.
+
+However, this can be handled as follows:
+
+```Rust
+impl Walk, Play, Sleep for Cat {
+    override fn meow {
+        Walk.meow(); // if you want to use the Walk version
+        Play.meow(); // for the Play version
+        // or write something of your own
+    }
+}
+```
+
+#### Interaction with Struct Derivations
+
+When overriden Traits (or traits in general) interact with derived structs, this is the behaviour:
+
+```Rust
+trait Loggable {
+    fn log_state() -> void {
+        io.print("log");
+    }
+}
+
+struct Person {
+    name: string,
+}
+
+impl Loggable for Person;
+
+struct Employee derives Person {
+    job: string.
+}
+
+let e: Employee = Employee { name: "Ada", job: "Computer Scientist" };
+e.log_state(); // prints Person's default
+```
+
+So, a struct that derives another struct inherits the parent's trait implementation by default.
+
+To override on a derived struct:
+
+```Rust
+impl Employee {
+    override fn log_state() -> void {
+        io.print(this.name + " (" + this.job + ")");
+    }
+}
+```
+
+However, it is important to note that:
+Reimplementing an inherited trait (say `impl Loggable for Employee`) after derivation is always a compile error.
+If Employee derives from two parents that both implement `Loggable`, the rule applies: the compiler requires an explicit override, unless they both implement Loggable in the same exact way.
 
 ### Classes
 
@@ -636,7 +757,7 @@ Concrete Classes in Loid work like standard classes in any other programming lan
 
 Consider:
 
-```Rust
+```Coffee
 class Vehicle {
     inst pub vehicle_type: string;
 
@@ -662,7 +783,7 @@ In Loid, the keyword is `inherits`, as `extends` is kept for another use case.
 
 Consider:
 
-```Rust
+```Coffee
 class Vehicle {
     inst pub vehicle_type: string;
 
@@ -727,7 +848,7 @@ Methods can be marked by final on concrete classes.
 This means that they cannot be overridden in their children.
 Consider:
 
-```Rust
+```Coffee
 class Vehicle {
     final inst pub fn describe() -> string {
         return "a vehicle";
@@ -757,7 +878,7 @@ They work the same as in languages like TypeScript.
 
 Consider:
 
-```Rust
+```Coffee
 abstract class Animal {
     inst pub name: string;
 
@@ -775,7 +896,7 @@ When a class inherits an abstract class, it must `override` the abstract methods
 
 Consider:
 
-```Rust
+```Coffee
 class Cat inherits Animal {
     pub construct(name: string) -> this {
         super(name);
@@ -804,7 +925,7 @@ Proxies use the `proxy`, `proxies`, and `overwrite` keywords.
 
 Consider:
 
-```Rust
+```Coffee
 class Database {
     inst pub url: string;
 
@@ -863,8 +984,9 @@ Private, Public, or Protected.
 
 Interfaces use the `implements` keyword.
 
-```Rust
-// by notation always capitalize and start with "I"
+By notation always capitalize and start with "I"
+
+```Coffee
 interface IConnectTable {
     pub connect: (string) -> bool;
     pub disconnect: () -> void;
@@ -909,7 +1031,7 @@ Conflicts in visibility, types, and so on will cause compilation errors.
 
 Consider:
 
-```Rust
+```Coffee
 interface IReader {
     pub read: () -> string;
 }
@@ -932,7 +1054,7 @@ These default methods can access any fields that are enforced by the interface.
 
 Consider:
 
-```TypeScript
+```Java
 interface ILoggable {
     default pub log: () -> void = λ => io.print("logging");
 }
@@ -1203,26 +1325,9 @@ However, the chapter on metaprogramming will go into far more depth and detail o
 
 This is regarding the `block` type, macros, and so on.
 
-### Symbol Type
-
-Symbols are unique identifiers and are optimized, immutable, and evaluated at compile time.
-
-They are declared with a `\` prefix:
-
-```TypeScript
-symbol \mut;
-symbol \read_only;
-```
-
-They can simply serve as flags.
-
-A symbol called `\mut` is equivalent to any other symbol `\mut`.
-
-This is just a more efficient `string` for flagging.
-
 ## Advanced Types
 
-Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through the type system itself.
+Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through their types.
 
 ### Literal Types
 
@@ -1297,8 +1402,8 @@ let u: User = User {
 }
 
 match u.email {
-    Some { e } => io.print("sending to: " + e);
-    None       => io.print("who is you");
+    Option.Some { e } => io.print("sending to: " + e);
+    Option.None       => io.print("who is you");
 }
 ```
 

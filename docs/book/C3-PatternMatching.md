@@ -18,6 +18,10 @@ TO-DO
 
 TO-DO
 
+## On Lists
+
+TO-DO
+
 ## On Integers
 
 TO-DO

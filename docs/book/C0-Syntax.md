@@ -411,6 +411,19 @@ do {
 } // prints "stop playing!"
 ```
 
+### Both?
+
+You can do both actually, technically:
+
+```Rust
+if (true) do {
+    io.print("hungry");
+}
+```
+
+Just no reason to.
+Unless you're evil.
+
 ## The `directive` `#` syntax
 
 TO-DO (basically as in Odin)
