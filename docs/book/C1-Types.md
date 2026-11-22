@@ -270,6 +270,22 @@ block cool_block {
 
 More on blocks will be explained in the metaprogramming section.
 
+## Function Types
+
+TO-DO
+
+### Basic Function Syntax
+
+TO-DO
+
+### Function Signatures
+
+TO-DO
+
+### Generics in Functions
+
+TO-DO
+
 ## Structural & Object-Oriented Types
 
 ### Structs (`struct`)
@@ -425,6 +441,14 @@ impl Employee {
 
 ```
 
+#### Generics in Structs
+
+TO-DO
+
+#### Interactions of Generics with Inheritance
+
+TO-DO
+
 ### Enums
 
 Loid enums work similar to Rust enums.
@@ -440,7 +464,7 @@ enum Element {
 }
 
 // with payload:
-enum Result<T, E> {
+enum Result<T, E> { // this is how generics are written in Enums
     Ok  : T,
     Err : E,
 }
@@ -745,6 +769,14 @@ impl Employee {
 However, it is important to note that:
 Reimplementing an inherited trait (say `impl Loggable for Employee`) after derivation is always a compile error.
 If Employee derives from two parents that both implement `Loggable`, the rule applies: the compiler requires an explicit override, unless they both implement Loggable in the same exact way.
+
+#### Generics in Traits
+
+TO-DO
+
+#### Interactions of Generics in Trait Inheritance
+
+TO-DO
 
 ### Classes
 
@@ -1655,6 +1687,42 @@ TO-DO
 
 TO-DO, shouldn't be any, but just in case there might be any.
 
+## Constrained Types
+
+TO-DO
+
+### Natural Number Type
+
+TO-DO
+
+#### Proving Naturality
+
+TO-DO
+
+#### Handling Unnaturality
+
+TO-DO
+
+### Theorem Proving for Constraints
+
+TO-DO
+
+#### Induction
+
+TO-DO
+
+#### Rational Number Type
+
+TO-DO
+
+#### Irrational Number Type
+
+TO-DO
+
+#### Issue with the Irrational Number Type
+
+TO-DO (floating point values are always finite, so it'd have to be not a computed number but rather a more general statement? Like say sqrt2 instead of whatever that's gonna compute to.)
+
 ## First-Class Types
 
 TO-DO
@@ -1665,7 +1733,7 @@ TO-DO
 
 ### Reflections
 
-TO-DO (`TypeRep`?)
+TO-DO (`TypeRep`? Is this even a good idea?)
 
 ### `Type.of`
 
@@ -1793,7 +1861,7 @@ TO-DO
 
 ## Conditional Types
 
-TO-DO
+TO-DO (conditions applied to any type, rather than constraints, which simply narrows down a certain type to a smaller subtype, conditional types are a generalization of that (works with say `string | int` types too, for an example, constraints are just an example of an use case of conditional types, uses the same syntax)).
 
 ### Distribution Over Unions
 
@@ -1825,7 +1893,7 @@ TO-DO
 
 ## Theorem Proving
 
-TO-DO
+TO-DO (more in-depth)
 
 ### Natural Numbers
 
@@ -1917,11 +1985,11 @@ Any `unknown`s will get a compiler warning.
 
 TO-DO (basic rundown, finish in another chapter)
 
-### TLoid
+### Loid Derivatives
 
 TO-DO
 
-### Loid Derivatives
+### TLoid
 
 TO-DO
 
