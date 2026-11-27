@@ -1,0 +1,14 @@
+{
+    "profiles": {
+        "book": {
+            "includeOnly": {
+                "dirs": ["docs/book/"]
+            }
+        },
+        "docs": {
+            "includeOnly": {
+                "dirs": ["docs"]
+            }
+        }
+    }
+}

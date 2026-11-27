@@ -127,8 +127,8 @@ But not vice-versa
 
 Atomic types `Bit` and `Trit` refer to:
 
--   `Bit`: 1 or 0
--   `Trit`: 0, 1, or 2
+- `Bit`: 1 or 0
+- `Trit`: 0, 1, or 2
 
 TO-DO (needs more information)
 
@@ -1520,8 +1520,8 @@ To clarify, since Loid is a language with first-class types, the value of the sa
 `ProxyClassOf<A>` - the type of a proxy class wrapping `A`. But not a type that takes in a type.
 To be clearer:
 
--   A variable of type `ProxyClassOf<A>` can hold a value of an instance of a proxy class of `A`
--   A variable of type `ProxyClass<A>` can hold a value of any proxy class of `A`, the class itself, not an instantiated object of it.
+- A variable of type `ProxyClassOf<A>` can hold a value of an instance of a proxy class of `A`
+- A variable of type `ProxyClass<A>` can hold a value of any proxy class of `A`, the class itself, not an instantiated object of it.
 
 Recall that proxy classes are technically concrete classes, as such, any proxy class can also be treated as a concrete class.
 
@@ -1530,7 +1530,7 @@ TO-DO (explain how types'll work with proxy class children)
 `ChildClass<A>` - the type of a class that inherits from `A`.
 This is to say:
 
--   A variable of type `ChildClass<A>` can hold a value of a child class of `A`, the class itself, not an instantiated object of it.
+- A variable of type `ChildClass<A>` can hold a value of a child class of `A`, the class itself, not an instantiated object of it.
 
 TO-DO (parent classes for the type system)
 

@@ -9,3 +9,10 @@ target
 
 # Operating System Specific Files:
 .DS_Store
+
+# ai
+AGENTS.md
+aigest-docs.xml
+.agents
+repomix-output.xml
+aigest-output.xml
