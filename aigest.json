@@ -2,12 +2,22 @@
     "profiles": {
         "book": {
             "includeOnly": {
-                "dirs": ["docs/book/"]
+                "dirs": ["./docs/book/"]
             }
         },
         "docs": {
             "includeOnly": {
-                "dirs": ["docs"]
+                "dirs": ["./docs"],
+                "files": [
+                    "./README.md",
+                    "./DEPENDENCIES.md",
+                    "./CONTRIBUTING.md",
+                    "./CODE_OF_CONDUCT.md",
+                    "./SECURITY.md",
+                    "LICENSE",
+                    "robots.txt",
+                    "DEPENDENCIES.md"
+                ]
             }
         }
     }

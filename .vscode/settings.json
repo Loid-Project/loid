@@ -6,6 +6,7 @@
         "Coeffects",
         "Combinators",
         "comptime",
+        "desugars",
         "direnv",
         "fpoid",
         "givi",

@@ -1088,7 +1088,7 @@ Proxies use the `proxy`, `proxies`, and `overwrite` keywords.
 
 Consider:
 
-```Java
+```Rust
 class Database {
     inst pub url: String;
 
@@ -1151,7 +1151,7 @@ proxy AuditedDB proxies Database inherits ReadOnlyDB {
 }
 ```
 
-If a child declares `proxies <T>` explicitly, the type must match the proxied target (`Database` in this example above).
+If a child declares `proxies T` explicitly, the type must match the proxied target (`Database` in this example above).
 Otherwise the compiler will report a mismatch.
 The `proxies` clause may be omitted on the child, in which case the target is inherited from the parent chain:
 
@@ -1162,13 +1162,6 @@ proxy AuditDB inherits ReadOnlyDB { ... }
 The exposure rules are cumulative down the chain.
 A child exposes at least what its parent exposes, and may add further members of the wrapped class.
 It may also `overwrite` any inherited members, which replaces that member's behaviour from the child (and its own descendants).
-
-#### Interactions of Proxy Classes with `ConcreteClass<A>` / `ProxyClassOf<A>`
-
-Because a proxy is technically a concrete class, any proxy may be passed where a `ConcreteClass<Database>` is expected.
-`ProxyClassOf<A>` accepts any instance of any proxy chain targeting `A`.
-`ProxyClass<A>` accepts the class itself (see the reflection types part of this chapter).
-The compiler computes this set of admissible proxies from the inheritance chain of the proxy classes.
 
 ### Interfaces
 
@@ -1392,80 +1385,9 @@ This is done for the sake of simplicity.
 As you can CLEARLY tell, Loid is a very simple language with not many keywords.
 (This is sarcasm, Loid is actually a very large language)
 
-### Typestated Classes and Interfaces
-
-Typestate-Oriented Programming guarantees that methods are called in the right order and work in the right methodology.
-
-Typestating is defined at the `interface` level and implemented by a `typestated` class.
-
-Consider:
-
-```Rust
-typestated interface IFileOps {
-    pub file_name: String;
-    pub construct: (String) -> TypeOf<this>;
-
-    pub open: () -> Void;
-
-    depends (open) {
-        pub read_line: () -> String;
-        pub close: () -> String;
-    }
-    // these methods cannot be called until `open` is executed.
-    // an error here will be notified at comp-time and stopped
-    // if the compiler cannot detect the error then it will optionally break
-    // at runtime. This is behavior that must be specified by the programmer himself.
-    // As such, using typestated classes should be done carefully and cleanly.
-    // This is to allow the compiler to always find out how it'll execute.
-    // More on this later
-
-    // If there is a better way to deal with this behavior I'd appreciate help planning it
-}
-
-typestated class SafeFile implements IFileOps {
-    inst pub file_name: String;
-
-    pub construct(name: String) -> TypeOf<this> {
-        this.file_name = name;
-
-        return this;
-    }
-
-    inst pub open() -> Void {
-        io.print("opened");
-    }
-
-    inst pub read_line() -> String {
-        return "data";
-    }
-
-    inst pub close() -> Void {
-        io.print("closed");
-    }
-}
-
-let file: SafeFile = SafeFile.construct("data.txt");
-// file.read_line() // FAILURE (compile error)
-file.open();
-file.read_line(); // SUCCESS
-```
-
-#### Typestated Object Inheritance
-
-TO-DO (how inheritance works on typestated classes and interfaces, also for interfaces with default values)
-
-#### Typestated Abstract Classes
-
-TO-DO (decide whether to allow typestating in abstract classes)
-(decide on how to allow that in a clean manner)
-
-#### Typestated Proxies
-
-TO-DO
-
 ### Typestated Structs
 
-Typestate on structs works via type parameters rather than depends blocks.
+Typestate on structs works via type parameters.
 A struct carries its state as a type argument, and `impl` blocks are specialized per state.
 
 It relies on generics.
@@ -1496,49 +1418,15 @@ impl File<Open> {
 
 Calling methods on a wrong state will result in a compile error.
 
-An useful type function built into Loid is `Typestated<A, S>`:
+An useful type operator built into Loid is `Typestated<A, S>`:
 `Typestated<A, S>` - the typestated struct `A` in state `S`.
 Say: `Typestated<File, Open>`.
 
 ### Integrating Classes into the Type System
 
-Because Loid's types are first-class and classes lower to JS classes with attached `__typerep` data, the type system exposes reflection over classes through a set of useful utility types and comptime type functions.
+To do operations on classes in the type system in Loid, you can rely on Loid's powerful type system instead of needing pre-made functionality.
 
-#### Reflection Types
-
-`AbstractClass<A>` - the type of an abstract class named `A`. Values of this type may be subclasses of `A` but not instantiated.
-Say in `AbstractClass<Animal>` the `Animal` is an abstract class.
-If a type of a variable is `AbstractClass<A>` it can be assigned a value of `A` (which is the abstract class itself), or value of `B` if `B` is a child of the abstract class.
-
-If a type of a variable is `A` and `A` is an abstract class, it can be assigned any child of said abstract class.
-
-`ConcreteClass<A>` - the type of a concrete class `A`.
-If a type of a variable is `ConcreteClass<A>` it can be assigned a value of `A` (which is the concrete class itself), or a value of `B` if `B` is a child of the abstract class.
-
-To clarify, since Loid is a language with first-class types, the value of the said variable (or parameter, or constant, or whatever), is actually just the type itself.
-
-`ProxyClassOf<A>` - the type of a proxy class wrapping `A`. But not a type that takes in a type.
-To be clearer:
-
-- A variable of type `ProxyClassOf<A>` can hold a value of an instance of a proxy class of `A`
-- A variable of type `ProxyClass<A>` can hold a value of any proxy class of `A`, the class itself, not an instantiated object of it.
-
-Recall that proxy classes are technically concrete classes, as such, any proxy class can also be treated as a concrete class.
-
-TO-DO (explain how types'll work with proxy class children)
-
-`ChildClass<A>` - the type of a class that inherits from `A`.
-This is to say:
-
-- A variable of type `ChildClass<A>` can hold a value of a child class of `A`, the class itself, not an instantiated object of it.
-
-TO-DO (parent classes for the type system)
-
-TO-DO (how interfaces, singletons, and typestated classes, and typestated interfaces, including their inheritance fits into this)
-
-#### Type-Level Utility Functions for Reflection Types upon Classes
-
-TO-DO
+This will be further explained in the constrained types section.
 
 ### Namespaces
 
@@ -1631,16 +1519,6 @@ To-DO
 
 TO-DO
 
-## Meta Programming
-
-Loid offers some metaprogramming capabilities.
-They are designed to be highly explicit and avoiding magic.
-
-This section from the type system will only go into types that are useful for metaprogramming.
-However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
-
-This is regarding the `Block` type, macros, and so on.
-
 ## Advanced Types
 
 Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through their types.
@@ -1654,8 +1532,8 @@ It's similar to a lightweight enum.
 Consider:
 
 ```Rust
-type Status = typing.literal<"SUCCESS", "FAILURE", "PENDING">;
-type BinaryInt = typing.literal<0, 1>;
+type Status = Literal<"SUCCESS", "FAILURE", "PENDING">;
+type BinaryInt = Literal<0, 1>;
 
 let current_status: Status = "SUCCESS"; // Valid
 // let current_status: Status = "UNKNOWN"; // COMPILE ERROR
@@ -1735,7 +1613,7 @@ Consider:
 
 ```Rust
 enum Either<L, R> {
-    Left: L,
+    Left:  L,
     Right: R,
 }
 ```
@@ -1767,7 +1645,7 @@ impl Either<L, R> {
 
     pub fn swap() -> Either<R, L>;
 
-    pub fn fold<T, FL: (L) -> T, FR: (R) -> T>(fl: FL, fr: FR) -> T;
+    pub fn fold<T, FL: (L) -> T, FR: (R) -> T>(fl: FL, fr: FR) -> T; // we love generics :3
 }
 ```
 
@@ -1797,19 +1675,19 @@ class Set<T> {
     pub fn new() -> Set<T>;
     pub fn of(items: List<T>) -> Set<T>;
 
-    pub fn add(item: T)    ->    Bool;        // true if newly inserted
+    pub fn add(item: T)    -> Bool;        // true if newly inserted
     pub fn remove(item: T) -> Bool;
     pub fn has(item: T)    -> Bool;
 
-    pub fn union(other: Set<T>) -> Set<T>;
-    pub fn intersect(other: Set<T>) -> Set<T>;
-    pub fn difference(other: Set<T>) -> Set<T>;
+    pub fn union(other: Set<T>)                -> Set<T>;
+    pub fn intersect(other: Set<T>)            -> Set<T>;
+    pub fn difference(other: Set<T>)           -> Set<T>;
     pub fn symmetric_difference(other: Set<T>) -> Set<T>;
 
     pub fn is_subset(other: Set<T>)   -> Bool;
     pub fn is_superset(other: Set<T>) -> Bool;
 
-    pub fn size() -> Int;
+    pub fn size()    -> Int;
     pub fn to_list() -> List<T>;
 
     pub fn for_each<F: (T) -> Void>(f: F) -> Void;
@@ -1827,7 +1705,7 @@ This is a type-level set used for keys and unions of literals.
 Consider:
 
 ```TypeScript
-type K = set<"a" | "b" | "c">;
+type K = set<"a", "b", "c">;
 
 // You can add elements to this type set:
 // and do various other operations
@@ -1835,7 +1713,7 @@ type K = set<"a" | "b" | "c">;
 type L = K.add<"d">;          // { "a", "b", "c", "d" }
 type M = K.remove<"a">;       // { "b", "c" }
 type N = K.union<set<"d">>;    // { "a", "b", "c", "d" }
-type O = K.intersect<set<"b" | "x">>; // { "b" }
+type O = K.intersect<set<"b", "x">>; // { "b" }
 ```
 
 Type-level sets such as this must be finite.
@@ -1846,95 +1724,6 @@ The type system does not allow for side effects, despite it serving as a almost 
 This is to allow for stronger and safer types.
 
 #### Infinite Type-Level Sets
-
-TO-DO
-
-### Promises
-
-Loid's asynchronous model is Promise-based, mirroring JavaScript but with full type level tracking.
-
-#### Async Functions
-
-Consider:
-
-```Coffee
-async fn fetch_user(id: Int) -> Promise<User> {
-    let res = await http.get("/users/" + (Int.to_string <| id>));
-    return User.from_json(res.body);
-}
-```
-
-These work the same way as in TypeScript.
-
-#### Await
-
-The `await` keyword works the same as in JavaScript.
-
-It waits until an asynchronous function is done doing its calculations.
-
-Consider:
-
-```TypeScript
-await fetch_user(1);
-```
-
-The code will simply wait here until the user is fetched.
-The `await` keyword only works in asynchronous functions or blocks of code.
-
-#### Async Blocks
-
-For the purposes of metaprogramming, one can define an `AsyncBlock` type block.
-
-These blocks are a built-in type that extend the `Block` type.
-These can work in metaprogramming terms as well.
-
-```Rust
-let some_block: AsyncBlock = async {
-    ...
-}
-```
-
-These can be worked with and ran same as other blocks, but these will simply be asynchronous.
-
-#### After Keyword
-
-TO-DO
-Waits for multiple jobs and then runs that block of code
-
-```Odin
-async { ... } after async { ... }
-```
-
-#### When Keyword
-
-TO-DO
-Runs a background task (daemon) in the program.
-
-#### Assign After Keyword
-
-TO-DO (requires being in an async block)
-
-```Rust
-let [a, b, c] = assign after [
-    fetch_user(1),
-    fetch_user(2),
-    fetch_user(3),
-];
-```
-
-#### Assign Before Keyword
-
-TO-Do (requires being in an async block)
-
-#### Promise<T> Combinators and API
-
-TO-DO
-
-#### Deferred Lazy Execution in Async Blocks via Future<T>
-
-TO-DO
-
-#### Promise Cancellation
 
 TO-DO
 
@@ -1974,49 +1763,288 @@ TO-DO
 
 TO-DO, shouldn't be any, but just in case there might be any.
 
+## Meta Programming
+
+Loid offers some metaprogramming capabilities.
+They are designed to be highly explicit and avoiding magic.
+
+This section from the type system will only go into types that are useful for metaprogramming.
+However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
+
+This is regarding the `Block` type, macros, and so on.
+
 ## Constrained Types
 
-TO-DO
+Loid allows you to constrain types at compile-time, to ensure of proper typing before your code runs.
+
+This is a powerful feature that the entire language relies upon.
+
+### Within OOP
+
+Consider a class `Animal`.
+
+Then, the type of its child is as follows:
+
+```Odin
+type AnimalChild = #let { type^ C; } in C | C <: Animal;
+```
+
+Here we have a lot of new stuff.
+
+Let's uncover this.
+
+The `#let` keyword resolves a namespace with the type `C`.
+
+The `type^` keyword (with the `^`) inside the let keyword specifies that the type `C` is a generic type of type `Type` with no constraints.
+
+The `in` resolves it out into the `C | C <: Animal` chunk.
+
+This entire let creation has a sugar of `^C`.
+
+In code:
+
+```Rust
+type AnimalChild = ^C | C <: Animal;
+```
+
+The `|` symbol is an alias of `where`, they serve the same purpose.
+This is a keyword that says:
+`something does something where a condition applies`.
+
+The `<:` is a catch-all operator that checks for any form of inheritance in terms of types.
+
+You can narrow this down to `inherits`, `derives`, or else for specific types, but on a type system level they all just mean `<:`.
+
+Thus, the statement
+
+```Odin
+type AnimalChild = #let { type^ C; } in C where C inherits Animal;
+```
+
+Is equivalent to:
+
+```Rust
+type AnimalChild = ^C where C <: Animal;
+```
+
+An is, in its shortest form:
+
+```Rust
+type AnimalChild = ^C | C <: Animal;
+```
+
+This essentially means that, the type `AnimalChild` is the type `C` where `C` is a child of `Animal`.
+
+To make you hate the full desugaring, the `where` keyword technically expects a lambda function that returns true when a condition is met and false otherwise.
+
+However, you can simply type what we have and the `where` keyword will fill in the gaps.
+
+#### Equivalence Note
+
+Loid allows you to store expressions as the `Expr` type, as shown in the metaprogramming chapter.
+
+For note, it is done as follows:
+
+```Rust
+let expr: Expr = Expr { ^C | C <: Animal };
+```
+
+Expressions can be compared to one another to see if they result in isomorphic abstract syntax trees.
+
+```Rust
+let expr1: Expr = Expr { ^C | C <: Animal; }
+let expr2: Expr = Expr { #let { type^ C; } in C where C <: Animal; }
+let expr3: Expr = Expr { #let { type^ C; } in C | C <: Animal; }
+let expr4: Expr = Expr { ^C where C <: Animal; }
+let expr5: Expr = Expr { ^C | C inherits Animal; }
+let expr6: Expr = Expr { ^C where C inherits Animal; }
+
+Expr.equiv([expr1, expr2, expr3, expr4, expr5, expr6]); // true
+```
+
+In other words, these expressions are all identical.
+
+Note that, the exact operation that `<:` will be whether `inherits` or `derives` or else is inferred after the CST is made, and then inputted as such in the AST.
+As such, it will, in these expressions, always desugar to `inherits`.
+
+Loid might feel a little bloated as of now, but this syntactic sugar all desugars to the most precise variant of:
+
+```Rust
+let expr2: Expr = Expr { let { type^ C; } in C where lambda (PossibleAnimalType: Type<C>) -> Bool => PossibleAnimalType inherits Animal; }
+```
+
+While letting you express what you mean in clean and simple readable code:
+
+```Rust
+let expr1: Expr = Expr { ^C | C <: Animal; }
+```
+
+The value of this is huge, as your codebase is now far more readable and clear.
 
 ### Natural Number Type
 
-TO-DO
+In Loid, one can define a `Nat` type for natural numbers.
+
+To go on here, recall that `^` is a symbol in Loid that refers to generics.
+
+Declaring anything as `^` means introducing something without the loss of generality (WLoG). As in mathematical proofs.
+
+Consider with all the sugar in the world:
+
+```Rust
+type Nat = ^n: Int | n >= 0;
+```
+
+Without the sugar:
+
+```Odin
+type Nat = #let { let^ n: Int; } in n where n >= 0;
+```
 
 #### Proving Naturality
 
-TO-DO
+For the case of assigning a natural number as a value when it isn't directly known that the type is a natural number in Loid, we do not actually have to do theorem proving.
 
-#### Handling Unnaturality
+But in many other cases, we would.
 
-TO-DO
+Consider the `Nat` type described above to already be defined somewhere in the working namespace.
 
-### Theorem Proving for Constraints
+Consider this:
 
-TO-DO
+```Rust
+let n: Int = 10;
 
-#### Induction
+let m: Nat = n;
+```
 
-TO-DO
+This will compile without an error, as `n` is an immutable `let` declaration, with is perfect for what we want.
+The compiler will catch the naturality of `10` on its own.
 
-#### Rational Number Type
+Consider this:
 
-TO-DO
+```Rust
+let n: Int = -10;
+let m: Nat = n; // this will fail to compile
+```
 
-#### Irrational Number Type
+Consider this too:
 
-TO-DO
+```Rust
+let n: Int = String.toInt("10");
+let m: Nat = n;
+```
 
-#### Issue with the Irrational Number Type
+Will this compile?
+The answer is, no, it will not. As the compiler cannot directly verify that the string being parsed to an integer is a natural number and meets the constraint of `Nat`.
 
-TO-DO (floating point values are always finite, so it'd have to be not a computed number but rather a more general statement? Like say sqrt2 instead of whatever that's gonna compute to.)
+To force it to compile, one can simply do as follows:
+
+```Rust
+let m: Nat = if (n >= 0) do n
+             else do 0;
+```
+
+Here, we enforce that any time that `n` isn't a natural number, `m` will be a zero.
+
+There are other ways to handle this too, but this is an example of compilation.
+
+Another thing one can do to make your life easier on complex constraints (especially when they get so complex that the compiler might have trouble proving them) is using the built in `mem` (for member) method on the constrained types.
+
+```TypeScript
+let m: Nat = if (Nat.mem(n)) do n
+             else do 0;
+```
+
+This will check if `n` satisfies `Nat` by running the constraint function on it.
+
+For more complex constraints, we will require a degree of theorem proving.
 
 ## First-Class Types
 
-TO-DO
+Loid is designed to allow and integrate cleanly and clearly with first class types.
 
-### The `Type<T>` Wrapper
+First-class concepts in a programming language, refer to constructs in a language that can be passed around and treated as values.
 
-TO-DO
+In modern times, most languages treat functions as first class concepts, often seen in the form of lambda functions and assigning functions to variables.
+
+Many functional programming languages implement first-class types for the purposes for verification and theorem proving.
+Also for compile-time checking.
+
+There is however an issue with such languages, and that is that most of them have syntax that is unreadable or confusing to newcomers.
+And it enforces the functional paradigm in most scenarios.
+
+The functional paradigm of programming is a limiting and yet a powerful paradigm. Enforcing almost total purity on all functions in your codebase and composing your program as a composition of functions rather than complex and interconnected webs of objects that interact in esoteric ways is a great way to keep code clear and usable.
+
+It also allows languages to use powerful type systems and compiler optimizations to ensure fast and correct code.
+
+However, the functional paradigm seems esoteric to many programmers, and thus the software they write can never use the full power of security that the functional and type-driven paradigm offers.
+
+The point of Loid is to bring that type-driven and clean paradigm to more object-oriented programming. Allowing programmers to have side-effects and object-oriented code that interacts in complex esoteric ways, in a type-safe way that uses first-class types to allow for as powerful a type checking as possible given the lack of the total purity constraint.
+
+Thus, Loid has first-class and dependent types.
+
+Consider the following function:
+
+```Rust
+fn string_or_int(b: Bool) -> Union<Type<String>, Type<Int>> {
+    return match b {
+        True  => String,
+        False => Int
+    }
+}
+```
+
+Recall, that for unions, the `&` keyword can also be used.
+
+So: `Union<A, B>` is the same as `A & B`.
+
+Here, we have a couple new things to discuss.
+
+The `Type` wrapper over types indicates that instead of expecting the value of type `String` or `Int`, we expect the literal type `String` or `Int`.
+
+Consider an use of this function.
+
+```Rust
+fn string_or_int(b: Bool) -> Type<String> & Type<Int> {
+    return match b {
+        True  => Int,
+        False => String,
+    }
+}
+
+fn get_string_or_int(x: Bool) -> string_or_int(x) {
+    return match x {
+        True  => 94,
+        False => "94",
+    }
+}
+
+fn val_to_string(x: Bool, val: string_or_int(x)) -> String {
+    return match x {
+        True  => Int.toString(val),
+        False => val,
+    }
+}
+```
+
+This is literally a function that takes in a boolean and returns a type.
+
+You can also of course generalize this to:
+
+```Rust
+fn string_or_int(b: Bool) -> Type {
+    return match b {
+        True  => Int,
+        False => String,
+    }
+}
+```
+
+In this case, the compiler will try to infer what this is. If it cannot, it'll ask you to declare it straight.
+
+The assignment of `string_or_int(x)` as a type is allowed with functions, and only with functions, that are total and pure, and return a type of `Type` or `Type<T>`.
+
+Otherwise, the compiler will give a warning.
 
 ### Reflections
 
@@ -2049,6 +2077,26 @@ TO-DO
 ### Type Functions
 
 TO-DO
+
+### Theorem Proving for Constraints
+
+TO-DO
+
+#### Induction
+
+TO-DO
+
+#### Rational Number Type
+
+TO-DO
+
+#### Irrational Number Type
+
+TO-DO
+
+#### Issue with the Irrational Number Type
+
+TO-DO (floating point values are always finite, so it'd have to be not a computed number but rather a more general statement? Like say sqrt2 instead of whatever that's gonna compute to.)
 
 ## Immutably Dependent Types
 
@@ -2148,7 +2196,7 @@ TO-DO
 
 ## Conditional Types
 
-TO-DO (conditions applied to any type, rather than constraints, which simply narrows down a certain type to a smaller subtype, conditional types are a generalization of that (works with say `string | int` types too, for an example, constraints are just an example of an use case of conditional types, uses the same syntax)).
+TO-DO (conditions applied to any type, rather than constraints, which simply narrows down a certain type to a smaller subtype, conditional types are a generalization of that (works with say `string & int` types too, for an example, constraints are just an example of an use case of conditional types, uses the same syntax)).
 
 ### Distribution Over Unions
 
@@ -2277,6 +2325,95 @@ TO-DO (basic rundown, finish in another chapter)
 TO-DO
 
 ### TLoid
+
+TO-DO
+
+## Promises
+
+Loid's asynchronous model is Promise-based, mirroring JavaScript but with full type level tracking.
+
+### Async Functions
+
+Consider:
+
+```Coffee
+async fn fetch_user(id: Int) -> Promise<User> {
+    let res = await http.get("/users/" + (Int.to_string <| id>));
+    return User.from_json(res.body);
+}
+```
+
+These work the same way as in TypeScript.
+
+### Await
+
+The `await` keyword works the same as in JavaScript.
+
+It waits until an asynchronous function is done doing its calculations.
+
+Consider:
+
+```TypeScript
+await fetch_user(1);
+```
+
+The code will simply wait here until the user is fetched.
+The `await` keyword only works in asynchronous functions or blocks of code.
+
+### Async Blocks
+
+For the purposes of metaprogramming, one can define an `AsyncBlock` type block.
+
+These blocks are a built-in type that extend the `Block` type.
+These can work in metaprogramming terms as well.
+
+```Rust
+let some_block: AsyncBlock = async {
+    ...
+}
+```
+
+These can be worked with and ran same as other blocks, but these will simply be asynchronous.
+
+### After Keyword
+
+TO-DO
+Waits for multiple jobs and then runs that block of code
+
+```Odin
+async { ... } after async { ... }
+```
+
+### When Keyword
+
+TO-DO
+Runs a background task (daemon) in the program.
+
+### Assign After Keyword
+
+TO-DO (requires being in an async block)
+
+```Rust
+let [a, b, c] = assign after [
+    fetch_user(1),
+    fetch_user(2),
+    fetch_user(3),
+];
+```
+
+### Assign Before Keyword
+
+TO-Do (requires being in an async block)
+
+### Promise<T> Combinators and API
+
+TO-DO
+
+### Deferred Lazy Execution in Async Blocks via Future<T>
+
+TO-DO
+
+### Promise Cancellation
 
 TO-DO
 

@@ -349,16 +349,31 @@ The block defined will simply create a namespace.
 
 There is a shorthand as well:
 
-TO-DO (decide on shorthand notation)
-
-## The `where` Keyword.
-
-The `where` keyword is a syntactic sugar over the `let` and `in` syntax.
-
-Consider:
+TO-DO (decide on shorthand notation for the let parts of this)
+(maybe something like
 
 ```Rust
-let n: Int = x + y where { let x: Int = 10; let y: Int = 11; };
+let result: Int = #let { x = 10, y = 15 } in x + y;
+```
+
+without requiring the use of the `let` keyword inside and of statically typing types (although the types have always been optional due to inference)).
+
+#### Using the `#let` `in` Syntax in Conjunction with `with`.
+
+You can use the `#let` and `in` syntax with `with` to achieve some very funny situations.
+
+Consider this:
+
+```TypeScript
+with (#let {
+    namespace SomeNamespace {
+        let funny_word: String = "cat";
+        let funny_num: Int = 67;
+    }
+} in SomeNamespace) {
+    io.print(funny_word);
+    io.print(funny_num);
+}
 ```
 
 ## The Ternary Operator.
