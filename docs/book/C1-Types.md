@@ -78,7 +78,7 @@ Represent boolean logic states of `true` and `false`.
 
 ```Rust
 let is_active: Bool = true;
-let is_dead  : Bool   = false;
+let is_dead  : Bool = false;
 ```
 
 ### Character (`Char`)
@@ -182,6 +182,7 @@ let f: String = f"2 + 2 = \(2 + 2)"; // f-strings
 let m: String = // multiline strings, by default are f-strings
     >Line one
     >Line two \(f)
+    >funny word lol
 ```
 
 #### Manipulation
@@ -222,7 +223,8 @@ let one_til_ten: Int[] = List.til(1, 10);
 
 io.print(xs.at(0).to_string());
 
-xs.for_each(λ (x: Int, i: Int) -> void => io.print(x.to_string()));
+xs.for_each(λ (x: Int, i: Int) -> Void effect IO => io.print(x.to_string()));
+// what effect IO means will be explained down below soon
 
 xs.set(0, 99);
 xs.push(6);
@@ -263,12 +265,20 @@ Declaring `Block`s:
 ```Rust
 let cool_block: Block = {
     let n: int = 0;
-
-    io.print(n + n + n);
 }
 ```
 
 More on blocks will be explained in the metaprogramming section.
+
+For an effectful block one would have to do:
+
+```Rust
+let cool_block: Block effects IO {
+    let n: int = 0;
+
+    io.print(Int.to_string(n));
+}
+```
 
 ## Structural & Object-Oriented Types
 
@@ -303,7 +313,7 @@ struct Person {
 }
 
 impl Person {
-    fn age_up() -> Int {
+    fn age_up() -> Int effect Mut { // effect Mut simply states that a mutation is happening here
         this.age = this.age + 1;
         return this.age;
     }
@@ -387,7 +397,7 @@ struct Person {
 }
 
 impl Person {
-    fn age_up() -> Int {
+    fn age_up() -> Int effect Mut {
         this.age = this.age + 1;
         return this.age;
     }
@@ -407,7 +417,7 @@ struct Person {
 }
 
 impl Person {
-    fn age_up() -> Int {
+    fn age_up() -> Int effect Mut {
         this.age = this.age + 1;
         return this.age;
     }
@@ -418,7 +428,7 @@ struct Employee derives Person {
 }
 
 impl Employee {
-    override fn age_up() -> {
+    override fn age_up() effect Mut -> {
         this.age = this.age + 2; // you age more when employed
     }
 }
@@ -537,11 +547,11 @@ enum Connection {
 }
 
 impl Connection {
-    fn connect(target_ip: String) -> Void {
+    fn connect(target_ip: String) -> Void effect Mut {
         this = Connection.Connected({ ip: target_ip });
     }
 
-    fn disconnect() -> Void {
+    fn disconnect() -> Void effect Mut {
         this = Connection.Disconnected;
     }
 }
@@ -550,6 +560,8 @@ let conn: Connection = Connection.Disconnected;
 
 conn.connect("192.168.1.1");
 ```
+
+TO-DO (handling mutations here with regards to effects)
 
 #### Setting Enum Payloads
 
@@ -595,7 +607,7 @@ Traits do NOT work with classes nor enums.
 
 ```Rust
 trait Loggable {
-    fn log_state() -> Void {
+    fn log_state() -> Void effect IO, NDet {
         io.print("state logged as: " + time.now().to_string());
     }
 }
@@ -636,7 +648,7 @@ trait Drawable {
 }
 
 trait Resizable {
-    fn resize(w: Int, h: Int) -> Void { ... };
+    fn resize(w: Int, h: Int) -> Void effect Mut { ... };
 }
 
 trait UIElement inherits Drawable, Resizable {
@@ -689,7 +701,7 @@ We can override these by writing this instead:
 
 ```Rust
 impl UIElement for Button {
-    override fn draw() -> Void {
+    override fn draw() -> Void effect IO {
         io.print("drawing");
     }
 };
@@ -705,7 +717,7 @@ However, this can be handled as follows:
 
 ```Rust
 impl Walk, Play, Sleep for Cat {
-    override fn meow() -> Void {
+    override fn meow() -> Void effect IO {
         Walk.meow(); // if you want to use the Walk version
         Play.meow(); // for the Play version
         // or write something of your own
@@ -719,7 +731,7 @@ When overriden Traits (or traits in general) interact with derived structs, this
 
 ```Rust
 trait Loggable {
-    fn log_state() -> Void {
+    fn log_state() -> Void effect IO {
         io.print("log");
     }
 }
@@ -744,7 +756,7 @@ To override on a derived struct:
 
 ```Rust
 impl Employee {
-    override fn log_state() -> void {
+    override fn log_state() -> Void effect IO {
         io.print(this.name + " (" + this.job + ")");
     }
 }
@@ -761,8 +773,8 @@ As in:
 
 ```Rust
 trait AnimalLike {
-    abstract fn make_sound() -> Void;
-    abstract fn get_named(s: String) -> Bool;
+    abstract fn make_sound() -> Void effect IO;
+    abstract fn get_named(s: String) -> Bool effect Mut;
 }
 ```
 
@@ -774,11 +786,11 @@ struct Cat {
 }
 
 impl AnimalLike for Cat {
-    override fn make_sound() -> Void {
+    override fn make_sound() -> Void effect IO{
         io.print("meow");
     }
 
-    override fn get_named(s: String) -> Bool {
+    override fn get_named(s: String) -> Bool effect Mut {
         this.name = s;
         return true;
     }
@@ -786,6 +798,15 @@ impl AnimalLike for Cat {
 ```
 
 Code failing to do this fails to compile.
+
+TO-DO (explain how to deal with effects, how to tack effects on later, etc...)
+(what if AnimalLike starts with an effect IO type
+what if AnimalLike doesn't have IO but Cat does,
+what if Cat's make_sound is being called from a function expecting that it's calling a total function from a type of all structs that implement AnimalLike)
+
+(this needs to be clarified)
+
+(for now, we'll just be forcing the effect on all)
 
 #### Generics in Traits
 
@@ -796,8 +817,8 @@ Consider:
 ```Rust
 trait Container<T> {
     fn get(index: Int) -> T { ... };
-    fn set(index: Int, value: T) -> Void { ... };
-    fn len() -> Int { ... };
+    fn set(index: Int, value: T) -> Void effect Mut { ... };
+    fn len() -> Int effect NDet { ... };
 }
 ```
 
@@ -856,7 +877,7 @@ trait Writeable<T> {
 }
 
 trait ReadWriteable<T> inherits Readable<T>, Writeable<T> {
-    fn flush() ->Void;
+    fn flush() -> Void;
 }
 
 // Here K and V are the child's parameters,
@@ -1045,7 +1066,7 @@ Consider:
 abstract class Animal {
     inst pub name: String;
 
-    pub construct(name: String) -> TypeOf<t>his {
+    pub construct(name: String) -> TypeOf<this> {
         this.name = name;
 
         return this;
@@ -1102,7 +1123,7 @@ class Database {
         return "some sensitive data";
     }
 
-    inst pub drop_tables() -> Void {
+    inst pub drop_tables() -> Void effect IO {
         io.print("tables totally dropped");
     }
 }
@@ -1112,7 +1133,7 @@ proxy ReadOnlyDB proxies Database {
 
     pub read: () -> String; // exposes read as-is
 
-    overwrite pub drop_tables() -> Void {
+    overwrite pub drop_tables() -> Void effect IO {
         io.print("security issue: no drop permissions");
     } // you can also just not have a drop_tables exposed if you want at all
 }
@@ -1174,10 +1195,10 @@ Interfaces use the `implements` keyword.
 
 By notation always capitalize and start with "I"
 
-```Coffee
+```C++
 interface IConnectTable {
-    pub connect: (string) -> Bool;
-    pub disconnect: () -> Void;
+    pub connect: (string) -> Bool effect Mut;
+    pub disconnect: () -> Void effect Mut;
 }
 
 interface ILoggable {
@@ -1187,19 +1208,19 @@ interface ILoggable {
 class NetworkNode implements IConnectable, ILoggable {
     inst pub is_active: Bool;
 
-    pub construct() -> TypeOf<this> {
+    pub construct() -> TypeOf<this> { // technically not Mut effect as it is just setting is_active for the first time
         this.is_active = false;
 
         return this;
     }
 
-    inst pub connect(ip: String) -> Bool {
+    inst pub connect(ip: String) -> Bool effect Mut {
         this.is_active = true;
 
         return true;
     }
 
-    inst pub disconnect() -> Void {
+    inst pub disconnect() -> Void effect Mut {
         this.is_active = false;
     }
 
@@ -1369,13 +1390,16 @@ Consider:
 
 ```Coffee
 interface IBase {
-    default prot log: () -> Void = λ () => io.print("base");
+    default prot log: () -> Void effect IO = λ () -> void effect IO  => io.print("base");
 }
 
 interface IDerived inherits IBase {
-    override default pub log: () -> Void = λ () => io.print("derived");
+    override default pub log: () -> Void effect IO = λ () -> Void effect IO => io.print("derived");
 }
 ```
+
+TO-DO (can the Void effect IO be inferred anywhere here, to make writing this easier)
+(should it even be inferrable)
 
 #### Interfaces with Proxy Classes
 
@@ -1641,7 +1665,7 @@ Consider a class `Animal`.
 Then, the type of its child is as follows:
 
 ```Odin
-type AnimalChild = #let { type^ C; } in C | C <: Animal;
+type AnimalChild = #let { type^ C; } in C where C <: Animal;
 ```
 
 Here we have a lot of new stuff.
@@ -1652,7 +1676,7 @@ The `#let` keyword resolves a namespace with the type `C`.
 
 The `type^` keyword (with the `^`) inside the let keyword specifies that the type `C` is a generic type of type `Type` with no constraints.
 
-The `in` resolves it out into the `C | C <: Animal` chunk.
+The `in` resolves it out into the `C where C <: Animal` chunk.
 
 This entire let creation has a sugar of `^C`.
 
@@ -1682,12 +1706,6 @@ Is equivalent to:
 type AnimalChild = ^C where C <: Animal;
 ```
 
-An is, in its shortest form:
-
-```Rust
-type AnimalChild = ^C | C <: Animal;
-```
-
 This essentially means that, the type `AnimalChild` is the type `C` where `C` is a child of `Animal`.
 
 To make you hate the full desugaring, the `where` keyword technically expects a `theorem` that returns true when a condition is met and false otherwise.
@@ -1707,14 +1725,11 @@ let expr: Expr = Expr { ^C | C <: Animal };
 Expressions can be compared to one another to see if they result in isomorphic abstract syntax trees.
 
 ```Rust
-let expr1: Expr = Expr { ^C | C <: Animal; }
-let expr2: Expr = Expr { #let { type^ C; } in C where C <: Animal; }
-let expr3: Expr = Expr { #let { type^ C; } in C | C <: Animal; }
-let expr4: Expr = Expr { ^C where C <: Animal; }
-let expr5: Expr = Expr { ^C | C inherits Animal; }
-let expr6: Expr = Expr { ^C where C inherits Animal; }
+let expr1: Expr = Expr { #let { type^ C; } in C where C <: Animal; }
+let expr2: Expr = Expr { ^C where C <: Animal; }
+let expr3: Expr = Expr { ^C where C inherits Animal; }
 
-Expr.equiv([expr1, expr2, expr3, expr4, expr5, expr6]); // true
+Expr.equiv([expr1, expr2, expr3]); // true
 ```
 
 In other words, these expressions are all identical.
@@ -1737,13 +1752,55 @@ let expr2: Expr = Expr {
 While letting you express what you mean in clean and simple readable code:
 
 ```Rust
-let expr1: Expr = Expr { ^C | C <: Animal; }
+let expr1: Expr = Expr { ^C where C <: Animal; }
 ```
 
 The value of this is huge, as your codebase is now far more readable and clear.
 
 Although, it does lose a lot of the internal work that Loid is doing under the hood, if you're someone that cares about knowing that.
 You can always write the desugared version however, fret not.
+
+#### Type of a Parent Class Itself
+
+TO-DO
+
+#### Type of Child Class (Not a Parent)
+
+TO-DO
+
+#### Type of Class Without Parents
+
+TO-DO
+
+#### Type of an Interface Itself
+
+TO-DO
+
+#### Type of a Child of an Interface (Not a Parent)
+
+TO-DO
+
+#### Type of a Parent Interface Itself
+
+TO-DO
+
+#### Type of Interface Without Parents
+
+TO-DO
+
+### Structs
+
+TO-DO (same as classes)
+
+### Traits
+
+TO-DO
+
+### Enums
+
+TO-DO
+
+(Consider all cases that can happen just-in-case, we want to avoid UB)
 
 ### Natural Number Type
 
@@ -1756,7 +1813,7 @@ Declaring anything as `^` means introducing something without the loss of genera
 Consider with all the sugar in the world:
 
 ```Rust
-type Nat = ^n: Int | n >= 0;
+type Nat = ^n: Int where n >= 0;
 ```
 
 Without the sugar of the `n` declaration.
@@ -1809,7 +1866,7 @@ However, if the `n` is still somehow not known as it is read from a file that we
 To force it to compile, one can simply do something similar to what follows:
 
 ```Rust
-let m: Nat = if (n >= 0) do n
+let m: Nat = ensure (n >= 0) do n
              else do 0;
 ```
 
@@ -1820,7 +1877,7 @@ There are other ways to handle this too, but this is an example of compilation.
 Another thing one can do to make your life easier on complex constraints (especially when they get so complex that the compiler might have trouble proving them) is using the built in `mem` (for member) method on the constrained types.
 
 ```Rust
-let m: Nat = if (Nat.mem(n)) do n
+let m: Nat = ensure (Nat.mem(n)) do n
              else do 0;
 ```
 
@@ -1863,9 +1920,9 @@ fn string_or_int(b: Bool) -> Union<Type<String>, Type<Int>> {
 }
 ```
 
-Recall, that for unions, the `&` keyword can also be used.
+Recall, that for unions, the `|` symbol can also be used.
 
-So: `Union<A, B>` is the same as `A & B`.
+So: `Union<A, B>` is the same as `A | B`.
 
 Here, we have a couple new things to discuss.
 
@@ -1874,7 +1931,7 @@ The `Type` wrapper over types indicates that instead of expecting the value of t
 Consider an use of this function.
 
 ```Rust
-fn string_or_int(b: Bool) -> Type<String> & Type<Int> {
+fn string_or_int(b: Bool) -> Type<String> | Type<Int> {
     return match b {
         True  => Int,
         False => String,
@@ -1957,6 +2014,7 @@ There are a couple major types of side effects that we want to account for.
 - Divergence: might not terminate
 - IO: Might output something, or take in input (whether file or console)
 - Non-determinism: The value cannot be seen before runtime
+- Mutations: non-constant values
 
 These major effects are described in the language as follows:
 
@@ -1964,6 +2022,7 @@ These major effects are described in the language as follows:
 - Divergence: `Div`
 - IO: `IO`
 - Non-Determinism: `NDet`
+- Mutations: `Mut`
 
 These are the major effects that the language forces the handling of.
 
@@ -2003,6 +2062,10 @@ Now consider this function:
 ```Rust
 fn try_from_string(raw: String) -> Void effect IO {
     ensure IntegralString(raw) {
+        // due to the IntegralString(raw) above, the theorem won't be re-run
+        // instead it'll trust that anywhere IntegralString(raw) is asked of now, it is true
+        // this allows for faster compile times, and safer code at the same time
+        // ^;^
         let n: Int = parse_int(raw);
 
         ensure Gte0(n) {
@@ -2040,17 +2103,416 @@ fn try_from_string(raw: String) -> Void effect IO {
 }
 ```
 
+For clarification's purposes:
+
+While these are functions that can be called like normal and evaluated as boolean values, simply calling them will not be enough to prove that they are in fact proving a theorem for a specific thing.
+But will rather be treated as unproven standard function calls.
+
+So, the upper example, wouldn't actually compile, the compiler will simply treat the code as if it was that AFTER the type checking is complete.
+
 ### Handling Exceptions
 
-TO-DO
+Consider the following theorems:
+
+```lean
+theorem IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
+theorem Gte0          (n: Int)    => n >= 0;
+```
+
+Consider the following exception handlers.
+
+```rust
+error InvalidNumber(raw: String)       => "Not an integer: " + raw;
+error NegativeLength(n: Int)           => "Length must be >= 0" + Int.to_string(n);
+error IOErr(path: String, msg: String) => path ": " + msg;
+```
+
+Consider the following piece of code:
+
+```Rust
+struct SizedArray<T> {
+    len:  Int where Naturality(len),
+    data: Array<T, len>,
+}
+
+@total
+fn make_zeroes(n: Int) -> Array<Int, n> where Naturality(n) { ... }
+
+@total
+fn parse_int(s: String) -> Int where IntegralString(s) { ... }
+
+fn read_zero_array(path: String) ->
+    SizedArray<Int>
+    effect IO, Exn
+    {
+        let raw: String = fs.read(path);
+
+        ensure IntegralString(raw)
+        else do raise InvalidNumber(raw);
+        // from now we assume IntegralString(raw) to be true
+
+        let n: Int = parse_int(raw); // compiles now
+
+        ensure Naturality(n)
+        else do raise NegativeLength(n);
+
+        let zeroes: Array<Int, n> = make_zeroes(n);
+
+        return SizedArray {
+            len:  n,
+            data: zeroes,
+        }
+    }
+```
+
+Consider that this causes exceptions that print to the screen and stops the program from continuing to be evaluated.
+
+#### Try-Catch Blocks
+
+One can handle exceptions through `try-catch` blocks as follows:
+
+```Rust
+fn read_zero_array(path: String) ->
+    SizedArray<Int>
+    effect IO, Exn
+    {
+        try {
+            let raw: String = fs.read(path);
+
+            ensure IntegralString(raw)
+            else do raise InvalidNumber(raw);
+            // from now we assume IntegralString(raw) to be true
+
+            let n: Int = parse_int(raw); // compiles now
+
+            ensure Naturality(n)
+            else do raise NegativeLength(n);
+
+            let zeroes: Array<Int, n> = make_zeroes(n);
+
+            return SizedArray {
+                len:  n,
+                data: zeroes,
+            }
+        } catch {
+            IOErr(e) => {
+                // what to run if an IOErr occurred
+                // this is a standard code block
+                // you can basically write anything here as long as it follows the rules of
+                // the code block it is inside of.
+                // so the parent or super code block.
+                // so if this is in a IO, Exn effected block, it cannot make
+                // new kinds of effects.
+
+                // obviously
+            },
+            InvalidNumber(s) => { ... },
+            NegativeLength(s) => { ... },
+        }
+    }
+```
 
 ### Handling Divergence
 
-TO-DO
+A function has the `Div` effect whenever the compiler cannot guarantee that it will finish running.
+
+This usually happens in two places.
+
+Loops, and recursion.
+
+Consider the Collatz Sequence:
+
+```Rust
+fn collatz_steps(start: Int)
+    -> Int
+        where Naturality(start)
+        effect Div, Mut {
+    var n: Int = start; // variables of `var` can only exist in Mut blocks
+    var steps: Int = 0;
+
+    while (n > 1) {
+        if (n % 2 == 0) {
+            n = n / 2;
+        } else {
+            n = (3 * n) + 1;
+        }
+
+        steps = steps + 1;
+    }
+
+    return steps;
+}
+```
+
+This hasn't been proven to terminate for every input, so the compiler requires the `effect Div`.
+
+Because `Div` functions might run forever, they cannot be marked `@total`, cannot be called inside a `theorem`, and cannot be used inside a type expression.
+Otherwise, the compiler could hang during typechecking.
+
+You could keep `Div` where non-termination is intentional.
+
+Or use guaranteed terminating constructs such as matching:
+
+```Rust
+fn sum_up_to(n: Int) -> Int where Naturality(n) {
+    return match n {
+        0 => 0,
+        _ => n + sum_up_to(n - 1),
+    }
+}
+```
+
+Because `n` is known to be `>= 0`, and decreases by `1` on every recursive call until it hits `0`, the compiler knows this terminates and therefore does not require `effect Div`.
+
+If you do still want to run a function you don't want to manually prove the convergence (non-divergence) of, you can simply limit it.
+
+Consider:
+
+```Rust
+fn bounded_collatz(start: Int, max_steps: Int)
+    -> Int
+        effect Mut
+        where Naturality(start), Naturality(max_steps)
+    {
+        var n: Int = start;
+
+        for (var steps: Int = 0; steps < max_steps; steps += 1) {
+            if (n <= 1) {
+                return steps;
+            }
+            if (n % 2 == 0) {
+                n = n / 2;
+            } else {
+                n = (3 * n) + 1;
+            }
+        }
+
+        return -1; // err value
+    }
+```
+
+You could even declare a `Result`-like monadic wrapper to deal with this (or use any of the similar Struct-based monadic wrappers in the standard library).
+
+Long as the compiler can prove convergence, like in this case, the program will safely compile.
+
+Of course, you can force the compiler to believe that this will compile, by writing a decorator on top of the function that states `@force_converge`.
+
+This is however, dangerous, and not recommended for production.
 
 ### Handling Non-Determinism
 
+A function has the `NDet` effect when its result cannot be determined solely from its inputs before runtime.
+
+Common sources are random generation, current data (coeffects?).
+In general, globally stateful actions.
+
+Consider:
+
+```Rust
+fn random_zero_array() -> SizedArray<Int> effect NDet {
+    let n: Int = rand.int(-5, 10);
+
+    ensure Naturality(n) {
+        let zeroes: Array<Int, n> = make_zeroes(n);
+
+        return SizedArray {
+            len:  n,
+            data: zeroes,
+        };
+    } else {
+        let zeroes: Array<Int, 0> = make_zeroes(0);
+
+        return SizedArray {
+            len:  0,
+            data: zeroes,
+        }
+    }
+}
+```
+
+The compiler knows of the non-determinism, and ensures of it.
+
+Here `n` is immutable after binding, and the naturality proof mints the proof that `make_zeroes` needs without requiring `n` to be known at compile time.
+
+We can also deal with non-determinism with a handler:
+
+```Rust
+effect RNG {
+    fn next_int(min: Int, max: Int) -> Int;
+}
+
+fn roll_die() -> Int effect RNG {
+    return RNG.next_int(1, 6);
+}
+
+fn test_roll() -> Bool {
+    handle RNG {
+        fn next_int(min: Int, max: Int) -> Int {
+            return min; // make it deterministic
+        }
+    }
+
+    // now that all effects are handled you can do this
+    return roll_die() == 1;
+}
+```
+
+#### Where We can Ignore Non-Determinism
+
+TO-DO (Maybe? To make life easier?)
+
+### Handling Mutations
+
+Mutable OOP objects break dependent types.
+
+They simply do not work.
+
+If someone mutates a part of a class, but a type depended on it, it'll simply break.
+
+As such, Loid does not allow dependencies on mutable objects.
+
+However, you can depend upon snapshots of said mutable objects.
+
+Consider the following class
+
+```Coffee
+class GridConfig {
+    inst pub size: Int;
+
+    pub construct(size: Int) -> TypeOf<this> {
+        this.size = size;
+        return this;
+    }
+
+    inst pub fn resize(next: Int) -> Void effect Mut {
+        this.size = next;
+    }
+}
+```
+
+Now consider the following function:
+
+```Rust
+fn build_grid(cfg: GridConfig) -> SizedArray<Int> effect Mut, Exn<NegativeLength> {
+    let frozen: Snap<GridConfig> = Class.Snap(cfg);
+
+    ensure Naturality(frozen.size)
+    else do raise NegativeLength(frozen.size);
+
+    cfg.resize(999); // the mutation doesn't change what we froze cfg at
+
+    let data: Array<Int, frozen.size> - make_zeroes(frozen.size);
+
+    return SizedArray {
+        len:  frozen.size,
+        data: data,
+    }
+}
+```
+
+The `snapping` can be applied to anything that is mutable, not just class objects.
+
+More on this later.
+
+TO-DO (Call-By-Push-Value interest point?)
+
+### Totality as an Effect
+
+TO-DO (`@total` is the same as -> Type effect Total)
+
+### Decorators as Effects
+
+TO-DO (considerable, not sure)
+
+## Effects and Handlers
+
+Unlike Koka's multi-shot delimited continuation style effect handling (which is a very complex way to say you can pause functions mid-execution and resume them multiple times), Loid's effect system is far simpler.
+
+In Loid's capability-passed model, a user-defined effect is just an interface that gets passed invisibly down the call stack.
+
+Declare an effect, say `Logger` and `Clock`.
+
+```Koka
+effect Logger {
+    fn log(msg: String) -> Void effect IO;
+}
+
+effect Clock {
+    fn now() -> Int effect NDet;
+}
+```
+
+You can now use the said effect in a function that might have said effect.
+
+Consider:
+
+```Rust
+fn audit_login(user: String) -> Void effect Logger, Clock {
+    let ts: Int = Clock.now();
+
+    Logger.log(user + " logged in at " + Int.to_string(ts));
+}
+```
+
+Because Logger and Clock are in the signature, the compiler guarantees `audit_login` cannot be called inside a theorem or a dependent type, and cannot be run at top level unless someone provides handlers for both.
+
+You can provide handlers for them.
+
+```Rust
+fn main() -> Void effect IO, NDet {
+    handle Logger {
+        fn log(msg: String) -> Void effect IO {
+            io.print("[INFO] " + msg);
+        }
+    }
+
+    handle Clock {
+        fn now() -> Int {
+            return sys.unix_time(); // NDet
+        }
+    }
+
+    // after a handle function is written,
+    // in the block or scope that it is written in
+    // it will always be assumed
+    // unless stated otherwise (you can do in-line handlers).
+
+    audit_login("logan");
+}
+```
+
+### In-Line Effect Handlers
+
 TO-DO
+
+## In-Line Error Handling
+
+This is more akin to Monadic error handling.
+
+Consider:
+
+```Rust
+let raw: String = fs.read(path) or ""; // in case that `fs.read` fails. just do "".
+let grid: SizedArray<Int> = read_zero_array(path) or (λ () -> Void effect IO {
+    io.print("Using empty grid");
+    return SizedArray { len: 0, data: [] };
+})();
+
+let n: Int = parse_int(raw) or 0;
+```
+
+If the theorems cannot be proven, we can simply do this.
+
+Can be useful, can shoot you in the foot.
+
+## Effect Behaviour
+
+TO-DO (what happens when you forget the effects, effect-holes? similar to idris, how to write those?)
+(what is some UB for effects that we need to define)
+
+## Effect Derivations
+
+TO-DO (effect parents, children, derivations, maybe? would this be useful, would it make things clearer? better integrate w/ OOP?)
 
 ## Advanced Theorem Proving
 
@@ -2071,6 +2533,18 @@ TO-DO
 ### Issue with the Irrational Number Type
 
 TO-DO (floating point values are always finite, so it'd have to be not a computed number but rather a more general statement? Like say sqrt2 instead of whatever that's gonna compute to.)
+
+### Role of Effects
+
+TO-DO
+
+### Ensuring Purity
+
+TO-DO
+
+### Loiderem
+
+TO-DO (Pure-only Loid as a theorem prover (more on this in the derivations chapter))
 
 ## Immutably Dependent Types
 
@@ -2170,7 +2644,7 @@ TO-DO
 
 ## Conditional Types
 
-TO-DO (conditions applied to any type, rather than constraints, which simply narrows down a certain type to a smaller subtype, conditional types are a generalization of that (works with say `string & int` types too, for an example, constraints are just an example of an use case of conditional types, uses the same syntax)).
+TO-DO (conditions applied to any type, rather than constraints, which simply narrows down a certain type to a smaller subtype, conditional types are a generalization of that (works with say `string | int` types too, for an example, constraints are just an example of an use case of conditional types, uses the same syntax)).
 
 ### Distribution Over Unions
 
