@@ -1552,7 +1552,7 @@ TO-DO
 
 ## Advanced Types
 
-Leveraging Martin-Löf Type Theory, Loid's type system can restrict values through their types.
+Leveraging Dependent Type Theory, Loid's type system can restrict values through their types.
 
 ### Literal Types
 
@@ -2135,14 +2135,18 @@ error NegativeLength(n: Int)           => "Length must be >= 0" + Int.to_string(
 error IOErr(path: String, msg: String) => path ": " + msg;
 ```
 
-Consider the following piece of code:
+And this sigma-like type (more on sigma types and their sugar at a later part of this chapter):
 
 ```Rust
 struct SizedArray<T> {
     len:  Int where Naturality(len),
     data: Array<T, len>,
 }
+```
 
+Consider the following piece of code:
+
+```Rust
 @total
 fn make_zeroes(n: Int) -> Array<Int, n> where Naturality(n) { ... }
 

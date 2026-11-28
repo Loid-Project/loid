@@ -1,6 +1,6 @@
 # Loid
 
-Loid is an in-works programming language integrating Martin-Lof's Type Theory into an OOP approach.
+Loid is an in-works programming language integrating Dependent Type Theory into an OOP approach.
 
 Loid compiles to JavaScript.
 
