@@ -9,6 +9,7 @@
         "comptime",
         "desugars",
         "direnv",
+        "effectful",
         "fpoid",
         "givi",
         "Guix",

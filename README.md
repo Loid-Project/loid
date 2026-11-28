@@ -80,12 +80,26 @@ If any organization, team, or company wants to contribute, sponsor, or help in a
 
 ## AI Policy
 
-Loid does allow for AI-assisted code, but any issue, pull request, or code published or pushed to this codebase must be verified by a human and sent by a human.
+Loid does allow for AI-assisted code, but not for AI-generated code.
+To clarify what this means is that AI can recommend you things to write, you may copy what it has written, and use it.
+However, the idea and understanding must be yours.
+
+The code written by AI cannot simply be hoped to be correct, but rather truly understood.
+
+Given a huge pull request making a lot of changes with a very AI-like writing style, we will simply ignore it, as we do not want to review complicated AI-generated code written with no effort.
+
+AI-use for documentation purposes is allowed, but is to be verified.
+
+AI-use for specification purposes is allowed, but is to be verified and documented.
+
+Actual plans and ideas must be yours rather than that of an AI model.
 
 AI-assisted code will still be expected to hold up to our standards, be well written, and tested.
 We ask that you cite your AI sources when used and how it was used.
 
-Code that is clearly fully AI generated, or written and then pushed to the codebase by an autonomous AI agent will not be accepted.
+Code that is clearly fully AI generated, or written and then pushed to the codebase by an autonomous AI agent will not be accepted at all.
+
+Agents will also not be allowed write nor edit to Loid's repositories.
 
 ## Issues
 

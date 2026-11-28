@@ -1361,18 +1361,19 @@ Consider:
 
 ```Coffee
 interface ILoggable {
-    default pub log: () -> Void = λ () => io.print("loggable");
+    default pub log: () -> Void effect IO = λ () -> Void effect IO => io.print("loggable");
 }
 
 interface IDebuggable {
-    default pub log: () -> Void = λ () => io.print("debuggable");
+    default pub log: () -> Void effect IO = λ () -> Void effect IO => io.print("debuggable");
 }
 
 interface ICombined inherits ILoggable, IDebuggable {
-    override default pub log: () -> Void = λ () => {
-        ILoggable.log();
-        IDebuggable.log();
-    }
+    override default pub log: () -> Void effect IO =
+        λ () -> Void effect IO  => {
+            ILoggable.log();
+            IDebuggable.log();
+        }
 }
 ```
 
@@ -1611,7 +1612,7 @@ And that is the natural numbers.
 Consider:
 
 ```lean
-theorem Naturality(n: Int) => n >= 0;
+theorem Naturality (n: Int) => n >= 0;
 ```
 
 This is the theorem of naturality. An integer greater than or equal to `0`.
@@ -1639,7 +1640,7 @@ A very frequent computation that programmers will partake in is turning a string
 Consider the theorem:
 
 ```lean
-theorem IsIntString(s: String) => regex.matches("^-?[0-9]+$", s);
+theorem IsIntString (s: String) => regex.matches("^-?[0-9]+$", s);
 ```
 
 Consider a String to Int function of the signature:
@@ -1683,7 +1684,7 @@ This entire let creation has a sugar of `^C`.
 In code:
 
 ```Rust
-type AnimalChild = ^C | C <: Animal;
+type AnimalChild = ^C where C <: Animal;
 ```
 
 The `|` symbol is an alias of `where`, they serve the same purpose.
@@ -1719,7 +1720,7 @@ Loid allows you to store expressions as the `Expr` type, as shown in the metapro
 For note, it is done as follows:
 
 ```Rust
-let expr: Expr = Expr { ^C | C <: Animal };
+let expr: Expr = Expr { ^C where C <: Animal };
 ```
 
 Expressions can be compared to one another to see if they result in isomorphic abstract syntax trees.
@@ -1853,28 +1854,24 @@ let m: Nat = n; // this will fail to compile
 Consider this too:
 
 ```Rust
-let n: Int = String.toInt("10");
-let m: Nat = n;
+let n: Int = String.to_int("10");
+let m: Nat = n where Naturality(n)
 ```
 
 Will this compile?
-Yes, it actually will, because the `toInt` function checks a theorem similar to the `Naturality` theorem.
+Yes, it actually will, because the `to_int` function checks an Integrality theorem.
+And then we checked the Naturality theorem.
 
 Therefore, yes, this will absolutely compile.
 
-However, if the `n` is still somehow not known as it is read from a file that we cannot simply parse it will not compile.
-To force it to compile, one can simply do something similar to what follows:
+Without checking both though? It would not.
+
+You could also do:
 
 ```Rust
 let m: Nat = ensure (n >= 0) do n
              else do 0;
 ```
-
-Here, we enforce that any time that `n` isn't a natural number, `m` will be a zero.
-
-There are other ways to handle this too, but this is an example of compilation.
-
-Another thing one can do to make your life easier on complex constraints (especially when they get so complex that the compiler might have trouble proving them) is using the built in `mem` (for member) method on the constrained types.
 
 ```Rust
 let m: Nat = ensure (Nat.mem(n)) do n
@@ -1883,7 +1880,7 @@ let m: Nat = ensure (Nat.mem(n)) do n
 
 This will check if `n` satisfies `Nat` by running the constraint function on it.
 
-For more complex constraints, we will require a degree of theorem proving.
+For more complex constraints, we will require a further degree of theorem proving.
 
 ## First-Class Types
 
@@ -2394,7 +2391,7 @@ Now consider the following function:
 
 ```Rust
 fn build_grid(cfg: GridConfig) -> SizedArray<Int> effect Mut, Exn<NegativeLength> {
-    let frozen: Snap<GridConfig> = Class.Snap(cfg);
+    let frozen: Snap<GridConfig> = SnapOf(cfg); // this is built in
 
     ensure Naturality(frozen.size)
     else do raise NegativeLength(frozen.size);
@@ -2727,6 +2724,9 @@ TO-DO
 ## Built-in Types
 
 ### Sets
+
+TO-DO (rewrite the entire Sets section to fit the new effectful system)
+(also possibly change the syntax, it's a bit ehh)
 
 Loid has both a runtime collection type for sets and a type-level set representation.
 

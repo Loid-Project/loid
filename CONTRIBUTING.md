@@ -6,6 +6,7 @@ We use Github Issues to keep track of our bug reports.
 Please write in detail what the issue you are facing is and how to reproduce it when submitting a bug report.
 
 When creating an issue or PR, make sure they have each of these labels:
+
 - priority:
     - critical
     - high
@@ -52,6 +53,7 @@ When creating an issue or PR, make sure they have each of these labels:
     - needs a team
 
 And if needed:
+
 - good first issue
 - help wanted
 
@@ -61,17 +63,18 @@ But do let us know if any issues arise, we will provide help depending on what i
 ## Policies
 
 Most policies here are self explanatory and can be summarized as this:
+
 ```
 - Follow clean code procedures
 - Have good documentation, with test cases
-- Don't use AI to generate new code, and disclose where you've used it
+- Avoiding the use AI to generate new code, and disclose where you've used it
 ```
 
 In general we expect all contributors to follow a code of conduct:
+
 ```
 We are committed to providing a welcoming and inclusive environment for all contributors. All Contributors are expected to behave in a professional, respectful, and constructive ways in all issues, pr requests, and anywhere else throughout the project. Failure to
 ```
-
 
 ### Formatting and Good Code Practices
 
@@ -84,7 +87,6 @@ Follow Loid's style guide for writing new code
 Changes should always include tests for new behavior
 
 All tests must pass before contributing
-
 
 ### Documentation
 
@@ -106,9 +108,11 @@ You can use LLMs for:
     - suggesting
     - reviewing
 
-But **NOT** for creation
+But **NOT** for direct creation, unless it is something menial and simple.
 
-AI disclosure is necessary
+AI disclosure is necessary.
+
+Follow what <a href="./AI_POLICY.md">./AI_POLICY.md</a> says.
 
 Contributors are responsible for understanding and verifying everything they submit
 
@@ -135,6 +139,7 @@ Loid uses <a href="https://wiki.nixos.org/wiki/Flakes">nix flakes</a> with <a hr
 After installing `direnv` you can do:
 Then go into this project's root directory on your local machine.
 And run:
+
 ```
 direnv allow
 ```
@@ -144,6 +149,7 @@ This'll install all the dependencies and they'll only be accessible within this 
 ### On Non-NixOS Linux Distributions
 
 ##### IMPORTANT!!!!:
+
 Do the following in the root directory `~/`
 
 Every most distributions provide the `direnv` package, however, for `direnv` to work correctly with `nix flakes`, one must still enable `nix`.
@@ -155,6 +161,7 @@ You can see how to do so here:
 To use nix flakes on other distributions, one can set up the <a href="https://nixos.org/download/">nix</a> package manager and get direnv through it.
 
 For a simpler approach you can just run:
+
 ```bash
 curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --daemon
 ```
@@ -162,36 +169,43 @@ curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --da
 After having installed nix you have to source your shell:
 
 ##### BASH
+
 ```
 source ~/.bashrc
 ```
 
 ##### zsh
+
 ```
 source ~/.zshrc
 ```
 
 ##### Fish
+
 ```
 source ~/.config/fish/config.fish
 ```
 
 Then you can get flakes and commands enabled through:
+
 ```bash
 echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
 ```
 
 And then:
+
 ```bash
 nix profile add nixpkgs#nix-direnv
 ```
 
 Restart the Nix Daemon (for `systemd`):
+
 ```bash
 sudo systemctl restart nix-daemon
 ```
 
 Then make a config file:
+
 ```bash
 mkdir -p ~/.config/direnv
 echo 'source $HOME/.nix-profile/share/nix-direnv/direnvrc' >> ~/.config/direnv/direnvrc
@@ -208,6 +222,7 @@ This'll all be explained below:
 This section applies to <a href="https://archlinux.org/">Arch Linux</a> and its derivatives such as <a href="https://cachyos.org/">CachyOS</a> or <a href="https://manjaro.org/">Manjaro</a>
 
 `direnv` can be installed natively through `pacman`:
+
 ```
 sudo pacman -S direnv
 ```
@@ -217,6 +232,7 @@ sudo pacman -S direnv
 This section applies to <a href="https://ubuntu.com/">Ubuntu</a> and its many derivatives.
 
 `direnv` can be installed via `apt`:
+
 ```
 sudo apt install direnv
 ```
@@ -226,6 +242,7 @@ sudo apt install direnv
 This section applies to <a href="https://fedoraproject.org/">Fedora Linux</a> and its various derivatives.
 
 `direnv` can be installed via `dnf`:
+
 ```
 sudo dnf install direnv
 ```
@@ -235,18 +252,21 @@ sudo dnf install direnv
 Do the following in the root directory of your computer:
 
 ##### BASH
+
 ```
 echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ##### zsh
+
 ```
 echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
 ##### Fish
+
 ```
 mkdir -p ~/.config/fish
 echo 'direnv hook fish | source' >> ~/.config/fish/config.fish
@@ -258,6 +278,7 @@ source ~/.config/fish/config.fish
 Get <a href="https://wiki.nixos.org/wiki/Direnv">direnv</a>.
 
 You can enable it with:
+
 ```Nix
 {
     programs.direnv.enable = true;
@@ -266,6 +287,7 @@ You can enable it with:
 ```
 
 Make sure nix flakes are enabled:
+
 ```Nix
 {
     nix.settings.experimental-features = [
@@ -280,33 +302,39 @@ And rebuild with `$ nixos-rebuild switch --sudo`.
 ### MacOS
 
 You must first install `nix` on MacOS:
+
 ```
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
 You can install direnv via homebrew:
+
 ```
 brew install direnv
 ```
 
 Then add the shell hook to your zsh:
+
 ```
 echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
 Install `nix-direnv` to allow for flake evaluation:
+
 ```
 nix profile add nixpkgs#nix-direnv
 ```
 
 Configuring the caching hook:
+
 ```
 mkdir -p ~/.config/direnv
 echo 'source $HOME/.nix-profile/share/nix-direnv/direnvrc' >> ~/.config/direnv/direnvrc
 ```
 
 Then, in the root of the directory run:
+
 ```
 direnv allow
 ```
@@ -330,6 +358,7 @@ Feel free to help bring Loid to Windows.
 Due to the use of direnv, it is recommended to open VSCode through the terminal.
 Go to the project repository folder at the root of the repo.
 And then run:
+
 ```
 code .
 ```
@@ -339,8 +368,6 @@ This way all of the requirements for VSCode (language servers, formatters, and s
 #### Extensions
 
 For this project the following extensions are recommended:
-
-
 
 #### VSCode Settings
 
