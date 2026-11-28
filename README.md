@@ -6,7 +6,7 @@ Loid compiles to JavaScript.
 
 ## Inspiration
 
-Loid is heavily inspired by <a href="https://rust-lang.org/">Rust</a>, <a href="https://odin-lang.org/">Odin</a>, <a href="https://www.typescriptlang.org/">TypeScript</a>, and <a href="https://idris-lang.org/">Idris2</a>
+Loid is heavily inspired by <a href="https://rust-lang.org/">Rust</a>, <a href="https://odin-lang.org/">Odin</a>, <a href="https://www.typescriptlang.org/">TypeScript</a>, <a href="https://koka-lang.github.io/koka/doc/index.html">Koka</a> and <a href="https://idris-lang.org/">Idris2</a>
 
 ## Book
 
@@ -14,6 +14,14 @@ Loid is currently writing a full documentation to describe every aspect of the l
 This is as to avoid any issues after the language is developed.
 
 You can see the progress in the <a href="docs/">docs</a> folder.
+
+### Warning
+
+The book is currently being written and is under active development.
+
+As such, it is going to include inconsistencies, weird writings, and much more.
+
+But should generally be very clear and correct, if you find any mistakes or want clarifications, please open an issue or a PR.
 
 ### Chapters
 

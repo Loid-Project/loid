@@ -16,8 +16,16 @@
                     "./SECURITY.md",
                     "LICENSE",
                     "robots.txt",
-                    "DEPENDENCIES.md"
+                    "DEPENDENCIES.md",
+                    "CHANGELOG.md",
+                    "MANIFESTO.md",
+                    "flake.nix"
                 ]
+            }
+        },
+        "solo-docs": {
+            "includeOnly": {
+                "dirs": ["./docs"]
             }
         }
     }

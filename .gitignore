@@ -12,7 +12,6 @@ target
 
 # ai
 AGENTS.md
-aigest-docs.xml
+aigest-*.xml
 .agents
 repomix-output.xml
-aigest-output.xml

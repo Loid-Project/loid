@@ -1564,205 +1564,6 @@ fn panic(msg: String) -> Never {
 
 #### Never Behaviour Quirks
 
-TO-DO
-
-## Built-in and Monadic Types
-
-Loid omits the infamous programming concept of `null`. For obvious reasons.
-
-Instead of missing values with the `null` type, Loid relies on monadic types.
-
-These types enforce that the developer handles both the "success" and "failure" tracks explicitly.
-
-### Option, Maybe, Either, Result
-
-#### Option
-
-The `Option<T>` type represents a value that might be present.
-
-It has two variants: `Some` and `None`.
-
-Consider:
-
-```Rust
-struct User {
-    username: String,
-    email   : Option<String>,
-}
-
-let u: User = User {
-    username: "LoidFan69",
-    email   : Option.Some("fan@proton.me"),
-}
-
-match u.email {
-    Option.Some { e } => io.print("sending to: " + e);
-    Option.None       => io.print("who is you");
-}
-```
-
-#### Maybe
-
-`Maybe` is an alias of `Option`.
-
-#### Either
-
-The `Either<L, R>` monad is a two-variant sum enum type used for when a type is either one thing or another.
-
-Consider:
-
-```Rust
-enum Either<L, R> {
-    Left:  L,
-    Right: R,
-}
-```
-
-Constructors:
-
-```Rust
-let l: Either<Int, String> = Either.Left(42);
-let r: Either<Int, String> = Either.Right("hi");
-```
-
-TO-DO (still need to properly decide on syntax for payload initializing and access)
-
-Combinators:
-
-```Rust
-impl Either<L, R> {
-    pub fn is_left() ->  Bool;
-    pub fn is_right() -> Bool;
-
-    pub fn left() -> Option<L>;
-    pub fn right() -> Option<R>;
-
-    pub fn unwrap_left() -> L;
-    pub fn unwrap_right() -> R;
-
-    pub fn map<R2, F: (R) -> R2>(f: F) -> Either<L, R2>;
-    pub fn map_left<L2, F: (L) -> L2>(f: F) -> Either<L2, R>;
-
-    pub fn swap() -> Either<R, L>;
-
-    pub fn fold<T, FL: (L) -> T, FR: (R) -> T>(fl: FL, fr: FR) -> T; // we love generics :3
-}
-```
-
-#### Result
-
-TO-DO (write a basic explanation)
-Ideas:
-`Result` is a wrapper around `Either`.
-More on the `?` operator, `Result` type (and the general monadic error handling system) in the Error Handling chapter.
-
-### Sets
-
-Loid has both a runtime collection type for sets and a type-level set representation.
-
-#### Runtime Sets
-
-TO-DO (add more useful functions to the API)
-
-These are instances of the `Set` class, which stores an unique list of elements:
-
-This is the Set API:
-
-```Rust
-class Set<T> {
-    priv fn construct() -> Set<T>;
-
-    pub fn new() -> Set<T>;
-    pub fn of(items: List<T>) -> Set<T>;
-
-    pub fn add(item: T)    -> Bool;        // true if newly inserted
-    pub fn remove(item: T) -> Bool;
-    pub fn has(item: T)    -> Bool;
-
-    pub fn union(other: Set<T>)                -> Set<T>;
-    pub fn intersect(other: Set<T>)            -> Set<T>;
-    pub fn difference(other: Set<T>)           -> Set<T>;
-    pub fn symmetric_difference(other: Set<T>) -> Set<T>;
-
-    pub fn is_subset(other: Set<T>)   -> Bool;
-    pub fn is_superset(other: Set<T>) -> Bool;
-
-    pub fn size()    -> Int;
-    pub fn to_list() -> List<T>;
-
-    pub fn for_each<F: (T) -> Void>(f: F) -> Void;
-}
-```
-
-These sets are unordered, deduplicated, and support O(1) membership.
-
-TO-DO (examples)
-
-#### Type-Level Sets
-
-This is a type-level set used for keys and unions of literals.
-
-Consider:
-
-```TypeScript
-type K = set<"a", "b", "c">;
-
-// You can add elements to this type set:
-// and do various other operations
-
-type L = K.add<"d">;          // { "a", "b", "c", "d" }
-type M = K.remove<"a">;       // { "b", "c" }
-type N = K.union<set<"d">>;    // { "a", "b", "c", "d" }
-type O = K.intersect<set<"b", "x">>; // { "b" }
-```
-
-Type-level sets such as this must be finite.
-The use cases for these will be explained later on.
-
-This is also a good time to mention that in Loid, the type system itself is purely functional.
-The type system does not allow for side effects, despite it serving as a almost a full programming language of its own, in some regards.
-This is to allow for stronger and safer types.
-
-#### Infinite Type-Level Sets
-
-TO-DO
-
-## As Keyword
-
-TO-DO
-
-### Checked `as` Conversion
-
-TO-DO
-
-### Unchecked `as!` Conversion
-
-TO-DO
-
-### Pattern Matching as Narrowing
-
-TO-DO
-
-### Numeric Conversions
-
-TO-DO
-
-### String Conversions
-
-TO-DO
-
-## Satisfies Keyword
-
-TO-DO
-
-### Exhaustiveness
-
-TO-DO
-
-### Runtime Behavior
-
-TO-DO, shouldn't be any, but just in case there might be any.
-
 ## Meta Programming
 
 Loid offers some metaprogramming capabilities.
@@ -1772,6 +1573,60 @@ This section from the type system will only go into types that are useful for me
 However, the chapter on metaprogramming will go into far more depth and detail on how the loid language actually works.
 
 This is regarding the `Block` type, macros, and so on.
+
+## Basics of Theorem Proving
+
+In Loid, one can write simple theorems.
+
+### Natural Numbers
+
+To show how they work, before moving onto more complex things, it is good to demonstrate the simplest example.
+
+And that is the natural numbers.
+
+Consider:
+
+```lean
+theorem Naturality(n: Int) => n >= 0;
+```
+
+This is the theorem of naturality. An integer greater than or equal to `0`.
+
+We can ensure of naturality in certain places.
+
+Consider:
+
+```Rust
+fn make_zeros(n: Int) -> Array<Int, n> where Naturality(n) {
+    return Array.zeros(n);
+}
+```
+
+Essentially, a theorem in Loid is a compile-time total and pure function that returns a boolean value.
+
+However, this can only work assuming that we know what `n` is being passed in.
+
+We do have to handle various different issues on the way there.
+
+### String to Int
+
+A very frequent computation that programmers will partake in is turning a string into an integer.
+
+Consider the theorem:
+
+```lean
+theorem IsIntString(s: String) => regex.matches("^-?[0-9]+$", s);
+```
+
+Consider a String to Int function of the signature:
+
+```Rust
+string_to_int(s: String) -> Int where IsIntString(s);
+```
+
+If we use this function and pass in a raw string, the compiler will ensure that the string'll evaluate to an integer, without any trouble.
+
+This, allows for some very complex and useful type checking at compile-time and error catching.
 
 ## Constrained Types
 
@@ -1835,7 +1690,7 @@ type AnimalChild = ^C | C <: Animal;
 
 This essentially means that, the type `AnimalChild` is the type `C` where `C` is a child of `Animal`.
 
-To make you hate the full desugaring, the `where` keyword technically expects a lambda function that returns true when a condition is met and false otherwise.
+To make you hate the full desugaring, the `where` keyword technically expects a `theorem` that returns true when a condition is met and false otherwise.
 
 However, you can simply type what we have and the `where` keyword will fill in the gaps.
 
@@ -1870,7 +1725,13 @@ As such, it will, in these expressions, always desugar to `inherits`.
 Loid might feel a little bloated as of now, but this syntactic sugar all desugars to the most precise variant of:
 
 ```Rust
-let expr2: Expr = Expr { let { type^ C; } in C where lambda (PossibleAnimalType: Type<C>) -> Bool => PossibleAnimalType inherits Animal; }
+let expr2: Expr = Expr {
+    #let {
+        type^ C;
+    } in C where (#let {
+        theorem ChildOfAnimal(c: Type<C>) => c inherits Animal;
+    } in ChildOfAnimal(C));
+}
 ```
 
 While letting you express what you mean in clean and simple readable code:
@@ -1880,6 +1741,9 @@ let expr1: Expr = Expr { ^C | C <: Animal; }
 ```
 
 The value of this is huge, as your codebase is now far more readable and clear.
+
+Although, it does lose a lot of the internal work that Loid is doing under the hood, if you're someone that cares about knowing that.
+You can always write the desugared version however, fret not.
 
 ### Natural Number Type
 
@@ -1895,11 +1759,13 @@ Consider with all the sugar in the world:
 type Nat = ^n: Int | n >= 0;
 ```
 
-Without the sugar:
+Without the sugar of the `n` declaration.
 
-```Odin
+```Rust
 type Nat = #let { let^ n: Int; } in n where n >= 0;
 ```
+
+As you can see, the `let^` declaration works perfectly fine.
 
 #### Proving Naturality
 
@@ -1935,9 +1801,12 @@ let m: Nat = n;
 ```
 
 Will this compile?
-The answer is, no, it will not. As the compiler cannot directly verify that the string being parsed to an integer is a natural number and meets the constraint of `Nat`.
+Yes, it actually will, because the `toInt` function checks a theorem similar to the `Naturality` theorem.
 
-To force it to compile, one can simply do as follows:
+Therefore, yes, this will absolutely compile.
+
+However, if the `n` is still somehow not known as it is read from a file that we cannot simply parse it will not compile.
+To force it to compile, one can simply do something similar to what follows:
 
 ```Rust
 let m: Nat = if (n >= 0) do n
@@ -1950,7 +1819,7 @@ There are other ways to handle this too, but this is an example of compilation.
 
 Another thing one can do to make your life easier on complex constraints (especially when they get so complex that the compiler might have trouble proving them) is using the built in `mem` (for member) method on the constrained types.
 
-```TypeScript
+```Rust
 let m: Nat = if (Nat.mem(n)) do n
              else do 0;
 ```
@@ -2078,23 +1947,128 @@ TO-DO
 
 TO-DO
 
-### Theorem Proving for Constraints
+## Side Effect Handling
+
+In Loid, side-effects are allowed.
+
+There are a couple major types of side effects that we want to account for.
+
+- Exceptions: something may raise an exception
+- Divergence: might not terminate
+- IO: Might output something, or take in input (whether file or console)
+- Non-determinism: The value cannot be seen before runtime
+
+These major effects are described in the language as follows:
+
+- Exceptions: `Exn`
+- Divergence: `Div`
+- IO: `IO`
+- Non-Determinism: `NDet`
+
+These are the major effects that the language forces the handling of.
+
+Alongside the failing or possibly failing theorems.
+
+### Handling IO Side Effects
+
+Consider the following theorems:
+
+```lean
+theorem IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
+theorem Gte0          (n: Int)    => n >= 0;
+```
+
+Then consider the functions:
+
+```Rust
+@total
+fn parse_int(s: String) where IntegralString(s) -> Int { ... }
+```
+
+This is a total function, and doesn't cause any side effects _as long as_ the string is integral.
+Otherwise we have to handle the effects.
+
+Also consider:
+
+```Rust
+@total
+fn make_zeroes(n: Int) where Gte0(n) -> Array<Int, n> { ... }
+```
+
+This is also a total function and doesn't cause any side effects _as long as_ the integer is natural.
+Otherwise we have to handle the effects.
+
+Now consider this function:
+
+```Rust
+fn try_from_string(raw: String) -> Void effect IO {
+    ensure IntegralString(raw) {
+        let n: Int = parse_int(raw);
+
+        ensure Gte0(n) {
+            let arr: Array<Int, n> = make_zeroes(n);
+
+            io.print("Built array of length " + Int.to_string(n));
+        } else {
+            io.print("Unnatural Integer");
+        }
+    } else {
+        io.print("Not an integral string");
+    }
+}
+```
+
+This function will always compile, even if the compiler cannot prove the naturality or integrality of the integer and the string.
+
+For the sake of interest, it does desugar down to:
+
+```Rust
+fn try_from_string(raw: String) -> Void effect IO {
+    if (IntegralString(raw)) { // recall that theorems are essentially restricted functions
+        let n: Int = parse_int(raw);
+
+        if (Gte0(n)) {
+            let arr: Array<Int, n> = make_zeroes(n);
+
+            io.print("Built array of length " + Int.to_string(n));
+        } else {
+            io.print("Unnatural Integer");
+        }
+    } else {
+        io.print("Not an integral string");
+    }
+}
+```
+
+### Handling Exceptions
 
 TO-DO
 
-#### Induction
+### Handling Divergence
 
 TO-DO
 
-#### Rational Number Type
+### Handling Non-Determinism
 
 TO-DO
 
-#### Irrational Number Type
+## Advanced Theorem Proving
 
 TO-DO
 
-#### Issue with the Irrational Number Type
+### Induction
+
+TO-DO
+
+### Rational Number Type
+
+TO-DO
+
+### Irrational Number Type
+
+TO-DO
+
+### Issue with the Irrational Number Type
 
 TO-DO (floating point values are always finite, so it'd have to be not a computed number but rather a more general statement? Like say sqrt2 instead of whatever that's gonna compute to.)
 
@@ -2226,30 +2200,6 @@ TO-DO
 
 TO-DO
 
-## Theorem Proving
-
-TO-DO (more in-depth)
-
-### Natural Numbers
-
-TO-DO
-
-### Irrational Number Type
-
-TO-DO
-
-#### Example: Proving Irrationality to the Compiler
-
-TO-DO
-
-### Types as Statements
-
-TO-DO
-
-### Induction
-
-TO-DO
-
 ## Runtime/Compile-time Testing
 
 TO-DO
@@ -2297,6 +2247,117 @@ TO-DO
 ### Coverage
 
 TO-DO
+
+TO-DO
+
+## Built-in Types
+
+### Sets
+
+Loid has both a runtime collection type for sets and a type-level set representation.
+
+#### Runtime Sets
+
+TO-DO (add more useful functions to the API)
+
+These are instances of the `Set` class, which stores an unique list of elements:
+
+This is the Set API:
+
+```Rust
+class Set<T> {
+    priv fn construct() -> Set<T>;
+
+    pub fn new() -> Set<T>;
+    pub fn of(items: List<T>) -> Set<T>;
+
+    pub fn add(item: T)    -> Bool;        // true if newly inserted
+    pub fn remove(item: T) -> Bool;
+    pub fn has(item: T)    -> Bool;
+
+    pub fn union(other: Set<T>)                -> Set<T>;
+    pub fn intersect(other: Set<T>)            -> Set<T>;
+    pub fn difference(other: Set<T>)           -> Set<T>;
+    pub fn symmetric_difference(other: Set<T>) -> Set<T>;
+
+    pub fn is_subset(other: Set<T>)   -> Bool;
+    pub fn is_superset(other: Set<T>) -> Bool;
+
+    pub fn size()    -> Int;
+    pub fn to_list() -> List<T>;
+
+    pub fn for_each<F: (T) -> Void>(f: F) -> Void;
+}
+```
+
+These sets are unordered, deduplicated, and support O(1) membership.
+
+TO-DO (examples)
+
+#### Type-Level Sets
+
+This is a type-level set used for keys and unions of literals.
+
+Consider:
+
+```TypeScript
+type K = set<"a", "b", "c">;
+
+// You can add elements to this type set:
+// and do various other operations
+
+type L = K.add<"d">;          // { "a", "b", "c", "d" }
+type M = K.remove<"a">;       // { "b", "c" }
+type N = K.union<set<"d">>;    // { "a", "b", "c", "d" }
+type O = K.intersect<set<"b", "x">>; // { "b" }
+```
+
+Type-level sets such as this must be finite.
+The use cases for these will be explained later on.
+
+This is also a good time to mention that in Loid, the type system itself is purely functional.
+The type system does not allow for side effects, despite it serving as a almost a full programming language of its own, in some regards.
+This is to allow for stronger and safer types.
+
+#### Infinite Type-Level Sets
+
+TO-DO
+
+## As Keyword
+
+TO-DO
+
+### Checked `as` Conversion
+
+TO-DO
+
+### Unchecked `as!` Conversion
+
+TO-DO
+
+### Pattern Matching as Narrowing
+
+TO-DO
+
+### Numeric Conversions
+
+TO-DO
+
+### String Conversions
+
+TO-DO
+
+## Satisfies Keyword
+
+TO-DO
+
+### Exhaustiveness
+
+TO-DO
+
+### Runtime Behavior
+
+TO-DO, shouldn't be any, but just in case there might be any.
 
 ## The Unknown Type
 
