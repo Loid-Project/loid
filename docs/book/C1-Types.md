@@ -256,6 +256,12 @@ Consider:
 let t : Tuple<Int, String> = tuple(1, "one");
 ```
 
+Tuples are distinctly NOT dependent.
+
+However, dependent pairs _can_ exist in Loid.
+
+They are described in the later parts of this chapter.
+
 ### Block
 
 The `Block` type represents any un-evaluated chunk of code.
@@ -1603,6 +1609,11 @@ This is regarding the `Block` type, macros, and so on.
 
 In Loid, one can write simple theorems.
 
+There are 3 different ways of writing theorems, `theorem`, `proof`, and `rule`.
+
+Rules, are akin to liquid or refinement types.
+And are used everywhere when verifying functions.
+
 ### Natural Numbers
 
 To show how they work, before moving onto more complex things, it is good to demonstrate the simplest example.
@@ -1611,11 +1622,11 @@ And that is the natural numbers.
 
 Consider:
 
-```lean
-theorem Naturality (n: Int) => n >= 0;
+```Coffee
+rule Naturality (n: Int) => n >= 0;
 ```
 
-This is the theorem of naturality. An integer greater than or equal to `0`.
+This is the rule of naturality. An integer greater than or equal to `0`.
 
 We can ensure of naturality in certain places.
 
@@ -1627,7 +1638,7 @@ fn make_zeros(n: Int) -> Array<Int, n> where Naturality(n) {
 }
 ```
 
-Essentially, a theorem in Loid is a compile-time total and pure function that returns a boolean value.
+Essentially, a rule in Loid is a compile-time total and pure function that returns a boolean value.
 
 However, this can only work assuming that we know what `n` is being passed in.
 
@@ -1637,10 +1648,10 @@ We do have to handle various different issues on the way there.
 
 A very frequent computation that programmers will partake in is turning a string into an integer.
 
-Consider the theorem:
+Consider the rule:
 
-```lean
-theorem IsIntString (s: String) => regex.matches("^-?[0-9]+$", s);
+```coffee
+rule IsIntString (s: String) => regex.matches("^-?[0-9]+$", s);
 ```
 
 Consider a String to Int function of the signature:
@@ -1709,7 +1720,7 @@ type AnimalChild = ^C where C <: Animal;
 
 This essentially means that, the type `AnimalChild` is the type `C` where `C` is a child of `Animal`.
 
-To make you hate the full desugaring, the `where` keyword technically expects a `theorem` that returns true when a condition is met and false otherwise.
+To make you hate the full desugaring, the `where` keyword technically expects a theorem or function of some kind that returns true when a condition is met and false otherwise.
 
 However, you can simply type what we have and the `where` keyword will fill in the gaps.
 
@@ -1745,7 +1756,7 @@ let expr2: Expr = Expr {
     #let {
         type^ C;
     } in C where (#let {
-        theorem ChildOfAnimal(c: Type<C>) => c inherits Animal;
+        rule ChildOfAnimal (c: Type<C>) => c inherits Animal;
     } in ChildOfAnimal(C));
 }
 ```
@@ -1859,8 +1870,8 @@ let m: Nat = n where Naturality(n)
 ```
 
 Will this compile?
-Yes, it actually will, because the `to_int` function checks an Integrality theorem.
-And then we checked the Naturality theorem.
+Yes, it actually will, because the `to_int` function checks an Integrality rule.
+And then we checked the Naturality rule.
 
 Therefore, yes, this will absolutely compile.
 
@@ -2023,15 +2034,15 @@ These major effects are described in the language as follows:
 
 These are the major effects that the language forces the handling of.
 
-Alongside the failing or possibly failing theorems.
+Alongside the failing or possibly failing rules, theorems, or proofs.
 
 ### Handling IO Side Effects
 
-Consider the following theorems:
+Consider the following rules:
 
-```lean
-theorem IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
-theorem Gte0          (n: Int)    => n >= 0;
+```coffee
+rule IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
+rule Gte0          (n: Int)    => n >= 0;
 ```
 
 Then consider the functions:
@@ -2059,7 +2070,7 @@ Now consider this function:
 ```Rust
 fn try_from_string(raw: String) -> Void effect IO {
     ensure IntegralString(raw) {
-        // due to the IntegralString(raw) above, the theorem won't be re-run
+        // due to the IntegralString(raw) above, the rule won't be re-run
         // instead it'll trust that anywhere IntegralString(raw) is asked of now, it is true
         // this allows for faster compile times, and safer code at the same time
         // ^;^
@@ -2084,7 +2095,7 @@ For the sake of interest, it does desugar down to:
 
 ```Rust
 fn try_from_string(raw: String) -> Void effect IO {
-    if (IntegralString(raw)) { // recall that theorems are essentially restricted functions
+    if (IntegralString(raw)) { // recall that rules are essentially restricted functions
         let n: Int = parse_int(raw);
 
         if (Gte0(n)) {
@@ -2109,11 +2120,11 @@ So, the upper example, wouldn't actually compile, the compiler will simply treat
 
 ### Handling Exceptions
 
-Consider the following theorems:
+Consider the following rules:
 
-```lean
-theorem IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
-theorem Gte0          (n: Int)    => n >= 0;
+```coffee
+rule IntegralString(s: String) => regex.matches("^-?[0-9]+$", s);
+rule Gte0          (n: Int)    => n >= 0;
 ```
 
 Consider the following exception handlers.
@@ -2243,7 +2254,7 @@ fn collatz_steps(start: Int)
 
 This hasn't been proven to terminate for every input, so the compiler requires the `effect Div`.
 
-Because `Div` functions might run forever, they cannot be marked `@total`, cannot be called inside a `theorem`, and cannot be used inside a type expression.
+Because `Div` functions might run forever, they cannot be marked `@total`, cannot be called inside a `rule`, and cannot be used inside a type expression.
 Otherwise, the compiler could hang during typechecking.
 
 You could keep `Div` where non-termination is intentional.
@@ -2451,7 +2462,7 @@ fn audit_login(user: String) -> Void effect Logger, Clock {
 }
 ```
 
-Because Logger and Clock are in the signature, the compiler guarantees `audit_login` cannot be called inside a theorem or a dependent type, and cannot be run at top level unless someone provides handlers for both.
+Because Logger and Clock are in the signature, the compiler guarantees `audit_login` cannot be called inside a rule or a dependent type, and cannot be run at top level unless someone provides handlers for both.
 
 You can provide handlers for them.
 
@@ -2498,7 +2509,7 @@ let grid: SizedArray<Int> = read_zero_array(path) or (λ () -> Void effect IO {
 let n: Int = parse_int(raw) or 0;
 ```
 
-If the theorems cannot be proven, we can simply do this.
+If the rules cannot be proven, we can simply do this.
 
 Can be useful, can shoot you in the foot.
 
@@ -2512,6 +2523,10 @@ TO-DO (what happens when you forget the effects, effect-holes? similar to idris,
 TO-DO (effect parents, children, derivations, maybe? would this be useful, would it make things clearer? better integrate w/ OOP?)
 
 ## Advanced Theorem Proving
+
+TO-DO
+
+### Dependent Pairs and Sigma Types
 
 TO-DO
 
