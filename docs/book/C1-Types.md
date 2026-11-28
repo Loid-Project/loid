@@ -166,6 +166,17 @@ Measurements return classical bits and mutate the registers.
 let outcome: Bit = Q.measure(reg, 0);
 ```
 
+If this looks scary, do not worry.
+You will never touch QLoid as the average developer using Loid.
+
+QLoid is a special Loid-derivative language designed for the use-case of Quantum Computing.
+
+As such, the main Loid compiler doesn't allow QBit types.
+
+However, it can read and understand them, just won't compile unless you're specifically working on QLoid.
+
+So fret not friends, we shalt not suffer today.
+
 ## Complex Types
 
 Complex types in Loid are types that descend from the `type` type.
@@ -2632,7 +2643,15 @@ TO-DO (very small explanation, elaborated upon in another chapter)
 
 ## Dynamically Dependent Types
 
-TO-DO
+TO-DO (allowing for a kind of dynamic run-time dependence, unlike immutable dependencies)
+(this will be a specific language construct, and will be written as so)
+(this will be seen as unsafe, and the compiler won't be dealing with this, but rather the run-time application will)
+
+(this will essentially allow for the first class types and loid's type system to be more than just a verification system, but also a run-time system)
+
+(will be marked with clear symbols and keywords and effects where used)
+
+(might even use an `unsafe` block for this)
 
 ### Refined Runtime Values
 
@@ -2850,9 +2869,11 @@ TO-DO
 
 ### Runtime Behavior
 
-TO-DO, shouldn't be any, but just in case there might be any.
+TO-DO, shouldn't be any, but just in case there might be any, let's avoid UB.
 
 ## The Unknown Type
+
+TO-DO (elaborate and double check)
 
 The `Unknown` type is the top type.
 
@@ -2883,6 +2904,8 @@ TO-DO
 TO-DO
 
 ## Promises
+
+TO-DO (this whole thing not only needs to be written to work with the new effectful system, but also needs a rewrite in general)
 
 Loid's asynchronous model is Promise-based, mirroring JavaScript but with full type level tracking.
 

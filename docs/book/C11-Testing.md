@@ -1,6 +1,6 @@
 # Code Testing in Loid
 
-TO-DO
+TO-DO (this needs so much work)
 
 ## Unit Testing in Purity
 

@@ -29,61 +29,16 @@ This will be implemented further down in time, but for now, Loid can technically
 
 Due to this, we are okay making Loid less capable of proof-assistant-like actions at times, as Loiderem is to be used for this.
 
-## `LoidT`
-
-Loid's type system is in itself a turing complete programming language.
-
-It can be typed separately from a normal Loid file in a `.loidt` file.
-
-These cannot be compiles to anything, it is simply for types. These can be imported into normal Loid files however.
-
-TO-DO (documentation)
-
-TO-DO (do we even want this)
-
-## `LoidF`
-
-Loid allows for pure functional programming.
-
-And for some specific pieces of code, pure functions are highly preferred.
-
-The `.loidf` subset of the Loid language is for entirely pure functional programming.
-
-TO-DO (documentation)
-
 ## `NLoid`
 
-Dialect of Loid for compiling Loid code to Nix code.
+A purely-functional dialect of Loid for compiling Loid code to Nix code.
 
 TO-DO (documentation)
 
-## `JLoid`
+## `QLoid`
 
-Dialect of Loid for compiling Loid code cleanly and directly into JavaScript (CoffeeScript-like clarity of what the JavaScript will look like)
-Isn't the same as the standard JavaScript target, but rather becomes a language that is directly compatible with JavaScript but with a slightly alternative syntax.
+Quantum Computing emulation in Loid.
 
-TO-DO (documentation)
+Very interesting idea to build on.
 
-## `CLoid`
-
-Dialect of Loid that compiles to pure `C` code
-
-TO-DO (documentation) (written WAY later, no need to ever actually care about this until SO MUCH LATER)
-
-## `CSSoid`
-
-CSS in Loid
-
-TO-DO (also WAY later)
-
-## `Lispoid`
-
-Lisp-like Loid
-
-TO-DO (interesting concept, might expand).
-
-## `NecraLoid`
-
-Warfarme inspired dialect of Loid that compiles to standard Loid
-
-TO-DO (literally just some fun stuff that I'll write when I have nothing else to do, this is completely irrelevant)
+TO-DO (when we are not working on the main language)

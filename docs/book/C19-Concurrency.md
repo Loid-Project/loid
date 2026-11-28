@@ -1,6 +1,6 @@
 # Concurrency
 
-TO-DO
+TO-DO (no plans yet, need a plan for this)
 
 ## Async
 
@@ -10,10 +10,6 @@ TO-DO
 
 TO-DO
 
-## Daemons
+## Promises
 
-TO-DO
-
-## Systemd Integration
-
-TO-DO
+TO-Do

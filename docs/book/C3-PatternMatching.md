@@ -33,3 +33,11 @@ To-DO
 ## On Classes
 
 TO-DO
+
+## On Interfaces
+
+TO-DO
+
+## On Arrays
+
+TO-DO

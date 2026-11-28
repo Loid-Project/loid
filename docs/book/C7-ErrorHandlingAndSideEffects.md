@@ -2,18 +2,26 @@
 
 TO-DO
 
-## The Result Type
+## Effects and Effect Handling
 
-TO-DO
+TO-DO (in lots of depth)
 
-## IO Side Effects
+## Effect Handlers
 
-TO-DO
+TO-DO (insane depth)
 
-## Impure Systems
+(how to deal with these)
 
-TO-DO
+(even now effects do feel a bit iffy we need to work on making them feel less iffy and more formalized)
 
-## Coeffects
+## Monads
 
-TO-DO
+TO-DO (examples of how to write your own monads to use them to make your life easier if you really want to)
+
+## Full Monadic Typing
+
+TO-DO (allow users to use Monads if they so choose, enforcing specific monads that exist in Loid's standard library over the effect handling system currently implemented).
+
+(Essentially, effects still exist, and are there, but we abstract over with Monads for the sake of easier handling, if someone prefers that)
+
+(the quirks of this needs to be worked out in detail soon)

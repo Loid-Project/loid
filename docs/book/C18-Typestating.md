@@ -4,7 +4,7 @@ TO-DO
 
 ## Class and Interface Typestating in Action
 
-TO-DO
+TO-DO (maybe?)
 
 ## Struct Typestating in Action
 

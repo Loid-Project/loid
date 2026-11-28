@@ -12,11 +12,7 @@ TO-DO
 
 ## Adding Loid modules to NPM
 
-TO-DO
-
-## The `JLoid` Language
-
-TO-DO
+TO-DO (more in depth I guess?)
 
 ### Calling Loid with JavaScript
 

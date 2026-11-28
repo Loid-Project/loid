@@ -1,14 +1,14 @@
 # The Hashtag Directive
 
-TO-DO
+TO-DO (this relates heavily to metaprogramming)
 
 ## Built-In Directives
 
 TO-DO
 
-## Defining Directives for Loid-based DSLs
+## Defining Directives
 
-TO-DO
+TO-DO (might honestly make this the way metaprogramming is done, similar to rust's `!`)
 
 ## Rules of Directives
 

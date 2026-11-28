@@ -35,6 +35,10 @@ TO-DO
 
 ## Decorators
 
+TO-DO
+(split decorators that have actual changes and effects from decorators who just ensure of things?)
+(maybe place the decorators who ensure of things as effects as described in Types?)
+
 Loid provides decorators for functions to allow for more complex kinds of computing.
 
 ### Memoization and Caching

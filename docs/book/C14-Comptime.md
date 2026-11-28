@@ -1,6 +1,8 @@
 # Loid at Compile Time
 
-TO-DO
+TO-DO (explains basics of how the compiler'll work)
+
+(needs WAY more detail than I might be thinking originally)
 
 ## Lexer
 

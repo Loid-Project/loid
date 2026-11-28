@@ -4,28 +4,28 @@ TO-DO
 
 ## Git
 
-TO-DO
+TO-DO (using git repos as packages, basic explanation)
 
 ### Git
 
-TO-DO
+TO-DO (local git repos as packages)
 
 ### Git Forges
 
-TO-DO
+TO-DO (specific and popular git forges, and adding custom ones)
 
 ## Packages
 
 TO-DO
 
-### Packages as Git Repositories
-
-TO-DO
-
 ### Package Repositories
 
-TO-DO
+TO-DO (package repositories as git repos)
 
 ## Loid Package Manager and the Package Repository
 
 TO-DO
+
+## Using NPM
+
+TO-DO (this might be the most annoying part)
